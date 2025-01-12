@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 
-namespace ProcessadorVideo.Domain.Services;
+namespace ProcessadorVideo.Domain.Adapters.Services;
 
 public interface IVideoService
 {

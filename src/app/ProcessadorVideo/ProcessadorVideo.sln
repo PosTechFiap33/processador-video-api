@@ -9,13 +9,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Driver", "Driver", "{E65CC6
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Driven", "Driven", "{AC26AE1A-6F86-4FB2-89D9-FB04F2C59909}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessadorVideo.Api", "adapter\ProcessadorVideo.Api\ProcessadorVideo.Api.csproj", "{CB95EA9A-902E-4EE6-AACC-1E12F0F73F92}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{7C303EF2-83E5-45C0-A6EB-5A68C7F5A1E5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{AEF77E9A-CB60-456A-8840-7935FE5A4C0B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{F5CB72BF-34AE-4115-A199-887B261A7F49}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessadorVideo.Api", "adapter\ProcessadorVideo.Api\ProcessadorVideo.Api.csproj", "{CB95EA9A-902E-4EE6-AACC-1E12F0F73F92}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessadorVideo.Infra", "adapter\ProcessadorVideo.Infra\ProcessadorVideo.Infra.csproj", "{D2498C32-3BE2-4186-B820-9B8877EC6752}"
 EndProject

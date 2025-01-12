@@ -29,7 +29,7 @@ builder.Services.Configure<FormOptions>(options =>
     options.MultipartBodyLengthLimit = 900 * 1024 * 1024; // 900 MB limit (adjust as needed)
 });
 
-builder.Services.AddInfra();
+builder.Services.AddInfra(builder.Configuration);
 builder.Services.AddApplication();
 
 var app = builder.Build();

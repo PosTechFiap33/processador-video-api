@@ -10,7 +10,7 @@ public class VideoController : ControllerBase
     [HttpPost]
     [RequestSizeLimit(900_000_000)] // Limite de 900 MB
     public async Task<IActionResult> ConverterVideo(ICollection<IFormFile> videoFile,
-                                                   [FromForm] Guid usuarioId,          
+                                                   [FromForm] Guid usuarioId,
                                                    [FromServices] IConverterVideoParaImagemUseCase useCase)
     {
         try
@@ -18,9 +18,10 @@ public class VideoController : ControllerBase
             if (videoFile == null || !videoFile.Any())
                 return BadRequest("A valid video file is required.");
 
-            var zipBytes = await useCase.Executar(videoFile, usuarioId);
+            await useCase.Executar(videoFile, usuarioId);
 
-            return File(zipBytes, "application/zip", $"frame_{usuarioId}.zip");
+            return Created();
+            //   return File(zipBytes, "application/zip", $"frame_{usuarioId}.zip");
         }
         catch (Exception ex)
         {

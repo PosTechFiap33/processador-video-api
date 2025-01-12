@@ -2,7 +2,7 @@ using System.Drawing;
 using FFMpegCore;
 using Microsoft.AspNetCore.Http;
 using ProcessadorVideo.CrossCutting.Extensions;
-using ProcessadorVideo.Domain.Services;
+using ProcessadorVideo.Domain.Adapters.Services;
 
 namespace ProcessadorVideo.Infra.Services;
 

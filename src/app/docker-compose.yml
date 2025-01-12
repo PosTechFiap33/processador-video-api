@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack
+    ports:
+      - "4566:4566" # Porta para o gateway de serviços
+      - "8000:8000" # Porta para o DynamoDB
+      - "4572:4572" # Porta para o S3 (opcional no LocalStack atual)
+    environment:
+      - SERVICES=dynamodb,sqs,s3
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "./localstack_data:/var/lib/localstack" # Persistência opcional
+      - "./init-scripts:/etc/localstack/init/ready.d" # Scripts de inicialização
+
+
+networks:
+  controlepedido-network:
+    driver: bridge
