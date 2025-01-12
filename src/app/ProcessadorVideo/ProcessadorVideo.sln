@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
@@ -24,6 +24,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessadorVideo.Application", "core\ProcessadorVideo.Application\ProcessadorVideo.Application.csproj", "{E666558D-F8BD-4065-BE8D-E06379C06090}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessadorVideo.CrossCutting", "common\ProcessadorVideo.CrossCutting\ProcessadorVideo.CrossCutting.csproj", "{A52DAF95-D03F-4FF6-AD3A-24ED9ED477B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessadorVideo.Data", "adapter\ProcessadorVideo.Data\ProcessadorVideo.Data.csproj", "{9DCF3AE6-C454-4D5C-9629-9A6E334531AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{A52DAF95-D03F-4FF6-AD3A-24ED9ED477B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A52DAF95-D03F-4FF6-AD3A-24ED9ED477B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A52DAF95-D03F-4FF6-AD3A-24ED9ED477B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DCF3AE6-C454-4D5C-9629-9A6E334531AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DCF3AE6-C454-4D5C-9629-9A6E334531AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DCF3AE6-C454-4D5C-9629-9A6E334531AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DCF3AE6-C454-4D5C-9629-9A6E334531AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -63,5 +69,6 @@ Global
 		{48148B3D-5DAE-4652-A8CC-A0B775CC8ECF} = {7C303EF2-83E5-45C0-A6EB-5A68C7F5A1E5}
 		{E666558D-F8BD-4065-BE8D-E06379C06090} = {7C303EF2-83E5-45C0-A6EB-5A68C7F5A1E5}
 		{A52DAF95-D03F-4FF6-AD3A-24ED9ED477B3} = {F5CB72BF-34AE-4115-A199-887B261A7F49}
+		{9DCF3AE6-C454-4D5C-9629-9A6E334531AB} = {AC26AE1A-6F86-4FB2-89D9-FB04F2C59909}
 	EndGlobalSection
 EndGlobal

@@ -41,7 +41,6 @@ public class ConverterVideoParaImagemUseCase : IConverterVideoParaImagemUseCase
 
             await Parallel.ForEachAsync(videos, async (video, CancellationToken) =>
                        {
-                           //   string videoPath = Path.Combine(tempDirectory, video.Name);
                            using (var stream = new FileStream(tempDirectory, FileMode.Create))
                                await _fileStorageService.Salvar(pathProcessamento, video.FileName, stream);
                        });

@@ -2,8 +2,8 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.Extensions.Options;
 using ProcessadorVideo.CrossCutting.Configurations;
+using ProcessadorVideo.CrossCutting.Factories;
 using ProcessadorVideo.Domain.Adapters.Services;
-using ProcessadorVideo.Infra.Factories;
 
 namespace ProcessadorVideo.Infra.Services;
 

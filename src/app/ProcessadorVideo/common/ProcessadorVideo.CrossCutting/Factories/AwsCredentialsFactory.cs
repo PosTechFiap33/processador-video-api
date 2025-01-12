@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using Amazon.Runtime;
 using ProcessadorVideo.CrossCutting.Configurations;
 
-namespace ProcessadorVideo.Infra.Factories;
+namespace ProcessadorVideo.CrossCutting.Factories;
 
 [ExcludeFromCodeCoverage]
 public static class AwsCredentialsFactory

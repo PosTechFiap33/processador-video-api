@@ -4,9 +4,9 @@ using Amazon.SQS;
 using Amazon.SQS.Model;
 using Microsoft.Extensions.Options;
 using ProcessadorVideo.CrossCutting.Configurations;
+using ProcessadorVideo.CrossCutting.Factories;
 using ProcessadorVideo.Domain.Adapters.MessageBus;
 using ProcessadorVideo.Domain.DomainObjects;
-using ProcessadorVideo.Infra.Factories;
 
 namespace ProcessadorVideo.Infra.Messaging;
 
