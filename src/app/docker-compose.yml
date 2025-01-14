@@ -17,5 +17,5 @@ services:
 
 
 networks:
-  controlepedido-network:
+  processamentovideo-network:
     driver: bridge

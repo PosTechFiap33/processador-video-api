@@ -17,11 +17,11 @@ public class ConverterVideoParaImagemUseCase : IConverterVideoParaImagemUseCase
 {
     private readonly IMessageBus _messageBus;
     private readonly IFileStorageService _fileStorageService;
-    private readonly IProcessamentoPedidoRepository _repository;
+    private readonly IProcessamentoVideoRepository _repository;
 
     public ConverterVideoParaImagemUseCase(IMessageBus messageBus,
                                            IFileStorageService fileStorageService,
-                                           IProcessamentoPedidoRepository repository)
+                                           IProcessamentoVideoRepository repository)
     {
         _messageBus = messageBus;
         _fileStorageService = fileStorageService;

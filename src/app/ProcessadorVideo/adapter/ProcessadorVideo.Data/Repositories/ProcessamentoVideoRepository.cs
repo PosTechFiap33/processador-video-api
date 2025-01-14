@@ -4,14 +4,14 @@ using ProcessadorVideo.Domain.Entities;
 
 namespace ProcessadorVideo.Data.Repositories;
 
-public class ProcessamentoPedidoRepository : IProcessamentoPedidoRepository
+public class ProcessamentoVideoRepository : IProcessamentoVideoRepository
 {
     private const string TABLE_NAME = "ProcessamentoVideos";
 
     private readonly ProcessamentoVideoDynamoContext _context;
     public IUnitOfWork UnitOfWork => _context;
 
-    public ProcessamentoPedidoRepository(ProcessamentoVideoDynamoContext context)
+    public ProcessamentoVideoRepository(ProcessamentoVideoDynamoContext context)
     {
         _context = context;
     }

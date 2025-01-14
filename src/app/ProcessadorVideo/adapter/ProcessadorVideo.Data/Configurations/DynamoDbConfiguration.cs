@@ -14,7 +14,7 @@ public static class DynamoDbConfiguration
     {
         services.Configure<AWSConfiguration>(configuration.GetSection("AWS"));
         services.AddScoped<ProcessamentoVideoDynamoContext>();
-        services.AddTransient<IProcessamentoPedidoRepository, ProcessamentoPedidoRepository>();
+        services.AddTransient<IProcessamentoVideoRepository, ProcessamentoVideoRepository>();
         return services;
     }
 }
