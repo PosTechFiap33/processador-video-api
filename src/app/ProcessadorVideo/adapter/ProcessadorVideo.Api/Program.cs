@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http.Features;
 using ProcessadorVideo.Infra.Configurations;
 using ProcessadorVideo.Application.Configurations;
+using ProcessadorVideo.Data.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,7 @@ builder.Services.Configure<FormOptions>(options =>
 
 builder.Services.AddInfra(builder.Configuration);
 builder.Services.AddApplication();
+builder.Services.AddDataConfiguration(builder.Configuration);
 
 var app = builder.Build();
 

@@ -15,3 +15,21 @@ awslocal s3 ls s3://postech33-processamento-videos --recursive
 ## ex: awslocal s3 ls s3://postech33-processamento-videos/bdab9430-6160-4ae9-9695-5f99ea3e16f6/ --recursive
 
 
+##dynamodb
+aws dynamodb delete-table --table-name ProcessamentoVideos
+
+awslocal dynamodb create-table \
+    --table-name ProcessamentoVideos \
+    --attribute-definitions \
+        AttributeName=Id,AttributeType=S \
+        AttributeName=Status,AttributeType=S \
+    --key-schema \
+        AttributeName=Id,KeyType=HASH \
+        AttributeName=Status,KeyType=RANGE \
+    --provisioned-throughput \
+        ReadCapacityUnits=5,WriteCapacityUnits=5
+
+awslocal dynamodb scan --table-name ProcessamentoVideos
+
+
+
