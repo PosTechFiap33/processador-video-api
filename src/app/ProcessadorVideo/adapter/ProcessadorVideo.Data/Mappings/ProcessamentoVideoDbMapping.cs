@@ -18,7 +18,7 @@ public class ProcessamentoVideoDbMapping : IDynamoEntity<ProcessamentoVideo>
             { nameof(Entity.Id), new AttributeValue {  S = Entity.Id.ToString() }},
             { nameof(Entity.Status), new AttributeValue {  S = Entity.Status.ToString() }},
             { nameof(Entity.Data), new AttributeValue {  S = Entity.Data.ToString() }},
-            { nameof(Entity.UrlDownload), new AttributeValue {  S = Entity.UrlDownload.ToString() }},
+            { nameof(Entity.UrlDownload), new AttributeValue {  S = Entity.UrlDownload ?? "" }},
             { nameof(Entity.Mensagens), new AttributeValue { L = MapToList(Entity.Mensagens, m => new AttributeValue { S = m }) }},
         };
 

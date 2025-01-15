@@ -22,26 +22,23 @@ public class BucketS3StorageService : IFileStorageService
         {
             var client = CriarClient();
 
-            // Criando o request para obter o objeto
             var request = new GetObjectRequest
             {
                 BucketName = path,
                 Key = fileName
             };
 
-            // Obter o objeto
-            using (var response = await client.GetObjectAsync(request))
-            {
-                // Lendo o conteúdo do arquivo em um MemoryStream
-                using (var memoryStream = new MemoryStream())
-                {
-                    await response.ResponseStream.CopyToAsync(memoryStream);
-                    memoryStream.Seek(0, SeekOrigin.Begin);  // Voltar para o início do stream
+            var response = await client.GetObjectAsync(request);
 
-                    // Agora você pode usar o conteúdo do arquivo
-                    return memoryStream.ToArray();
-                }
+            byte[] fileBytes;
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await response.ResponseStream.CopyToAsync(memoryStream);
+                fileBytes = memoryStream.ToArray();
             }
+
+            return fileBytes;
         }
         catch (Exception ex)
         {
@@ -50,11 +47,12 @@ public class BucketS3StorageService : IFileStorageService
         }
     }
 
-    public async Task Salvar(string path, string fileName, Stream stream)
+    public async Task Salvar(string path, string fileName, byte[] fileBytes, string contentType)
     {
         var client = CriarClient();
 
-        await CriarBucket(client, path);
+        // await CriarBucket(client, path);
+        var stream = new MemoryStream(fileBytes);
 
         try
         {
@@ -62,7 +60,8 @@ public class BucketS3StorageService : IFileStorageService
             {
                 BucketName = path,
                 Key = fileName,
-                InputStream = stream
+                InputStream = stream,
+                ContentType = contentType
             };
 
             await client.PutObjectAsync(request);

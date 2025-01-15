@@ -37,6 +37,7 @@ public class ConverterVideoParaImagemUseCase : IConverterVideoParaImagemUseCase
         // string zipFilePath = Path.Combine(Path.GetTempPath(), frameZipName);
 
         var processamento = new ProcessamentoVideo(usuarioId);
+        var converterVideoMessage = new ProcessarVideoMessage(processamento.Id);
 
         string tempDirectory = Path.Combine(Path.GetTempPath(), processamento.Id.ToString());
 
@@ -46,15 +47,20 @@ public class ConverterVideoParaImagemUseCase : IConverterVideoParaImagemUseCase
 
             await Parallel.ForEachAsync(videos, async (video, CancellationToken) =>
                        {
-                           using (var stream = new FileStream(tempDirectory, FileMode.Create))
-                               await _fileStorageService.Salvar(pathProcessamento, video.FileName, stream);
+                           //    using (var stream = new FileStream(tempDirectory, FileMode.Create))
+                           using (var memoryStream = new MemoryStream())
+                           {
+                               await video.CopyToAsync(memoryStream);
+                               await _fileStorageService.Salvar(pathProcessamento, video.FileName, memoryStream.ToArray(), video.ContentType);
+                           }
+
+                           converterVideoMessage.AdicionarVideo(video.FileName, pathProcessamento);
                        });
 
             _repository.Criar(processamento);
 
             await _repository.UnitOfWork.Commit();
 
-            var converterVideoMessage = new ProcessarVideoMessage(processamento.Id, pathProcessamento);
             await _messageBus.PublishAsync(converterVideoMessage, "converter-video-para-imagem");
 
             // await Parallel.ForEachAsync(videos, async (video, CancellationToken) =>

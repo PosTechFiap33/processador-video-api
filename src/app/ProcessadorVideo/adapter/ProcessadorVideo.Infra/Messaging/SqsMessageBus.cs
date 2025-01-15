@@ -74,7 +74,10 @@ public class SqsMessageBus : IMessageBus
             var messages = new List<MessageResult<T>>();
 
             foreach (var message in response.Messages)
-                messages.Add(new MessageResult<T>(JsonSerializer.Deserialize<T>(message.Body), message.ReceiptHandle));
+                messages.Add(new MessageResult<T>(JsonSerializer.Deserialize<T>(message.Body, new JsonSerializerOptions
+                {
+                    IncludeFields = true
+                }), message.ReceiptHandle));
 
             return messages;
         }

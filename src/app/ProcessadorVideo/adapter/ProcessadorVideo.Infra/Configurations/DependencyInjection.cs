@@ -4,6 +4,7 @@ using ProcessadorVideo.CrossCutting.Configurations;
 using ProcessadorVideo.Domain.Adapters.MessageBus;
 using ProcessadorVideo.Domain.Adapters.Services;
 using ProcessadorVideo.Infra.Messaging;
+using ProcessadorVideo.Infra.Messaging.Workers;
 using ProcessadorVideo.Infra.Services;
 
 namespace ProcessadorVideo.Infra.Configurations;
@@ -14,10 +15,14 @@ public static class DependencyInjection
     {
         services.Configure<AWSConfiguration>(configuration.GetSection("AWS"));
 
-        services.AddScoped<IVideoService, VideoService>();
         services.AddScoped<IMessageBus, SqsMessageBus>();
-        services.AddScoped<IFileStorageService, BucketS3StorageService>();
-        
+
+        //TODO: avaliar se ta ok singleton
+        services.AddSingleton<IVideoService, VideoService>();
+        services.AddSingleton<IFileStorageService, BucketS3StorageService>();
+
+        services.AddHostedService<ConverterVideoParaImagemMessagingWorker>();
+
         return services;
     }
 }

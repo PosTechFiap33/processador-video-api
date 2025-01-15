@@ -11,6 +11,7 @@ public class AWSConfiguration
     public string SecretKey { get; set; }
     public string ServiceUrl { get; set; }
     public string AwsQueueUrl { get; set; }
+    public string ProcessarVideoQueueUrl { get { return $"{AwsQueueUrl}/converter-video-para-imagem"; } }
 
     public AWSConfiguration()
     {
@@ -20,6 +21,7 @@ public class AWSConfiguration
         ServiceUrl = GetEnvironmentVariableOrDefault("AWS_SERVICE_URL", ServiceUrl);
         AwsQueueUrl = GetEnvironmentVariableOrDefault("AWS_CONVERTER_VIDEO_IMAGEM_QUEUE", AwsQueueUrl);
     }
+    
 
     private string GetEnvironmentVariableOrDefault(string variableName, string defaultValue = null)
     {
