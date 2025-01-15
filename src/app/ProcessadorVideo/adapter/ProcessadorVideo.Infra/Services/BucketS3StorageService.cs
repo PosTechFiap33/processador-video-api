@@ -47,6 +47,27 @@ public class BucketS3StorageService : IFileStorageService
         }
     }
 
+    public async Task Remover(string path, string fileName)
+    {
+        try
+        {
+            var client = CriarClient();
+
+            var request = new DeleteObjectRequest
+            {
+                BucketName = path,
+                Key = fileName
+            };
+
+            await client.DeleteObjectAsync(request);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao ler o arquivo: {ex.Message}");
+            throw;
+        }
+    }
+
     public async Task Salvar(string path, string fileName, byte[] fileBytes, string contentType)
     {
         var client = CriarClient();
@@ -72,24 +93,24 @@ public class BucketS3StorageService : IFileStorageService
         }
     }
 
-    private async Task CriarBucket(IAmazonS3 s3Client, string bucketName)
-    {
-        try
-        {
-            var request = new PutBucketRequest
-            {
-                BucketName = bucketName
-            };
+    // private async Task CriarBucket(IAmazonS3 s3Client, string bucketName)
+    // {
+    //     try
+    //     {
+    //         var request = new PutBucketRequest
+    //         {
+    //             BucketName = bucketName
+    //         };
 
-            await s3Client.PutBucketAsync(request);
-            Console.WriteLine($"Bucket {bucketName} criado com sucesso.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Erro ao criar o bucket: {ex.Message}");
-            throw ex;
-        }
-    }
+    //         await s3Client.PutBucketAsync(request);
+    //         Console.WriteLine($"Bucket {bucketName} criado com sucesso.");
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         Console.WriteLine($"Erro ao criar o bucket: {ex.Message}");
+    //         throw ex;
+    //     }
+    // }
 
     private AmazonS3Client CriarClient()
     {
