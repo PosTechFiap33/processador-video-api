@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 namespace ProcessadorVideo.Domain.Adapters.MessageBus.Messages;
 
 
-public class Video
+public class Arquivo
 {
     [JsonPropertyName("Diretorio")]
     public string Diretorio { get; set; }
@@ -12,11 +12,11 @@ public class Video
     [JsonPropertyName("Nome")]
     public string Nome { get; set; }
 
-    public Video()
+    public Arquivo()
     {
     }
 
-    public Video(string diretorio, string nome)
+    public Arquivo(string diretorio, string nome)
     {
         Diretorio = diretorio;
         Nome = nome;
@@ -30,7 +30,7 @@ public class ProcessarVideoMessage
     public Guid ProcessamentoId { get; set; }
 
     [JsonPropertyName("Videos")]
-    public IList<Video> Videos { get; set; }
+    public IList<Arquivo> Videos { get; set; }
 
     public ProcessarVideoMessage()
     {
@@ -39,12 +39,12 @@ public class ProcessarVideoMessage
     public ProcessarVideoMessage(Guid processamentoId)
     {
         ProcessamentoId = processamentoId;
-        Videos = new List<Video>();
+        Videos = new List<Arquivo>();
     }
 
     public void AdicionarVideo(string nomeArquivo, string diretorio)
     {
-        var video = new Video(diretorio, nomeArquivo);
+        var video = new Arquivo(diretorio, nomeArquivo);
         Videos.Add(video);
     }
 }

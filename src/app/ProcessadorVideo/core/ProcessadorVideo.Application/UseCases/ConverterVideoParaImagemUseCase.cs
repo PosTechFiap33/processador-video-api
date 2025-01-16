@@ -30,12 +30,6 @@ public class ConverterVideoParaImagemUseCase : IConverterVideoParaImagemUseCase
 
     public async Task Executar(ICollection<IFormFile> videos, Guid usuarioId)
     {
-        // string outputFolder = Path.Combine(Path.GetTempPath(), "ExtractedFrames");
-        // Directory.CreateDirectory(outputFolder);
-
-        // var frameZipName = $"frames_{Guid.NewGuid()}.zip";
-        // string zipFilePath = Path.Combine(Path.GetTempPath(), frameZipName);
-
         var processamento = new ProcessamentoVideo(usuarioId);
         var converterVideoMessage = new ProcessarVideoMessage(processamento.Id);
 
@@ -47,7 +41,6 @@ public class ConverterVideoParaImagemUseCase : IConverterVideoParaImagemUseCase
 
             await Parallel.ForEachAsync(videos, async (video, CancellationToken) =>
                        {
-                           //    using (var stream = new FileStream(tempDirectory, FileMode.Create))
                            using (var memoryStream = new MemoryStream())
                            {
                                await video.CopyToAsync(memoryStream);
@@ -57,20 +50,12 @@ public class ConverterVideoParaImagemUseCase : IConverterVideoParaImagemUseCase
                            converterVideoMessage.AdicionarVideo(video.FileName, pathProcessamento);
                        });
 
+            //TODO: pensar em como deixar atomico
             _repository.Criar(processamento);
 
             await _repository.UnitOfWork.Commit();
 
             await _messageBus.PublishAsync(converterVideoMessage, "converter-video-para-imagem");
-
-            // await Parallel.ForEachAsync(videos, async (video, CancellationToken) =>
-            //            {
-            //                await _videoService.GenerateImageFromFrames(video, 20, outputFolder);
-            //            });
-
-            // ZipFile.CreateFromDirectory(outputFolder, zipFilePath);
-
-            //  return await File.ReadAllBytesAsync(zipFilePath);
         }
         catch (Exception ex)
         {
@@ -80,8 +65,6 @@ public class ConverterVideoParaImagemUseCase : IConverterVideoParaImagemUseCase
         finally
         {
             DirectoryExtensions.RemoveDirectory(tempDirectory);
-            // DirectoryExtensions.RemoveDirectory(outputFolder);
-            // DirectoryExtensions.RemoveDirectory(zipFilePath);
         }
     }
 }

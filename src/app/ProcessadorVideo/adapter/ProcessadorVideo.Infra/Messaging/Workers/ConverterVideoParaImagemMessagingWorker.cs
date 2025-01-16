@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ProcessadorVideo.CrossCutting.Configurations;
 using ProcessadorVideo.CrossCutting.Extensions;
+using ProcessadorVideo.Domain.Adapters.MessageBus;
 using ProcessadorVideo.Domain.Adapters.MessageBus.Messages;
 using ProcessadorVideo.Domain.Adapters.Services;
 using System.IO.Compression;
@@ -10,29 +11,28 @@ namespace ProcessadorVideo.Infra.Messaging.Workers;
 
 public class ConverterVideoParaImagemMessagingWorker : MessagingWorker<ProcessarVideoMessage>
 {
-    private readonly IFileStorageService _fileStorageService;
-    private readonly IVideoService _videoService;
 
     public ConverterVideoParaImagemMessagingWorker(ILogger<MessagingWorker<ProcessarVideoMessage>> logger,
-                                         IServiceProvider serviceProvider,
-                                         IOptions<AWSConfiguration> options,
-                                         IFileStorageService fileStorageService,
-                                         IVideoService videoService) : base(logger, serviceProvider, $"{options.Value.ProcessarVideoQueueUrl}")
+                                                   IServiceProvider serviceProvider,
+                                                   IOptions<AWSConfiguration> options)
+                                                   : base(logger, serviceProvider, $"{options.Value.ProcessarVideoQueueUrl}")
     {
-        _fileStorageService = fileStorageService;
-        _videoService = videoService;
     }
 
-    protected override async Task ProccessMessage(ProcessarVideoMessage message, IServiceScope serviceScope)
+    protected override async Task ProccessMessage(ProcessarVideoMessage processarVideoMessage, IServiceScope scope)
     {
         var frameZipName = $"frames_{Guid.NewGuid()}.zip";
-        string zipFilePath = Path.Combine(Path.GetTempPath(), frameZipName);
-
-        string outputFolder = Path.Combine(Path.GetTempPath(), $"{message.ProcessamentoId}/ExtractedFrames");
+        var zipFilePath = Path.Combine(Path.GetTempPath(), frameZipName);
+        var outputFolder = Path.Combine(Path.GetTempPath(), $"{processarVideoMessage.ProcessamentoId}/ExtractedFrames");
+       
+        var _messageBus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
 
         try
         {
-            await Parallel.ForEachAsync(message.Videos, async (video, CancellationToken) =>
+            var _videoService = scope.ServiceProvider.GetRequiredService<IVideoService>();
+            var _fileStorageService = scope.ServiceProvider.GetRequiredService<IFileStorageService>();
+
+            await Parallel.ForEachAsync(processarVideoMessage.Videos, async (video, CancellationToken) =>
             {
                 var videoBytes = await _fileStorageService.Ler(video.Diretorio, video.Nome);
                 await _videoService.GenerateImageFromFrames(videoBytes, video.Nome, 20, outputFolder);
@@ -43,10 +43,18 @@ public class ConverterVideoParaImagemMessagingWorker : MessagingWorker<Processar
 
             var arquivo = await File.ReadAllBytesAsync(zipFilePath);
 
-            using (MemoryStream memoryStream = new MemoryStream(arquivo))
-                await _fileStorageService.Salvar($"postech33-processamento-videos/{message.ProcessamentoId}", frameZipName, memoryStream.ToArray(), "application/zip");
+            var diretorioZip = $"postech33-processamento-videos/{processarVideoMessage.ProcessamentoId}";
 
-            //TODO - emitir evento de atualizacao do status do processamento na fila
+            using (MemoryStream memoryStream = new MemoryStream(arquivo))
+                await _fileStorageService.Salvar(diretorioZip, frameZipName, memoryStream.ToArray(), "application/zip");
+
+            var processamentoVideoRealizadoMessage = new ProcessamentoVideoRealizadoMessage(processarVideoMessage.ProcessamentoId, new Arquivo(diretorioZip, frameZipName));
+            await _messageBus.PublishAsync(processamentoVideoRealizadoMessage, "conversao-video-para-imagem-realizada");
+        }
+        catch (Exception ex)
+        {
+            var erroProcessamentoVideoMessage = new ErroProcessamentoVideoMessage(processarVideoMessage.ProcessamentoId, ex.Message);
+            await _messageBus.PublishAsync(erroProcessamentoVideoMessage, "erro-conversao-video-para-imagem");
         }
         finally
         {

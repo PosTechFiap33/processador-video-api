@@ -1,6 +1,11 @@
 #!/bin/bash
+#converter-video-para-imagem
+#conversao-video-para-imagem-realizada
+#erro-conversao-video-para-imagem
 
 awslocal sqs create-queue --queue-name converter-video-para-imagem
+awslocal sqs create-queue --queue-name conversao-video-para-imagem-realizada
+awslocal sqs create-queue --queue-name erro-conversao-video-para-imagem
 
 awslocal sqs receive-message --queue-url http://localhost:4566/000000000000/converter-video-para-imagem --max-number-of-messages 10 --visibility-timeout 30 --wait-time-seconds 0
 

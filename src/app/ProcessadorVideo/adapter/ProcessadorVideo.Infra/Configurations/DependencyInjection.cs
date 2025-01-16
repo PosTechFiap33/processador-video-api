@@ -17,9 +17,8 @@ public static class DependencyInjection
 
         services.AddScoped<IMessageBus, SqsMessageBus>();
 
-        //TODO: avaliar se ta ok singleton
-        services.AddSingleton<IVideoService, VideoService>();
-        services.AddSingleton<IFileStorageService, BucketS3StorageService>();
+        services.AddScoped<IVideoService, VideoService>();
+        services.AddScoped<IFileStorageService, BucketS3StorageService>();
 
         services.AddHostedService<ConverterVideoParaImagemMessagingWorker>();
 
