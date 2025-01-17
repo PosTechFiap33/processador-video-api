@@ -1,3 +1,4 @@
+using Amazon.DynamoDBv2.Model;
 using ProcessadorVideo.Data.Mappings;
 using ProcessadorVideo.Domain.Adapters.Repositories;
 using ProcessadorVideo.Domain.Entities;
@@ -26,4 +27,23 @@ public class ProcessamentoVideoRepository : IProcessamentoVideoRepository
         _context.Dispose();
     }
 
+    public async Task<ProcessamentoVideo?> Consultar(Guid id)
+    {
+        var request = new GetItemRequest
+        {
+            TableName = TABLE_NAME,
+            Key = new Dictionary<string, AttributeValue>
+            {
+                { nameof(ProcessamentoVideo.Id), new AttributeValue { S = id.ToString() } }
+            }
+        };
+
+        // Fazendo a consulta
+        var response = await _context.Client.GetItemAsync(request);
+
+        if (response.Item == null || !response.Item.Any())
+            return null;
+
+        return ProcessamentoVideoDbMappingFactory.MapToEntity(response.Item);
+    }
 }

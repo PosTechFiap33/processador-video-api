@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Http;
+using ProcessadorVideo.CrossCutting.Configurations;
 using ProcessadorVideo.CrossCutting.Extensions;
 using ProcessadorVideo.Domain.Adapters.MessageBus;
 using ProcessadorVideo.Domain.Adapters.MessageBus.Messages;
 using ProcessadorVideo.Domain.Adapters.Repositories;
 using ProcessadorVideo.Domain.Adapters.Services;
 using ProcessadorVideo.Domain.Entities;
+using Microsoft.Extensions.Options;
 
 namespace ProcessadorVideo.Application.UseCases;
 
@@ -18,14 +20,17 @@ public class ConverterVideoParaImagemUseCase : IConverterVideoParaImagemUseCase
     private readonly IMessageBus _messageBus;
     private readonly IFileStorageService _fileStorageService;
     private readonly IProcessamentoVideoRepository _repository;
+    private readonly AWSConfiguration _awsConfiguration;
 
     public ConverterVideoParaImagemUseCase(IMessageBus messageBus,
                                            IFileStorageService fileStorageService,
-                                           IProcessamentoVideoRepository repository)
+                                           IProcessamentoVideoRepository repository,
+                                           IOptions<AWSConfiguration> configuration)
     {
         _messageBus = messageBus;
         _fileStorageService = fileStorageService;
         _repository = repository;
+        _awsConfiguration = configuration.Value;
     }
 
     public async Task Executar(ICollection<IFormFile> videos, Guid usuarioId)
@@ -55,7 +60,7 @@ public class ConverterVideoParaImagemUseCase : IConverterVideoParaImagemUseCase
 
             await _repository.UnitOfWork.Commit();
 
-            await _messageBus.PublishAsync(converterVideoMessage, "converter-video-para-imagem");
+            await _messageBus.PublishAsync(converterVideoMessage, _awsConfiguration.ConverterVideoParaImagemQueueUrl);
         }
         catch (Exception ex)
         {

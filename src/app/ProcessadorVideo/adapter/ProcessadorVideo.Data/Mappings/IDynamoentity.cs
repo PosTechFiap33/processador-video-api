@@ -8,4 +8,5 @@ public interface IDynamoEntity<T> where T : Entity, IAggregateRoot
 {
     T Entity { get; }
     public Dictionary<string, AttributeValue> MapToDynamo();
+    public T MapToEntity(Dictionary<string, AttributeValue> attributes);
 }

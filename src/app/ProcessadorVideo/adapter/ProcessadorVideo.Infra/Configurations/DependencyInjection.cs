@@ -20,7 +20,8 @@ public static class DependencyInjection
         services.AddScoped<IVideoService, VideoService>();
         services.AddScoped<IFileStorageService, BucketS3StorageService>();
 
-        services.AddHostedService<ConverterVideoParaImagemMessagingWorker>();
+        services.AddHostedService<ProcessarVideoMessagingWorker>();
+        services.AddHostedService<ProcessamentoVideoRealizadoMessagingWorker>();        
 
         return services;
     }

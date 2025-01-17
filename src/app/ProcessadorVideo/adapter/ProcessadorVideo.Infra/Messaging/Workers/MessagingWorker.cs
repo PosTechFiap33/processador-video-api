@@ -10,7 +10,7 @@ namespace ProcessadorVideo.Infra.Messaging.Workers;
 public abstract class MessagingWorker<T> : BackgroundService
 {
     protected readonly IServiceProvider _serviceProvider;
-    private readonly ILogger<MessagingWorker<T>> _logger;
+    protected readonly ILogger<MessagingWorker<T>> _logger;
     private readonly string _queueUrl;
     protected abstract Task ProccessMessage(T message, IServiceScope serviceScope);
 

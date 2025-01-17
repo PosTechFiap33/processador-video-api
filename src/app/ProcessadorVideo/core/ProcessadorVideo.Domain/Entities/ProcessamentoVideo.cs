@@ -1,10 +1,11 @@
+using ProcessadorVideo.Domain.Adapters.MessageBus.Messages;
 using ProcessadorVideo.Domain.DomainObjects;
 
 namespace ProcessadorVideo.Domain.Entities;
 
 public enum StatusProcessamento
 {
-    EmProcessamento,
+    EmProcessamento = 1,
     Processado,
     Erro
 }
@@ -12,22 +13,38 @@ public enum StatusProcessamento
 public class ProcessamentoVideo : Entity, IAggregateRoot
 {
     public Guid UsuarioId { get; private set; }
-    public string UrlDownload { get; private set; }
+    public Arquivo ArquivoDownload { get; private set; }
     public StatusProcessamento Status { get; private set; }
     public DateTime Data { get; private set; }
     public IList<string> Mensagens { get; private set; }
 
+    public ProcessamentoVideo(Guid id,
+                              Guid usuarioId, 
+                              Arquivo arquivoDownload, 
+                              StatusProcessamento status, 
+                              DateTime data, 
+                              IList<string> mensagens)
+    {
+        Id = id;
+        UsuarioId = usuarioId;
+        ArquivoDownload = arquivoDownload;
+        Status = status;
+        Data = data;
+        Mensagens = mensagens;
+    }
+
     public ProcessamentoVideo(Guid usuarioId)
     {
         Mensagens = new List<string>();
+        ArquivoDownload = new Arquivo();
         UsuarioId = usuarioId;
         AtualizarStatus(StatusProcessamento.EmProcessamento);
         Mensagens.Add("Processamento de vídeos iniciado!");
     }
 
-    public void Finalizar(string urlDownload)
+    public void Finalizar(Arquivo arquivoDownload)
     {
-        UrlDownload = urlDownload;
+        ArquivoDownload = arquivoDownload;
         AtualizarStatus(StatusProcessamento.Processado);
         Mensagens.Add("Processamento de videos finalizado!");
     }

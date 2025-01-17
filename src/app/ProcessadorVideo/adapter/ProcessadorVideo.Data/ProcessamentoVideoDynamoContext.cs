@@ -12,7 +12,7 @@ namespace ProcessadorVideo.Data;
 
 public class ProcessamentoVideoDynamoContext : IUnitOfWork
 {
-    private readonly AmazonDynamoDBClient _client;
+    public AmazonDynamoDBClient Client { get; private set; }
     private readonly List<TransactWriteItem> _writeOperations;
     // private readonly ILogger<PagamentoDynamoDbContext> _logger;
 
@@ -26,7 +26,7 @@ public class ProcessamentoVideoDynamoContext : IUnitOfWork
             RegionEndpoint = Amazon.RegionEndpoint.GetBySystemName(awsConfiguration.Region),
         };
 
-        _client = new AmazonDynamoDBClient(config.CreateCredentials(awsConfiguration), config);
+        Client = new AmazonDynamoDBClient(config.CreateCredentials(awsConfiguration), config);
 
         _writeOperations = new List<TransactWriteItem>();
     }
@@ -41,7 +41,7 @@ public class ProcessamentoVideoDynamoContext : IUnitOfWork
             TransactItems = _writeOperations
         };
 
-        var response = await _client.TransactWriteItemsAsync(transactRequest);
+        var response = await Client.TransactWriteItemsAsync(transactRequest);
 
         if (response.HttpStatusCode != System.Net.HttpStatusCode.OK)
             return false;

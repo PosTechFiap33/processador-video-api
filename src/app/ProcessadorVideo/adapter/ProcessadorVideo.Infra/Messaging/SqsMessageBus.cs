@@ -42,7 +42,7 @@ public class SqsMessageBus : IMessageBus
 
             var sendMessageRequest = new SendMessageRequest
             {
-                QueueUrl = Path.Combine(_configuration.AwsQueueUrl, queueUrl),
+                QueueUrl = queueUrl,
                 MessageBody = message is string ? message.ToString() : JsonSerializer.Serialize(message)
             };
 

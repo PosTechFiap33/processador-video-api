@@ -7,16 +7,19 @@ using ProcessadorVideo.Domain.Adapters.MessageBus;
 using ProcessadorVideo.Domain.Adapters.MessageBus.Messages;
 using ProcessadorVideo.Domain.Adapters.Services;
 using System.IO.Compression;
+
 namespace ProcessadorVideo.Infra.Messaging.Workers;
 
-public class ConverterVideoParaImagemMessagingWorker : MessagingWorker<ProcessarVideoMessage>
+public class ProcessarVideoMessagingWorker : MessagingWorker<ProcessarVideoMessage>
 {
+    private readonly AWSConfiguration _awsConfiguration;
 
-    public ConverterVideoParaImagemMessagingWorker(ILogger<MessagingWorker<ProcessarVideoMessage>> logger,
-                                                   IServiceProvider serviceProvider,
-                                                   IOptions<AWSConfiguration> options)
-                                                   : base(logger, serviceProvider, $"{options.Value.ProcessarVideoQueueUrl}")
+    public ProcessarVideoMessagingWorker(ILogger<MessagingWorker<ProcessarVideoMessage>> logger,
+                                         IServiceProvider serviceProvider,
+                                         IOptions<AWSConfiguration> options)
+                                         : base(logger, serviceProvider, $"{options.Value.ConverterVideoParaImagemQueueUrl}")
     {
+        _awsConfiguration = options.Value;
     }
 
     protected override async Task ProccessMessage(ProcessarVideoMessage processarVideoMessage, IServiceScope scope)
@@ -49,12 +52,13 @@ public class ConverterVideoParaImagemMessagingWorker : MessagingWorker<Processar
                 await _fileStorageService.Salvar(diretorioZip, frameZipName, memoryStream.ToArray(), "application/zip");
 
             var processamentoVideoRealizadoMessage = new ProcessamentoVideoRealizadoMessage(processarVideoMessage.ProcessamentoId, new Arquivo(diretorioZip, frameZipName));
-            await _messageBus.PublishAsync(processamentoVideoRealizadoMessage, "conversao-video-para-imagem-realizada");
+            await _messageBus.PublishAsync(processamentoVideoRealizadoMessage, _awsConfiguration.ConversaoVideoParaImagemRealizadaQueueUrl);
         }
         catch (Exception ex)
         {
             var erroProcessamentoVideoMessage = new ErroProcessamentoVideoMessage(processarVideoMessage.ProcessamentoId, ex.Message);
-            await _messageBus.PublishAsync(erroProcessamentoVideoMessage, "erro-conversao-video-para-imagem");
+            await _messageBus.PublishAsync(erroProcessamentoVideoMessage, _awsConfiguration.ConversaoVideoParaImagemErroQueueUrl);
+            _logger.LogError(ex, $"Ocorreu um erro ao processar o video! Id do procesamento: {processarVideoMessage.ProcessamentoId}");
         }
         finally
         {

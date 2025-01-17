@@ -23,16 +23,14 @@ awslocal s3 ls s3://postech33-processamento-videos --recursive
 
 
 ##dynamodb
-aws dynamodb delete-table --table-name ProcessamentoVideos
+awslocal dynamodb delete-table --table-name ProcessamentoVideos
 
 awslocal dynamodb create-table \
     --table-name ProcessamentoVideos \
     --attribute-definitions \
         AttributeName=Id,AttributeType=S \
-        AttributeName=Status,AttributeType=S \
     --key-schema \
         AttributeName=Id,KeyType=HASH \
-        AttributeName=Status,KeyType=RANGE \
     --provisioned-throughput \
         ReadCapacityUnits=5,WriteCapacityUnits=5
 
@@ -40,3 +38,17 @@ awslocal dynamodb scan --table-name ProcessamentoVideos
 
 
 
+## inicializacao
+
+awslocal sqs create-queue --queue-name converter-video-para-imagem
+awslocal sqs create-queue --queue-name conversao-video-para-imagem-realizada
+awslocal sqs create-queue --queue-name erro-conversao-video-para-imagem
+awslocal s3 mb s3://postech33-processamento-videos
+awslocal dynamodb create-table \
+    --table-name ProcessamentoVideos \
+    --attribute-definitions \
+        AttributeName=Id,AttributeType=S \
+    --key-schema \
+        AttributeName=Id,KeyType=HASH \
+    --provisioned-throughput \
+        ReadCapacityUnits=5,WriteCapacityUnits=5

@@ -11,7 +11,10 @@ public class AWSConfiguration
     public string SecretKey { get; set; }
     public string ServiceUrl { get; set; }
     public string AwsQueueUrl { get; set; }
-    public string ProcessarVideoQueueUrl { get { return $"{AwsQueueUrl}/converter-video-para-imagem"; } }
+    public string ConverterVideoParaImagemQueueUrl { get { return $"{AwsQueueUrl}/converter-video-para-imagem"; } }
+    public string ConversaoVideoParaImagemRealizadaQueueUrl { get { return $"{AwsQueueUrl}/conversao-video-para-imagem-realizada"; } }
+    public string ConversaoVideoParaImagemErroQueueUrl { get { return $"{AwsQueueUrl}/erro-conversao-video-para-imagem"; } }
+
 
     public AWSConfiguration()
     {
