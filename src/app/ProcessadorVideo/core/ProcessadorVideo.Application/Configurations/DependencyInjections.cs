@@ -9,6 +9,8 @@ public static class DependencyInjections
     {
         services.AddScoped<IConverterVideoParaImagemUseCase, ConverterVideoParaImagemUseCase>();
         services.AddScoped<IListarProcessamentoUseCase, ListarProcessamentoUseCase>();
+        services.AddScoped<IConsultarArquivoZipUseCase, ConsultarArquivoZipUseCase>();
+
         return services;
     }
 }

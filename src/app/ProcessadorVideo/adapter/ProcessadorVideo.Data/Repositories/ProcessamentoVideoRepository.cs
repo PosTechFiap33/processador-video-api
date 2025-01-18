@@ -140,9 +140,8 @@ public class ProcessamentoVideoRepository : IProcessamentoVideoRepository
         var mensagens = attributes[nameof(ProcessamentoVideo.Mensagens)].L;
 
         var arquivoAttributes = attributes[nameof(ProcessamentoVideo.ArquivoDownload)].M;
-        Arquivo arquivo = new Arquivo();
-
-        arquivo = new Arquivo
+     
+        var arquivo = new Arquivo
         {
             Nome = arquivoAttributes[nameof(Arquivo.Nome)].S,
             Diretorio = arquivoAttributes[nameof(Arquivo.Diretorio)].S

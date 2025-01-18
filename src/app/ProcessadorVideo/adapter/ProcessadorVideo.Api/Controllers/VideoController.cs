@@ -1,6 +1,8 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using ProcessadorVideo.Application.DTOs;
 using ProcessadorVideo.Application.UseCases;
+using ProcessadorVideo.Domain.DomainObjects.Exceptions;
 
 namespace FiAPProcessaVideo.Api.Controllers;
 
@@ -22,7 +24,6 @@ public class VideoController : ControllerBase
             await useCase.Executar(videoFile, usuarioId);
 
             return StatusCode((int)HttpStatusCode.Created, "Processamento iniciado!");
-            //   return File(zipBytes, "application/zip", $"frame_{usuarioId}.zip");
         }
         catch (Exception ex)
         {
@@ -42,6 +43,31 @@ public class VideoController : ControllerBase
             var listaProcessamento = await useCase.Executar(usuarioId);
 
             return Ok(listaProcessamento);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"An error occurred: {ex.Message}");
+        }
+    }
+
+    [HttpGet("{processamentoId}/download")]
+    public async Task<IActionResult> BaixarArquivo(Guid processamentoId,
+                                                  [FromServices] IConsultarArquivoZipUseCase useCase)
+    {
+        try
+        {
+            if (Guid.Empty == processamentoId)
+                return BadRequest("Id do processamento não foi informado!");
+
+            ArquivoZipDTO arquivo = await useCase.Executar(processamentoId);
+
+            return File(arquivo.Conteudo, "application/zip", arquivo.Nome);
+        }
+        catch(ProcessamentoNaoEncontradoException ex){
+            return NotFound(ex.Message);
+        }
+        catch(ArquivoNaoEncontradoException ex){
+            return NoContent();
         }
         catch (Exception ex)
         {
