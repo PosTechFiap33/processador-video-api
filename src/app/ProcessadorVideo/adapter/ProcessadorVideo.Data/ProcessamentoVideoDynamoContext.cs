@@ -1,23 +1,16 @@
-using System.Text;
 using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.Model;
 using Microsoft.Extensions.Options;
 using ProcessadorVideo.CrossCutting.Configurations;
 using ProcessadorVideo.CrossCutting.Factories;
-using ProcessadorVideo.Data.Mappings;
 using ProcessadorVideo.Domain.Adapters.Repositories;
-using ProcessadorVideo.Domain.DomainObjects;
-using ProcessadorVideo.Domain.Entities;
 
 namespace ProcessadorVideo.Data;
 
 public class ProcessamentoVideoDynamoContext : IUnitOfWork
 {
     public AmazonDynamoDBClient Client { get; private set; }
-    private readonly DynamoDBContext _context;
-
-    private readonly List<TransactWriteItem> _writeOperations;
+    public readonly List<TransactWriteItem> WriteOperations;
 
     public ProcessamentoVideoDynamoContext(IOptions<AWSConfiguration> configuration)
     {
@@ -30,24 +23,24 @@ public class ProcessamentoVideoDynamoContext : IUnitOfWork
 
         Client = new AmazonDynamoDBClient(config.CreateCredentials(awsConfiguration), config);
 
-        _writeOperations = new List<TransactWriteItem>();
+        WriteOperations = new List<TransactWriteItem>();
     }
 
     public async Task Commit()
     {
         try
         {
-            if (!_writeOperations.Any())
+            if (!WriteOperations.Any())
                 return;
 
             var transactRequest = new TransactWriteItemsRequest
             {
-                TransactItems = _writeOperations
+                TransactItems = WriteOperations
             };
 
             await Client.TransactWriteItemsAsync(transactRequest);
 
-            _writeOperations.Clear();
+            WriteOperations.Clear();
         }
         catch (Exception ex)
         {
@@ -56,58 +49,16 @@ public class ProcessamentoVideoDynamoContext : IUnitOfWork
         }
     }
 
-    public void Add<T>(IDynamoEntity<T> dynamoEntity, string tableName) where T : Entity, IAggregateRoot
+    public List<AttributeValue> MapToList<T>(IList<T> list, Func<T, AttributeValue> GetAttribute)
     {
-        _writeOperations.Add(new TransactWriteItem
-        {
-            Put = new Put
-            {
-                TableName = tableName,
-                Item = dynamoEntity.MapToDynamo()
-            }
-        });
-    }
+        if (list != null && list.Any())
+            return list.Select(GetAttribute).ToList();
 
-    public void Remove<T>(IDynamoEntity<T> dynamoEntity, string tableName) where T : Entity, IAggregateRoot
-    {
-        var key = new Dictionary<string, AttributeValue>
-        {
-            { nameof(dynamoEntity.Entity.Id), new AttributeValue { S = dynamoEntity.Entity.Id.ToString() } }
-        };
-
-        _writeOperations.Add(new TransactWriteItem
-        {
-            Delete = new Delete
-            {
-                TableName = tableName,
-                Key = key
-            }
-        });
-    }
-
-    public void Update<T>(IDynamoEntity<T> dynamoEntity, string tableName) where T : Entity, IAggregateRoot
-    {
-        var key = new Dictionary<string, AttributeValue>
-        {
-            { nameof(dynamoEntity.Entity.Id), new AttributeValue { S = dynamoEntity.Entity.Id.ToString() } }
-        };
-        
-         var updateItem = new TransactWriteItem
-        {
-            Update = new Update
-            {
-                TableName = tableName,
-                Key = key,
-                UpdateExpression = dynamoEntity.GetUpdateExpression(),
-                ExpressionAttributeNames = dynamoEntity.MapAttributesNames(),
-                ExpressionAttributeValues = dynamoEntity.MapExpressionAttributesValues()
-            }
-        };
-        _writeOperations.Add(updateItem);
+        return new List<AttributeValue>();
     }
 
     public void Dispose()
     {
-        _writeOperations.Clear();
+        WriteOperations.Clear();
     }
 }
