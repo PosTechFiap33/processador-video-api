@@ -17,7 +17,7 @@ public class ProcessarVideoMessagingWorker : MessagingWorker<ProcessarVideoMessa
     public ProcessarVideoMessagingWorker(ILogger<MessagingWorker<ProcessarVideoMessage>> logger,
                                          IServiceProvider serviceProvider,
                                          IOptions<AWSConfiguration> options)
-                                         : base(logger, serviceProvider, $"{options.Value.ConverterVideoParaImagemQueueUrl}")
+                                         : base(logger, serviceProvider, $"{options.Value.ConverterVideoParaImagemQueueUrl}", 120)
     {
         _awsConfiguration = options.Value;
     }

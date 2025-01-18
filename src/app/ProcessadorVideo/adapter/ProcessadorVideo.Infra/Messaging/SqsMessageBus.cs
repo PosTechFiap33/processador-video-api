@@ -54,7 +54,7 @@ public class SqsMessageBus : IMessageBus
         }
     }
 
-    public async Task<IEnumerable<MessageResult<T>>> ReceiveMessagesAsync<T>(string queueUrl, int maxMessages = 10, int waitTimeSeconds = 5)
+    public async Task<IEnumerable<MessageResult<T>>> ReceiveMessagesAsync<T>(string queueUrl, int maxMessages = 10, int waitTimeSeconds = 5, int visibilityTimeout = 20)
     {
         try
         {
@@ -65,6 +65,7 @@ public class SqsMessageBus : IMessageBus
                 QueueUrl = queueUrl,
                 MaxNumberOfMessages = maxMessages,
                 WaitTimeSeconds = waitTimeSeconds,
+                VisibilityTimeout = visibilityTimeout,
                 AttributeNames = new List<string> { "All" }, // Retorna todos os atributos da mensagem
                 MessageAttributeNames = new List<string> { "All" } // Retorna todos os atributos customizados da mensagem
             };

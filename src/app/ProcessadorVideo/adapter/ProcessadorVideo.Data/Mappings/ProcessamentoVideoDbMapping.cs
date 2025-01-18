@@ -1,3 +1,4 @@
+using System.Text;
 using Amazon.DynamoDBv2.Model;
 using ProcessadorVideo.Domain.Adapters.MessageBus.Messages;
 using ProcessadorVideo.Domain.Entities;
@@ -65,6 +66,44 @@ public class ProcessamentoVideoDbMapping : IDynamoEntity<ProcessamentoVideo>
             DateTime.Parse(attributes[nameof(ProcessamentoVideo.Data)].S),
             mensagens?.Select(m => m.S)?.ToList()
         );
+    }
+
+    public string GetUpdateExpression()
+    {
+        var updateExpression = new StringBuilder("SET ");
+        updateExpression.Append("#status = :status, ");
+        updateExpression.Append("#data = :data, ");
+        updateExpression.Append("#mensagens = :mensagens, ");
+        updateExpression.Append("#arquivoDownload = :arquivoDownload");
+        return updateExpression.ToString();
+    }
+
+    public Dictionary<string, string> MapAttributesNames()
+    {
+        return new Dictionary<string, string>
+        {
+            { "#status", "Status" },
+            { "#data", "Data" },
+            { "#mensagens", "Mensagens" },
+            { "#arquivoDownload", "ArquivoDownload" }
+        };        
+    }
+
+    public Dictionary<string, AttributeValue> MapExpressionAttributesValues()
+    {
+        var arquivoMapeamento = new Dictionary<string, AttributeValue>
+        {
+            { "Diretorio", new AttributeValue { S = Entity.ArquivoDownload.Diretorio ?? "" } },
+            { "Nome", new AttributeValue { S = Entity.ArquivoDownload.Nome ?? "" } }
+        };
+
+        return new Dictionary<string, AttributeValue>
+        {
+            { ":status", new AttributeValue { N = ((int)Entity.Status).ToString() } },
+            { ":data", new AttributeValue { S = Entity.Data.ToString() } },
+            { ":mensagens", new AttributeValue { L = MapToList(Entity.Mensagens, m => new AttributeValue { S = m }) } },
+            { ":arquivoDownload", new AttributeValue { M = arquivoMapeamento } }
+        };
     }
 }
 

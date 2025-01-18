@@ -18,6 +18,6 @@ public class MessageResult<T>
 public interface IMessageBus
 {
     Task PublishAsync<T>(T message, string topicOrQueue);
-    Task<IEnumerable<MessageResult<T>>> ReceiveMessagesAsync<T>(string topicOrQueue, int maxMessages = 10, int waitTimeSeconds = 5);
+    Task<IEnumerable<MessageResult<T>>> ReceiveMessagesAsync<T>(string topicOrQueue, int maxMessages = 10, int waitTimeSeconds = 5, int visibilityTimeout = 20);
     Task DeleteMessage(string topicOrQueue, string messageId);
 }

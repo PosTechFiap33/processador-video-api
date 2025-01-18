@@ -1,4 +1,6 @@
+using System.Text;
 using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.Model;
 using Microsoft.Extensions.Options;
 using ProcessadorVideo.CrossCutting.Configurations;
@@ -13,12 +15,12 @@ namespace ProcessadorVideo.Data;
 public class ProcessamentoVideoDynamoContext : IUnitOfWork
 {
     public AmazonDynamoDBClient Client { get; private set; }
+    private readonly DynamoDBContext _context;
+
     private readonly List<TransactWriteItem> _writeOperations;
-    // private readonly ILogger<PagamentoDynamoDbContext> _logger;
 
     public ProcessamentoVideoDynamoContext(IOptions<AWSConfiguration> configuration)
     {
-        // _logger = logger;
         var awsConfiguration = configuration.Value;
 
         var config = new AmazonDynamoDBConfig
@@ -31,22 +33,27 @@ public class ProcessamentoVideoDynamoContext : IUnitOfWork
         _writeOperations = new List<TransactWriteItem>();
     }
 
-    public async Task<bool> Commit()
+    public async Task Commit()
     {
-        if (!_writeOperations.Any())
-            return true;
-
-        var transactRequest = new TransactWriteItemsRequest
+        try
         {
-            TransactItems = _writeOperations
-        };
+            if (!_writeOperations.Any())
+                return;
 
-        var response = await Client.TransactWriteItemsAsync(transactRequest);
+            var transactRequest = new TransactWriteItemsRequest
+            {
+                TransactItems = _writeOperations
+            };
 
-        if (response.HttpStatusCode != System.Net.HttpStatusCode.OK)
-            return false;
+            await Client.TransactWriteItemsAsync(transactRequest);
 
-        return true;
+            _writeOperations.Clear();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao realizar commit: {ex.Message}");
+            throw;
+        }
     }
 
     public void Add<T>(IDynamoEntity<T> dynamoEntity, string tableName) where T : Entity, IAggregateRoot
@@ -59,6 +66,44 @@ public class ProcessamentoVideoDynamoContext : IUnitOfWork
                 Item = dynamoEntity.MapToDynamo()
             }
         });
+    }
+
+    public void Remove<T>(IDynamoEntity<T> dynamoEntity, string tableName) where T : Entity, IAggregateRoot
+    {
+        var key = new Dictionary<string, AttributeValue>
+        {
+            { nameof(dynamoEntity.Entity.Id), new AttributeValue { S = dynamoEntity.Entity.Id.ToString() } }
+        };
+
+        _writeOperations.Add(new TransactWriteItem
+        {
+            Delete = new Delete
+            {
+                TableName = tableName,
+                Key = key
+            }
+        });
+    }
+
+    public void Update<T>(IDynamoEntity<T> dynamoEntity, string tableName) where T : Entity, IAggregateRoot
+    {
+        var key = new Dictionary<string, AttributeValue>
+        {
+            { nameof(dynamoEntity.Entity.Id), new AttributeValue { S = dynamoEntity.Entity.Id.ToString() } }
+        };
+        
+         var updateItem = new TransactWriteItem
+        {
+            Update = new Update
+            {
+                TableName = tableName,
+                Key = key,
+                UpdateExpression = dynamoEntity.GetUpdateExpression(),
+                ExpressionAttributeNames = dynamoEntity.MapAttributesNames(),
+                ExpressionAttributeValues = dynamoEntity.MapExpressionAttributesValues()
+            }
+        };
+        _writeOperations.Add(updateItem);
     }
 
     public void Dispose()

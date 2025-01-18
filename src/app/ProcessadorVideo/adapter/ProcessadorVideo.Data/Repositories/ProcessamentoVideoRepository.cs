@@ -22,10 +22,11 @@ public class ProcessamentoVideoRepository : IProcessamentoVideoRepository
         _context.Add(new ProcessamentoVideoDbMapping(processamentoVideo), TABLE_NAME);
     }
 
-    public void Dispose()
+    public void Atualizar(ProcessamentoVideo processamento)
     {
-        _context.Dispose();
+        _context.Update(new ProcessamentoVideoDbMapping(processamento), TABLE_NAME);
     }
+
 
     public async Task<ProcessamentoVideo?> Consultar(Guid id)
     {
@@ -38,12 +39,36 @@ public class ProcessamentoVideoRepository : IProcessamentoVideoRepository
             }
         };
 
-        // Fazendo a consulta
         var response = await _context.Client.GetItemAsync(request);
 
         if (response.Item == null || !response.Item.Any())
             return null;
 
         return ProcessamentoVideoDbMappingFactory.MapToEntity(response.Item);
+    }
+
+    public async Task<IEnumerable<ProcessamentoVideo>> ListarPorUsuario(Guid usuarioId)
+    {
+        var request = new QueryRequest
+        {
+            TableName = TABLE_NAME,
+            KeyConditionExpression = "UsuarioId = :usuarioId",
+            ExpressionAttributeValues = new Dictionary<string, AttributeValue>
+            {
+                { ":usuarioId", new AttributeValue { S = usuarioId.ToString() } }
+            }
+        };
+
+        var response = await _context.Client.QueryAsync(request);
+
+        if (response.Items == null || !response.Items.Any())
+            return Enumerable.Empty<ProcessamentoVideo>();
+
+        return response.Items.Select(ProcessamentoVideoDbMappingFactory.MapToEntity);
+    }
+
+    public void Dispose()
+    {
+        _context.Dispose();
     }
 }

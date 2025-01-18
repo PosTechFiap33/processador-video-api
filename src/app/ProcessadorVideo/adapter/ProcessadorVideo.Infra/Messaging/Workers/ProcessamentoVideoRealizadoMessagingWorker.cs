@@ -12,7 +12,8 @@ public class ProcessamentoVideoRealizadoMessagingWorker : MessagingWorker<Proces
     public ProcessamentoVideoRealizadoMessagingWorker(ILogger<MessagingWorker<ProcessamentoVideoRealizadoMessage>> logger,
                                                       IServiceProvider serviceProvider,
                                                       IOptions<AWSConfiguration> options)
-                                                      : base(logger, serviceProvider, $"{options.Value.ConversaoVideoParaImagemRealizadaQueueUrl}")
+                                                      : base(logger, serviceProvider, $"{options.Value.ConversaoVideoParaImagemRealizadaQueueUrl}", 
+                                                      20)
     {
     }
 
@@ -26,7 +27,9 @@ public class ProcessamentoVideoRealizadoMessagingWorker : MessagingWorker<Proces
 
             processamento.Finalizar(message.Zip);
 
-            await repository.UnitOfWork.Commit();
+            repository.Atualizar(processamento);
+
+           await repository.UnitOfWork.Commit();
         }
         catch (Exception ex)
         {

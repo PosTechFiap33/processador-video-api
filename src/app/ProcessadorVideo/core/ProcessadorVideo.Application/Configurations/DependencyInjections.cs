@@ -8,6 +8,7 @@ public static class DependencyInjections
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddScoped<IConverterVideoParaImagemUseCase, ConverterVideoParaImagemUseCase>();
+        services.AddScoped<IListarProcessamentoUseCase, ListarProcessamentoUseCase>();
         return services;
     }
 }
