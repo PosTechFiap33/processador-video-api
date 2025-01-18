@@ -30,36 +30,37 @@ public class ProcessamentoVideoRepository : IProcessamentoVideoRepository
 
     public async Task<ProcessamentoVideo?> Consultar(Guid id)
     {
-        var request = new GetItemRequest
+        var request = new QueryRequest
         {
             TableName = TABLE_NAME,
-            Key = new Dictionary<string, AttributeValue>
+            KeyConditionExpression = "Id = :id",
+            ExpressionAttributeValues = new Dictionary<string, AttributeValue>
             {
-                { nameof(ProcessamentoVideo.Id), new AttributeValue { S = id.ToString() } }
+                { ":id", new AttributeValue { S = id.ToString() } }
             }
         };
 
-        var response = await _context.Client.GetItemAsync(request);
+        var response = await _context.Client.QueryAsync(request);
 
-        if (response.Item == null || !response.Item.Any())
+        if (response.Items == null || !response.Items.Any())
             return null;
 
-        return ProcessamentoVideoDbMappingFactory.MapToEntity(response.Item);
+        return ProcessamentoVideoDbMappingFactory.MapToEntity(response.Items.FirstOrDefault());
     }
 
     public async Task<IEnumerable<ProcessamentoVideo>> ListarPorUsuario(Guid usuarioId)
     {
-        var request = new QueryRequest
+        var request = new ScanRequest
         {
             TableName = TABLE_NAME,
-            KeyConditionExpression = "UsuarioId = :usuarioId",
+            FilterExpression = "UsuarioId = :usuarioId",
             ExpressionAttributeValues = new Dictionary<string, AttributeValue>
             {
                 { ":usuarioId", new AttributeValue { S = usuarioId.ToString() } }
             }
         };
 
-        var response = await _context.Client.QueryAsync(request);
+        var response = await _context.Client.ScanAsync(request);
 
         if (response.Items == null || !response.Items.Any())
             return Enumerable.Empty<ProcessamentoVideo>();
