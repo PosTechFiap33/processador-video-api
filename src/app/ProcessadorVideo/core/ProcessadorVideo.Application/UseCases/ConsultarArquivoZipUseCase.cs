@@ -1,7 +1,6 @@
 using ProcessadorVideo.Application.DTOs;
 using ProcessadorVideo.Domain.Adapters.Repositories;
 using ProcessadorVideo.Domain.Adapters.Services;
-using ProcessadorVideo.Domain.DomainObjects;
 using ProcessadorVideo.Domain.DomainObjects.Exceptions;
 
 namespace ProcessadorVideo.Application.UseCases;
@@ -30,7 +29,7 @@ public class ConsultarArquivoZipUseCase : IConsultarArquivoZipUseCase
         if(processamento is null)
             throw new ProcessamentoNaoEncontradoException($"Não foi encontrado um processamento com id {processamentoId}");
 
-        if (processamento.ArquivoDownload is null)
+        if (processamento.VerificarDownloadDisponivel() is false)
             throw new ArquivoNaoEncontradoException($"Não foi encontrado um arquivo para o processamento {processamentoId}!");
 
         var arquivoDownload = processamento.ArquivoDownload;

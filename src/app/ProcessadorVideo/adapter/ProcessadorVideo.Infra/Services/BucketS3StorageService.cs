@@ -72,7 +72,6 @@ public class BucketS3StorageService : IFileStorageService
     {
         var client = CriarClient();
 
-        // await CriarBucket(client, path);
         var stream = new MemoryStream(fileBytes);
 
         try
@@ -82,7 +81,13 @@ public class BucketS3StorageService : IFileStorageService
                 BucketName = path,
                 Key = fileName,
                 InputStream = stream,
-                ContentType = contentType
+                ContentType = contentType,
+                TagSet = new List<Tag> {
+                    new Tag {
+                        Key = "ExpirationDate",
+                        Value = DateTime.UtcNow.AddDays(3).ToString("yyyy-MM-ddTHH:mm:ssZ")
+                    }
+                }
             };
 
             await client.PutObjectAsync(request);
@@ -92,25 +97,6 @@ public class BucketS3StorageService : IFileStorageService
             Console.WriteLine($"Erro ao enviar arquivo: {ex.Message}");
         }
     }
-
-    // private async Task CriarBucket(IAmazonS3 s3Client, string bucketName)
-    // {
-    //     try
-    //     {
-    //         var request = new PutBucketRequest
-    //         {
-    //             BucketName = bucketName
-    //         };
-
-    //         await s3Client.PutBucketAsync(request);
-    //         Console.WriteLine($"Bucket {bucketName} criado com sucesso.");
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         Console.WriteLine($"Erro ao criar o bucket: {ex.Message}");
-    //         throw ex;
-    //     }
-    // }
 
     private AmazonS3Client CriarClient()
     {

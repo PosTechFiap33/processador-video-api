@@ -19,10 +19,10 @@ public class ProcessamentoVideo : Entity, IAggregateRoot
     public IList<string> Mensagens { get; private set; }
 
     public ProcessamentoVideo(Guid id,
-                              Guid usuarioId, 
-                              Arquivo arquivoDownload, 
-                              StatusProcessamento status, 
-                              DateTime data, 
+                              Guid usuarioId,
+                              Arquivo arquivoDownload,
+                              StatusProcessamento status,
+                              DateTime data,
                               IList<string> mensagens)
     {
         Id = id;
@@ -53,6 +53,13 @@ public class ProcessamentoVideo : Entity, IAggregateRoot
     {
         AtualizarStatus(StatusProcessamento.Erro);
         Mensagens.Add($"Ocorreu um erro ao processar os vídeos: {erro}.");
+    }
+
+    public bool VerificarDownloadDisponivel()
+    {
+        return ArquivoDownload != null &&
+               !string.IsNullOrEmpty(ArquivoDownload.Diretorio) &&
+               !string.IsNullOrEmpty(ArquivoDownload.Nome);
     }
 
     private void AtualizarStatus(StatusProcessamento status)
