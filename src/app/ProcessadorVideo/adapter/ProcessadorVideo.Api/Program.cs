@@ -13,13 +13,12 @@ builder.Services.AddSwaggerGen(options =>
     options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
     {
         Version = "v1",
-        Title = "Minha API",
-        Description = "Exemplo de integração com Swagger em ASP.NET Core",
+        Title = "Api processamento de vídeos",
+        Description = "Api que realiza a conversão de vídeo para imagens",
         Contact = new Microsoft.OpenApi.Models.OpenApiContact
         {
-            Name = "Seu Nome",
-            Email = "seuemail@exemplo.com",
-            Url = new Uri("https://seusite.com")
+            Name = "Flávio Roberto Teixeira",
+            Email = "flavio.r.teixeira@outlook.com",
         }
     });
 });

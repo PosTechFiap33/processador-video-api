@@ -8,7 +8,7 @@ namespace FiAPProcessaVideo.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class VideoController : ControllerBase
+public class ProcessamentoVideoController : ControllerBase
 {
     [HttpPost]
     [RequestSizeLimit(900_000_000)] // Limite de 900 MB
