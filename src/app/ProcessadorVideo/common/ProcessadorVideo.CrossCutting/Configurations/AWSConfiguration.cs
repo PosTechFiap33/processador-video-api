@@ -22,7 +22,7 @@ public class AWSConfiguration
         AccessKey = GetEnvironmentVariableOrDefault("AWS_ACCESS_KEY", AccessKey);
         SecretKey = GetEnvironmentVariableOrDefault("AWS_SECRET_KEY", SecretKey);
         ServiceUrl = GetEnvironmentVariableOrDefault("AWS_SERVICE_URL", ServiceUrl);
-        AwsQueueUrl = GetEnvironmentVariableOrDefault("AWS_CONVERTER_VIDEO_IMAGEM_QUEUE", AwsQueueUrl);
+        AwsQueueUrl = GetEnvironmentVariableOrDefault("AWS_QUEUE", AwsQueueUrl);
     }
     
 

@@ -53,6 +53,7 @@ public abstract class MessagingWorker<T> : BackgroundService
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"queue: {_queueUrl} - Erro ao processar mensagens da fila. {ex.Message}");
                 _logger.LogError(ex, "Erro ao processar mensagens da fila.");
             }
 

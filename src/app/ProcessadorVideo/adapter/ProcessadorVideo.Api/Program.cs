@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Http.Features;
 using ProcessadorVideo.Infra.Configurations;
 using ProcessadorVideo.Application.Configurations;
 using ProcessadorVideo.Data.Configurations;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,23 +35,29 @@ builder.Services.AddInfra(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddDataConfiguration(builder.Configuration);
 
+builder.Services.AddHealthChecks()
+                .AddCheck("self", () => HealthCheckResult.Healthy());
+
 var app = builder.Build();
 
 // Configura o pipeline de requisição HTTP
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(options =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Minha API v1");
-        options.RoutePrefix = "swagger"; // Swagger será acessível em /swagger
-    });
-}
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Minha API v1");
+    options.RoutePrefix = "swagger"; // Swagger será acessível em /swagger
+});
 
 app.UseHttpsRedirection();
 
 app.UseStaticFiles(); // Adiciona suporte para arquivos estáticos
 
-app.MapControllers();
+app.UseRouting();
+
+app.UseEndpoints(endpoints =>
+       {
+           endpoints.MapControllers();
+           endpoints.MapHealthChecks("/health");
+       });
 
 app.Run();
