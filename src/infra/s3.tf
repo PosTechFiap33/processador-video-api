@@ -12,21 +12,6 @@ resource "aws_s3_bucket" "bucket" {
     Environment = "Production"
   }
 
-  # Definindo políticas de bloqueio de acesso público
-  acl                    = "private"
-  block_public_acls      = true
-  block_public_policy    = true
-  ignore_public_acls     = true
-  restrict_public_buckets = true
-
-  # Configuração CORS (permite compartilhamento de recursos)
-  cors_rule {
-    allowed_headers = ["*"]
-    allowed_methods = ["GET", "POST"]
-    allowed_origins = ["*"]
-    expose_headers  = ["x-amz-request-id"]
-  }
-
   # Política do Bucket (Permite acesso público apenas para leitura e gravação nos objetos do bucket)
   policy = <<POLICY
 {
@@ -43,4 +28,22 @@ resource "aws_s3_bucket" "bucket" {
   ]
 }
 POLICY
+
+  # Configuração CORS (permite compartilhamento de recursos)
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["GET", "POST"]
+    allowed_origins = ["*"]
+    expose_headers  = ["x-amz-request-id"]
+  }
+}
+
+# Configuração de bloqueio de acesso público para o bucket S3
+resource "aws_s3_bucket_public_access_block" "block_public_access" {
+  bucket = aws_s3_bucket.bucket.id
+
+  block_public_acls      = true
+  block_public_policy    = true
+  ignore_public_acls     = true
+  restrict_public_buckets = true
 }

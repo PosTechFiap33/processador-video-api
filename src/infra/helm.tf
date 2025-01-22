@@ -8,21 +8,22 @@ resource "helm_release" "processador_video" {
 
   set {
     name  = "aws.accesKey"
-    value = var.AWS_ACCESS_KEY
+    value = var.AWS_ACCESS_KEY_ID
   }
 
   set {
     name  = "aws.secretKey"
-    value = var.AWS_SECRET_KEY
+    value = var.AWS_SECRET_ACCESS_KEY
   }
 
   set {
-    name  = "api.configmap.database.value"
-    value = var.DB_CONNECTION
+    name  = "aws.sessionToken"   # Passando o session token
+    value = var.AWS_SESSION_TOKEN
   }
 
   set {
     name  = "forceUpdate"
     value = "${timestamp()}"
   }
+  
 }

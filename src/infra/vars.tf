@@ -30,12 +30,21 @@ variable "policyArn" {
   default = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
 }
 
-variable "AWS_ACCESS_KEY" {}
+variable "AWS_ACCESS_KEY_ID" {
+  description = "AWS Access Key ID"
+  type        = string
+  default     = "your-access-key-id"  # Valor padrão (não recomendado para credenciais sensíveis)
+}
 
-variable "AWS_SECRET_KEY" {}
+variable "AWS_SECRET_ACCESS_KEY" {
+  description = "AWS Secret Access Key"
+  type        = string
+  default     = "your-secret-access-key"  # Valor padrão (não recomendado para credenciais sensíveis)
+}
 
-variable "k8s_host" {}
+variable "AWS_SESSION_TOKEN" {
+  description = "AWS Session Token"
+  type        = string
+  default     = "your-session-token"  # Valor padrão (não recomendado para credenciais sensíveis)
+}
 
-variable "k8s_ca_cert" {}
-
-variable "k8s_token" {}

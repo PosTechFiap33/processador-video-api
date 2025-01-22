@@ -13,3 +13,13 @@ data "aws_subnet" "subnet" {
   for_each = toset(data.aws_subnets.subnets.ids)
   id       = each.value
 }
+
+# Obter o endpoint e o CA cert do cluster EKS
+data "aws_eks_cluster" "eks_cluster" {
+  name = aws_eks_cluster.eks-cluster.name
+}
+
+# Obter o token de autenticação do Kubernetes
+data "aws_eks_cluster_auth" "eks_cluster_auth" {
+  name = aws_eks_cluster.eks-cluster.name
+}
