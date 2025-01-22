@@ -12,13 +12,13 @@ resource "aws_s3_bucket" "bucket" {
     Environment = "Production"
   }
 
-  # Política do Bucket (Permite acesso público apenas para leitura e gravação nos objetos do bucket)
-  policy = <<POLICY
+policy = <<POLICY
 {
   "Version": "2012-10-17",
   "Statement": [
     {
       "Effect": "Allow",
+      "Principal": "*",  
       "Action": [
         "s3:GetObject",
         "s3:PutObject"
@@ -28,7 +28,6 @@ resource "aws_s3_bucket" "bucket" {
   ]
 }
 POLICY
-
   # Configuração CORS (permite compartilhamento de recursos)
   cors_rule {
     allowed_headers = ["*"]
