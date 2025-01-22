@@ -40,8 +40,8 @@ jobs:
         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
     - name: Build Docker image
-      run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPONAME }}:dev .
+      run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/processamento-video.api:latest .
       working-directory: src/app/ProcessadorVideo # Path to your Dockerfile
 
     - name: Push Docker image to Docker Hub
-      run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPONAME }}:dev
+      run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/processamento-video.api:latest

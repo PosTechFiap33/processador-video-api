@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
     name: localstack
-    labels:
-        app: localstack
 spec:
     replicas: 1
     selector:
@@ -18,17 +16,19 @@ spec:
               - name: localstack
                 image: localstack/localstack:latest
                 ports:
-                  - containerPort: 4566 # Porta que o LocalStack escuta
-                  - containerPort: 4510 # Porta para Lambda (se necessário)
-                  - containerPort: 4511 # Porta para outros serviços Lambda (se necessário)
-                env:
-                  - name: DOCKER_HOST
-                    value: "unix:///var/run/docker.sock"
+                  - containerPort: 4566
+                resources:
+                    requests:
+                        memory: "1Gi"
+                        cpu: "500m"
+                    limits:
+                        memory: "2Gi"
+                        cpu: "1"
                 volumeMounts:
-                  - name: docker-socket
-                    mountPath: /var/run/docker.sock
+                  - name: localstack-data
+                    mountPath: /tmp/localstack-new-data # Diretório dentro do contêiner onde o volume será montado
             volumes:
-              - name: docker-socket
+              - name: localstack-data
                 hostPath:
-                    path: /var/run/docker.sock
-                    type: Socket
+                    path: /Users/flaviorobertoteixeira/Desktop/Desenvolvimento/PosTech/Hackaton/processador-video-api/src/infra/localstack-volume # Caminho no nó do Kubernetes
+                    type: DirectoryOrCreate # Cria o diretório caso não exista

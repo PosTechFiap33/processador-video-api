@@ -10,7 +10,7 @@ aws:
 
 deployment:
   name: api-deployment
-  image: kenobirt/processamento-video.api:latest
+  image: kenobirt/processamento-video.api:local
   replicas: 1
 
 configmap:
@@ -19,14 +19,14 @@ configmap:
 hpa:
   name: api-hpa
   minReplicas: 1
-  maxReplicas: 5
-  cpuAverageUtilization: 50
-  memoryAverageUtilization: 50
+  maxReplicas: 2
+  cpuAverageUtilization: 60
+  memoryAverageUtilization: 60
 
 service:
   name: api-svc
   http:
-    targetPort: 80
+    targetPort: 8080
     nodePort: 32000
   https:
     targetPort: 443

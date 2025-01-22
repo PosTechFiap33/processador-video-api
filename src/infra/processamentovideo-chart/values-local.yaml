@@ -19,7 +19,7 @@ configmap:
 hpa:
   name: api-hpa
   minReplicas: 1
-  maxReplicas: 1
+  maxReplicas: 2
   cpuAverageUtilization: 60
   memoryAverageUtilization: 60
 

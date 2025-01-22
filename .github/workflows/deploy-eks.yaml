@@ -7,7 +7,7 @@ on:
 
 env:
   REGION_DEFAULT: "us-east-1"
-  CLUSTER_NAME: "controle-pedido-cluster"
+  CLUSTER_NAME: "processador-video-cluster"
 
 jobs:
   deploy:
@@ -35,7 +35,7 @@ jobs:
 
     - name: Deploy with Helm
       run: |
-        helm upgrade --install controle-pedido ./infra/processamentovideo-chart -f ./infra/values-production.yaml \
+        helm upgrade --install processador-video ./infra/processamentovideo-chart -f ./infra/values-production.yaml \
           --set aws.accesKey="${{ secrets.AWS_ACCESS_KEY }}"
           --set aws.secretKey="${{ secrets.AWS_SECRET_KEY }}"
           --set api.configmap.database.value="${{ secrets.DB_CONNECTION }}" \
