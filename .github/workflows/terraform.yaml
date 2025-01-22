@@ -38,20 +38,20 @@ jobs:
     - name: Terraform Init
       id: init
       run: terraform init -input=false
-      working-directory: ./infra
+      working-directory: ./src/infra
 
     - name: Terraform Validate
       id: validate
       run: terraform validate -no-color
-      working-directory: ./infra
+      working-directory: ./src/infra
 
     - name: Terraform Plan
       id: plan
       run: terraform plan -out=tfplan -no-color -input=false
       continue-on-error: false
-      working-directory: ./infra
+      working-directory: ./src/infra
 
     - name: Terraform Apply
       id: apply
       run: terraform apply -input=false -auto-approve
-      working-directory: ./infra
+      working-directory: ./src/infra
