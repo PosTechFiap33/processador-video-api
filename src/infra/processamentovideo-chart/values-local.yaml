@@ -28,6 +28,3 @@ service:
   http:
     targetPort: 8080
     nodePort: 32000
-  https:
-    targetPort: 443
-    nodePort: 32001

@@ -2,8 +2,6 @@
 FROM --platform=linux/amd64 mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 8080
-EXPOSE 443
-EXPOSE 5001
 
 # Atualizar pacotes e instalar FFmpeg
 RUN apt-get update && \

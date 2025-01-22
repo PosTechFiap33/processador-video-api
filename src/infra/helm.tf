@@ -1,10 +1,17 @@
 resource "helm_release" "processador_video" {
   name       = "processador-video"
-  namespace  = "default"  # Ou substitua pelo seu namespace
-  chart      = "./infra/processamentovideo-chart"
-  values     = [
-    "./infra/values-production.yaml"
-  ]
+  namespace  = "default"  
+  chart      = "./processamentovideo-chart"
+
+  set{
+    name = "environment"
+    value = "prod"
+  }     
+
+  set{
+    name = "aws.region"
+    value = var.region
+  }  
 
   set{
     name = "aws.QueueUrl"

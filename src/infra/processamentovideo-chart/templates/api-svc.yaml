@@ -13,11 +13,4 @@ spec:
       {{- if eq .Values.environment "local" }}
       nodePort: {{ .Values.service.http.nodePort }}
       {{- end }}     
-    - name: https           # Nome da porta para referência interna (HTTPS)
-      protocol: TCP
-      port: {{.Values.service.https.targetPort}}              # Porta externa do serviço Kubernetes
-      targetPort: {{.Values.service.https.targetPort}}        # Porta no pod onde a sua aplicação está escutando
-      {{- if eq .Values.environment "local" }}
-      nodePort: {{ .Values.service.https.nodePort }}
-      {{- end }}  
   type: {{ if eq .Values.environment "local" }} NodePort {{ else }} LoadBalancer {{ end }}
