@@ -1,0 +1,33 @@
+environment: local
+
+aws:
+  key: AwsIntegration
+  region: "us-east-1"
+  accesKey: ""
+  secretKey: ""
+  serviceUrl: ""
+  QueueUrl: ""
+
+deployment:
+  name: api-deployment
+  image: kenobirt/processamento-video.api:dev
+  replicas: 1
+
+configmap:
+  name: api-configmap
+
+hpa:
+  name: api-hpa
+  minReplicas: 1
+  maxReplicas: 5
+  cpuAverageUtilization: 50
+  memoryAverageUtilization: 50
+
+service:
+  name: api-svc
+  http:
+    targetPort: 80
+    nodePort: 32000
+  https:
+    targetPort: 443
+    nodePort: 32001

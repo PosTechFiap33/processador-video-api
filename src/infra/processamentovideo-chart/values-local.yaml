@@ -1,0 +1,33 @@
+environment: local
+
+aws:
+  key: AwsIntegration
+  region: "us-east-1"
+  accesKey: "test"
+  secretKey: "test"
+  serviceUrl: "http://localstack:4566"
+  QueueUrl: "http://localstack.default.svc.cluster.local:4566/000000000000"
+
+deployment:
+  name: api-deployment
+  image: kenobirt/processamento-video.api:local
+  replicas: 1
+
+configmap:
+  name: api-configmap
+
+hpa:
+  name: api-hpa
+  minReplicas: 1
+  maxReplicas: 2
+  cpuAverageUtilization: 60
+  memoryAverageUtilization: 60
+
+service:
+  name: api-svc
+  http:
+    targetPort: 8080
+    nodePort: 32000
+  https:
+    targetPort: 443
+    nodePort: 32001
