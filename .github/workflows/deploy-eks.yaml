@@ -48,33 +48,79 @@ jobs:
     - name: Push Docker image to Docker Hub
       run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/processamento-video.api:latest
 
-  deploy:
-    name: Deploy AWS
+  deploy-terraform:
+    name: terraform
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v2
 
-    - name: AWS Configure
-      uses: aws-actions/configure-aws-credentials@v4
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ID }}
         aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
         aws-region: ${{ env.REGION_DEFAULT }}
 
-    - name: Update Kube Config
-      run: aws eks update-kubeconfig --name ${{ env.CLUSTER_NAME }} --region ${{ env.REGION_DEFAULT }}
+    - name: Terraform Setup
+      uses: hashicorp/setup-terraform@v3
+      with:
+        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-    - name: Install Helm
-      run: |
-        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
-        helm version --short  # Verificar versão do Helm instalada
+    - name: Terraform Format
+      id: fmt
+      run: terraform fmt -check
+      continue-on-error: true
 
-    - name: Deploy with Helm
-      run: |
-        helm upgrade --install processador-video ./infra/processamentovideo-chart -f ./infra/values-production.yaml \
-          --set aws.accesKey="${{ secrets.AWS_ACCESS_KEY }}"
-          --set aws.secretKey="${{ secrets.AWS_SECRET_KEY }}"
-          --set api.configmap.database.value="${{ secrets.DB_CONNECTION }}" \
-          --set "forceUpdate=$(date +%s)"
+    - name: Terraform Init
+      id: init
+      run: terraform init -input=false
+      working-directory: ./src/infra
+
+    - name: Terraform Validate
+      id: validate
+      run: terraform validate -no-color
+      working-directory: ./src/infra
+
+    - name: Terraform Plan
+      id: plan
+      run: terraform plan -out=tfplan -no-color -input=false
+      continue-on-error: false
+      working-directory: ./src/infra
+
+    - name: Terraform Apply
+      id: apply
+      run: terraform apply -input=false -auto-approve
+      working-directory: ./src/infra
+  # deploy:
+  #   name: Deploy AWS
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Checkout
+  #     uses: actions/checkout@v4
+
+  #   - name: AWS Configure
+  #     uses: aws-actions/configure-aws-credentials@v4
+  #     with:
+  #       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #       aws-secret-access-key: ${{ secrets.AWS_SECRET_ID }}
+  #       aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+  #       aws-region: ${{ env.REGION_DEFAULT }}
+
+  #   - name: Update Kube Config
+  #     run: aws eks update-kubeconfig --name ${{ env.CLUSTER_NAME }} --region ${{ env.REGION_DEFAULT }}
+
+  #   - name: Install Helm
+  #     run: |
+  #       curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+  #       helm version --short  # Verificar versão do Helm instalada
+
+  #   - name: Deploy with Helm
+  #     run: |
+  #       helm upgrade --install processador-video ./infra/processamentovideo-chart -f ./infra/values-production.yaml \
+  #         --set aws.accesKey="${{ secrets.AWS_ACCESS_KEY }}"
+  #         --set aws.secretKey="${{ secrets.AWS_SECRET_KEY }}"
+  #         --set api.configmap.database.value="${{ secrets.DB_CONNECTION }}" \
+  #         --set "forceUpdate=$(date +%s)"

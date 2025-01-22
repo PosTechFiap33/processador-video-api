@@ -6,6 +6,11 @@ resource "helm_release" "processador_video" {
     "./infra/values-production.yaml"
   ]
 
+  set{
+    name = "aws.QueueUrl"
+    value = "https://sqs.${var.region}.amazonaws.com/${data.aws_caller_identity.current.account_id}"
+  }
+
   set {
     name  = "aws.accesKey"
     value = var.AWS_ACCESS_KEY_ID

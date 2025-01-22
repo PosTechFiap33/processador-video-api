@@ -5,7 +5,6 @@ aws:
   region: "us-east-1"
   accesKey: ""
   secretKey: ""
-  serviceUrl: ""
   QueueUrl: ""
 
 deployment:

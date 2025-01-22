@@ -23,3 +23,9 @@ data "aws_eks_cluster" "eks_cluster" {
 data "aws_eks_cluster_auth" "eks_cluster_auth" {
   name = aws_eks_cluster.eks-cluster.name
 }
+
+data "aws_caller_identity" "current" {}
+
+output "aws_account_id" {
+  value = data.aws_caller_identity.current.account_id
+}
