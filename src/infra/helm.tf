@@ -1,5 +1,5 @@
 resource "helm_release" "processador_video" {
-  name       = "processador-video"
+  name       = var.projectName
   namespace  = "default"  
   chart      = "./processamentovideo-chart"
 
@@ -37,5 +37,9 @@ resource "helm_release" "processador_video" {
     name  = "forceUpdate"
     value = "${timestamp()}"
   }
+
+  depends_on = [
+    aws_eks_cluster.eks-cluster 
+  ]
   
 }
