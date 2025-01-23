@@ -39,6 +39,9 @@ resource "helm_release" "processador_video" {
   }
 
   depends_on = [
+    aws_eks_node_group.eks-node,
+    aws_eks_access_entry.eks-access-entry,
+    aws_eks_access_policy_association.eks-access-policy,
     aws_eks_cluster.eks-cluster 
   ]
   
