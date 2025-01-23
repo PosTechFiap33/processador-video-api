@@ -17,11 +17,11 @@ spec:
       - name: {{ .Values.deployment.name }}
         image: "{{ .Values.deployment.image }}"
         ports:
-          - containerPort: 8080   # Porta HTTP dentro do contêiner
+          - containerPort: 80   # Porta HTTP dentro do contêiner
         livenessProbe:
           httpGet:
             path: /health
-            port: 8080
+            port: 80
           initialDelaySeconds: 30  
           periodSeconds: 10        
           timeoutSeconds: 5        
@@ -29,7 +29,7 @@ spec:
         readinessProbe:
           httpGet:
             path: /health
-            port: 8080
+            port: 80
           initialDelaySeconds: 10  
           periodSeconds: 10        # Verifica a cada 10 segundos
           timeoutSeconds: 5        # Tempo limite de 5 segundos para a resposta
