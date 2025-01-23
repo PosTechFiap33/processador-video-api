@@ -1,5 +1,5 @@
 resource "aws_dynamodb_table" "processamento_video_table" {
-  name           = "ProcessamentoVideos"   # Nome da tabela
+  name           = var.DynamoTableName  # Nome da tabela
   billing_mode   = "PROVISIONED"           # Pode ser "PROVISIONED" ou "PAY_PER_REQUEST"
   hash_key       = "Id"                    # Chave primária
   range_key      = "SortKey"               # Chave de ordenação (opcional)

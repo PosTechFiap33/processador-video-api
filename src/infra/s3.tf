@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "bucket" {
-  bucket = "postech33-processamento-videos"  # Nome único do bucket
+  bucket = var.BucketName  # Nome único do bucket
 
   # Habilitando versionamento
   versioning {

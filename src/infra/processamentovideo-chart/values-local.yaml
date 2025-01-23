@@ -28,3 +28,8 @@ service:
   http:
     targetPort: 80
     nodePort: 32000
+
+serviceAccount:
+  create: false
+  name: api-service-account
+  roleArn: ""
