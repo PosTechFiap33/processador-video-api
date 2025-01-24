@@ -3,8 +3,6 @@ environment: local
 aws:
   key: AwsIntegration
   region: "us-east-1"
-  accesKey: "test"
-  secretKey: "test"
   serviceUrl: "http://localstack:4566"
   QueueUrl: "http://localstack.default.svc.cluster.local:4566/000000000000"
 
