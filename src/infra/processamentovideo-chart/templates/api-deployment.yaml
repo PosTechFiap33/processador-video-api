@@ -69,14 +69,18 @@ spec:
                 name: {{ .Values.configmap.name }}
                 key: AWS_QUEUE
 
+          {{- if .Values.configmap.AWS_ACCESS_KEY }}
+          - name: AWS_ACCESS_KEY
+            valueFrom:
+             configMapKeyRef:
+                 name: {{ .Values.configmap.name }}
+                 key: AWS_ACCESS_KEY
+          {{- end }}
+            
+          {{- if .Values.configmap.AWS_SECRET_KEY }}
           - name: AWS_SECRET_KEY
             valueFrom:
               configMapKeyRef:
-                name: {{.Values.configmap.name}} 
-                key: AWS_SECRET_KEY
-
-          - name: AWS_ACCESS_KEY
-            valueFrom:
-              configMapKeyRef:
-                name: {{.Values.configmap.name}} 
-                key: AWS_ACCESS_KEY
+                  name: {{ .Values.configmap.name }}
+                  key: AWS_SECRET_KEY
+           {{- end }}
