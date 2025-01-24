@@ -2,7 +2,6 @@ using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 using Microsoft.Extensions.Options;
 using ProcessadorVideo.CrossCutting.Configurations;
-using ProcessadorVideo.CrossCutting.Factories;
 using ProcessadorVideo.Domain.Adapters.Repositories;
 
 namespace ProcessadorVideo.Data;
@@ -21,7 +20,7 @@ public class ProcessamentoVideoDynamoContext : IUnitOfWork
             RegionEndpoint = Amazon.RegionEndpoint.GetBySystemName(awsConfiguration.Region),
         };
 
-        Client = new AmazonDynamoDBClient(config.CreateCredentials(awsConfiguration), config);
+        Client = new AmazonDynamoDBClient(config);
 
         WriteOperations = new List<TransactWriteItem>();
     }

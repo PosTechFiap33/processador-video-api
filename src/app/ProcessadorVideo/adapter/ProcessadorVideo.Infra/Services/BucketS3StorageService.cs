@@ -2,7 +2,6 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.Extensions.Options;
 using ProcessadorVideo.CrossCutting.Configurations;
-using ProcessadorVideo.CrossCutting.Factories;
 using ProcessadorVideo.Domain.Adapters.Services;
 
 namespace ProcessadorVideo.Infra.Services;
@@ -108,6 +107,6 @@ public class BucketS3StorageService : IFileStorageService
         if (!string.IsNullOrEmpty(_configuration.ServiceUrl))
             config.ServiceURL = _configuration.ServiceUrl;
 
-        return new AmazonS3Client(config.CreateCredentials(_configuration), config);
+        return new AmazonS3Client(config);
     }
 }

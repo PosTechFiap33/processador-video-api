@@ -4,7 +4,6 @@ using Amazon.SQS;
 using Amazon.SQS.Model;
 using Microsoft.Extensions.Options;
 using ProcessadorVideo.CrossCutting.Configurations;
-using ProcessadorVideo.CrossCutting.Factories;
 using ProcessadorVideo.Domain.Adapters.MessageBus;
 using ProcessadorVideo.Domain.DomainObjects;
 
@@ -95,7 +94,7 @@ public class SqsMessageBus : IMessageBus
         if (!string.IsNullOrEmpty(_configuration.ServiceUrl))
             config.ServiceURL = _configuration.ServiceUrl;
 
-        return new AmazonSQSClient(config.CreateCredentials(_configuration), config);
+        return new AmazonSQSClient(config);
     }
 }
 
