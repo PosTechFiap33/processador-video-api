@@ -19,8 +19,13 @@ resource "helm_release" "processador_video" {
   }
 
   set {
-    name  = "serviceAccount.roleArn"
+    name  = "serviceAccount.labRole"
     value = var.labRole
+  }
+
+  set {
+    name  = "serviceAccount.principalRole"
+    value = var.principalArn
   }
 
   set {
@@ -46,7 +51,7 @@ resource "helm_release" "processador_video" {
 
   set {
     name  = "fluentbit.cloudWatch.logGroupName"
-    value = "your-log-group"  # Nome do Log Group do CloudWatch
+    value = "processamento-video-api"  # Nome do Log Group do CloudWatch
   }
 
   set {
