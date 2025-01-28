@@ -1,12 +1,8 @@
-resource "helm_repository" "fluent_bit" {
-  name = "fluent"
-  url  = "https://fluent.github.io/helm-charts"
-}
-
 resource "helm_release" "processador_video" {
   name       = var.projectName
   namespace  = "default"
-  chart      = "./processamentovideo-chart"
+  chart      = "./processamentovideo-chart"  # Mantém o caminho para o chart local, se necessário
+  repository = "https://fluent.github.io/helm-charts"  # Repositório do Fluent Bit
 
   # Variáveis de configuração do processador de vídeo
   set {
@@ -83,7 +79,15 @@ resource "helm_release" "processador_video" {
   # Configuração do tipo de coleta (exemplo de input, pode ser ajustado conforme necessidade)
   set {
     name  = "fluentbit.inputs"
-    value = "[INPUT]\n  Name tail\n  Path /var/log/containers/*.log\n  Parser docker\n  Tag kube.*\n  Refresh_Interval 5\n  Rotate_Wait 30s"
+    value = <<EOF
+[INPUT]
+  Name tail
+  Path /var/log/containers/*.log
+  Parser docker
+  Tag kube.*
+  Refresh_Interval 5
+  Rotate_Wait 30s
+EOF
   }
 
   depends_on = [
