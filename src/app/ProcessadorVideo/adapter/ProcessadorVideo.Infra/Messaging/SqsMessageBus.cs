@@ -1,5 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
+using Amazon;
+using Amazon.Runtime;
 using Amazon.SQS;
 using Amazon.SQS.Model;
 using Microsoft.Extensions.Options;
@@ -89,12 +91,7 @@ public class SqsMessageBus : IMessageBus
 
     private AmazonSQSClient CreateClient()
     {
-        var config = new AmazonSQSConfig();
-
-        if (!string.IsNullOrEmpty(_configuration.ServiceUrl))
-            config.ServiceURL = _configuration.ServiceUrl;
-
-        return new AmazonSQSClient(config);
+        return new AmazonSQSClient(new InstanceProfileAWSCredentials(), RegionEndpoint.GetBySystemName(_configuration.Region));
     }
 }
 
