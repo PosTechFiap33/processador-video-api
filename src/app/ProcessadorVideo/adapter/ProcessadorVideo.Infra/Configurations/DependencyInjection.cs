@@ -1,4 +1,3 @@
-using Amazon.DynamoDBv2;
 using Amazon.S3;
 using Amazon.SQS;
 using Microsoft.Extensions.Configuration;
@@ -18,7 +17,6 @@ public static class DependencyInjection
     {
         services.AddDefaultAWSOptions(configuration.GetAWSOptions());
         services.AddAWSService<IAmazonSQS>();
-        services.AddAWSService<IAmazonDynamoDB>();
         services.AddAWSService<IAmazonS3>();
         
         services.Configure<AWSConfiguration>(configuration.GetSection("AWS"));
