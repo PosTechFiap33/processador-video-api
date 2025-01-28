@@ -16,13 +16,3 @@ resource "aws_eks_addon" "aws-observability" {
   addon_name   = "amazon-cloudwatch-observability"
   cluster_name =  data.aws_eks_cluster.eks_cluster.name
 }
-
-resource "kubernetes_service_account" "eks_service_account" {
-  metadata {
-    name      = "api-service-account"
-    namespace = "default"
-    annotations = {
-      "eks.amazonaws.com/role-arn" = var.labRole
-    }
-  }
-}
