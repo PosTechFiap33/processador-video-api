@@ -78,10 +78,5 @@ public class SqsMessageBus : IMessageBus
             throw new MessageBusException($"Erro ao receber a mensagem do SQS: {ex.Message}");
         }
     }
-
-    // private AmazonSQSClient CreateClient()
-    // {
-    //     return new AmazonSQSClient(new DefaultAWSCredentialsProviderChain(), RegionEndpoint.GetBySystemName(_configuration.Region));
-    // }
 }
 
