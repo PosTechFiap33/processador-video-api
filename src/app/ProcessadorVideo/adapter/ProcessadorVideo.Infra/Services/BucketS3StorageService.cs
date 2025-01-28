@@ -1,33 +1,29 @@
 using Amazon.S3;
 using Amazon.S3.Model;
-using Microsoft.Extensions.Options;
-using ProcessadorVideo.CrossCutting.Configurations;
 using ProcessadorVideo.Domain.Adapters.Services;
 
 namespace ProcessadorVideo.Infra.Services;
 
 public class BucketS3StorageService : IFileStorageService
 {
-    private readonly AWSConfiguration _configuration;
+    private readonly IAmazonS3 _client;
 
-    public BucketS3StorageService(IOptions<AWSConfiguration> options)
+    public BucketS3StorageService(IAmazonS3 client)
     {
-        _configuration = options.Value;
+        _client = client;
     }
 
     public async Task<byte[]> Ler(string path, string fileName)
     {
         try
         {
-            var client = CriarClient();
-
             var request = new GetObjectRequest
             {
                 BucketName = path,
                 Key = fileName
             };
 
-            var response = await client.GetObjectAsync(request);
+            var response = await _client.GetObjectAsync(request);
 
             byte[] fileBytes;
 
@@ -50,15 +46,13 @@ public class BucketS3StorageService : IFileStorageService
     {
         try
         {
-            var client = CriarClient();
-
             var request = new DeleteObjectRequest
             {
                 BucketName = path,
                 Key = fileName
             };
 
-            await client.DeleteObjectAsync(request);
+            await _client.DeleteObjectAsync(request);
         }
         catch (Exception ex)
         {
@@ -69,8 +63,6 @@ public class BucketS3StorageService : IFileStorageService
 
     public async Task Salvar(string path, string fileName, byte[] fileBytes, string contentType)
     {
-        var client = CriarClient();
-
         var stream = new MemoryStream(fileBytes);
 
         try
@@ -89,24 +81,11 @@ public class BucketS3StorageService : IFileStorageService
                 }
             };
 
-            await client.PutObjectAsync(request);
+            await _client.PutObjectAsync(request);
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Erro ao enviar arquivo: {ex.Message}");
         }
-    }
-
-    private AmazonS3Client CriarClient()
-    {
-        var config = new AmazonS3Config
-        {
-            ForcePathStyle = true
-        };
-
-        if (!string.IsNullOrEmpty(_configuration.ServiceUrl))
-            config.ServiceURL = _configuration.ServiceUrl;
-
-        return new AmazonS3Client(config);
     }
 }

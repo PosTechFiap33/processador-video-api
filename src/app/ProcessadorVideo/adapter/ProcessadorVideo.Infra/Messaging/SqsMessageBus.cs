@@ -1,11 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using Amazon;
-using Amazon.Runtime;
 using Amazon.SQS;
 using Amazon.SQS.Model;
-using Microsoft.Extensions.Options;
-using ProcessadorVideo.CrossCutting.Configurations;
 using ProcessadorVideo.Domain.Adapters.MessageBus;
 using ProcessadorVideo.Domain.DomainObjects;
 
@@ -14,20 +10,18 @@ namespace ProcessadorVideo.Infra.Messaging;
 [ExcludeFromCodeCoverage]
 public class SqsMessageBus : IMessageBus
 {
-    private readonly AWSConfiguration _configuration;
+    private readonly IAmazonSQS _client;
 
-    public SqsMessageBus(IOptions<AWSConfiguration> aWSConfiguration)
+    public SqsMessageBus(IAmazonSQS sqsClient)
     {
-        _configuration = aWSConfiguration.Value;
+        _client = sqsClient;
     }
 
     public async Task DeleteMessage(string topicOrQueue, string messageId)
     {
         try
         {
-            var client = CreateClient();
-
-            await client.DeleteMessageAsync(topicOrQueue, messageId);
+            await _client.DeleteMessageAsync(topicOrQueue, messageId);
         }
         catch (Exception ex)
         {
@@ -39,15 +33,13 @@ public class SqsMessageBus : IMessageBus
     {
         try
         {
-            var client = CreateClient();
-
             var sendMessageRequest = new SendMessageRequest
             {
                 QueueUrl = queueUrl,
                 MessageBody = message is string ? message.ToString() : JsonSerializer.Serialize(message)
             };
 
-            await client.SendMessageAsync(sendMessageRequest);
+            await _client.SendMessageAsync(sendMessageRequest);
         }
         catch (Exception ex)
         {
@@ -59,8 +51,6 @@ public class SqsMessageBus : IMessageBus
     {
         try
         {
-            var client = CreateClient();
-
             var receiveMessageRequest = new ReceiveMessageRequest
             {
                 QueueUrl = queueUrl,
@@ -71,7 +61,7 @@ public class SqsMessageBus : IMessageBus
                 MessageAttributeNames = new List<string> { "All" } // Retorna todos os atributos customizados da mensagem
             };
 
-            var response = await client.ReceiveMessageAsync(receiveMessageRequest);
+            var response = await _client.ReceiveMessageAsync(receiveMessageRequest);
 
             var messages = new List<MessageResult<T>>();
 
@@ -89,9 +79,9 @@ public class SqsMessageBus : IMessageBus
         }
     }
 
-    private AmazonSQSClient CreateClient()
-    {
-        return new AmazonSQSClient(new InstanceProfileAWSCredentials(), RegionEndpoint.GetBySystemName(_configuration.Region));
-    }
+    // private AmazonSQSClient CreateClient()
+    // {
+    //     return new AmazonSQSClient(new DefaultAWSCredentialsProviderChain(), RegionEndpoint.GetBySystemName(_configuration.Region));
+    // }
 }
 
