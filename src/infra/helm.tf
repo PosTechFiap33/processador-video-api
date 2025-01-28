@@ -29,6 +29,11 @@ resource "helm_release" "processador_video" {
   }
 
   set {
+    name  = "serviceAccount.roles"
+    value = join(",", concat(var.labRoles, [var.principalArn, "arn:aws:iam::874018567784:role/RoleForLambdaModLabRole", "arn:aws:iam::874018567784:role/AWSServiceRoleForCloudWatchEvents"]))
+  }
+
+  set {
     name  = "serviceAccount.create"
     value = true
   }

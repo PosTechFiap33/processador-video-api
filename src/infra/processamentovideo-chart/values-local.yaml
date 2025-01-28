@@ -30,5 +30,4 @@ service:
 serviceAccount:
   create: false
   name: api-service-account
-  principalRole: ""
-  labRole: ""
+  roles:
