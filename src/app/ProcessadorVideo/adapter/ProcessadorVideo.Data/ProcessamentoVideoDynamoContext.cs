@@ -18,6 +18,7 @@ public class ProcessamentoVideoDynamoContext : IUnitOfWork
         var config = new AmazonDynamoDBConfig
         {
             RegionEndpoint = Amazon.RegionEndpoint.GetBySystemName(awsConfiguration.Region),
+            LogMetrics = true
         };
 
         Client = new AmazonDynamoDBClient(config);

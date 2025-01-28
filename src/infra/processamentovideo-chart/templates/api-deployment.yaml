@@ -16,48 +16,46 @@ spec:
       serviceAccountName: {{ .Values.serviceAccount.name }}
       {{- end }}
       containers:
-      - name: {{ .Values.deployment.name }}
-        image: "{{ .Values.deployment.image }}"       
-        ports:
-          - containerPort: 80   # Porta HTTP dentro do contêiner
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 80
-          initialDelaySeconds: 30  
-          periodSeconds: 10        
-          timeoutSeconds: 5        
-          failureThreshold: 2     
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 80
-          initialDelaySeconds: 10  
-          periodSeconds: 10        # Verifica a cada 10 segundos
-          timeoutSeconds: 5        # Tempo limite de 5 segundos para a resposta
-          failureThreshold: 2      # Número de falhas consecutivas para considerar o container como não pronto
-        resources:
-          requests:
-            cpu: "512m"
-            memory: "512Mi"
-          limits:
-            cpu: "2048m"
-            memory: "2048Mi"
-        env:  
-          - name: AWS_REGION
-            valueFrom:
-              configMapKeyRef:
-                name: {{ .Values.configmap.name }}
-                key: AWS_REGION
-          
-          - name: AWS_SERVICE_URL
-            valueFrom:
-              configMapKeyRef:
-                name: {{ .Values.configmap.name }}
-                key: AWS_SERVICE_URL
-
-          - name: AWS_QUEUE
-            valueFrom:
-              configMapKeyRef:
-                name: {{ .Values.configmap.name }}
-                key: AWS_QUEUE
+        - name: {{ .Values.deployment.name }}
+          image: "{{ .Values.deployment.image }}"
+          ports:
+            - containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 30  
+            periodSeconds: 10        
+            timeoutSeconds: 5        
+            failureThreshold: 2     
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 10  
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 2
+          resources:
+            requests:
+              cpu: "512m"
+              memory: "512Mi"
+            limits:
+              cpu: "2048m"
+              memory: "2048Mi"
+          env:  
+            - name: AWS_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configmap.name }}
+                  key: AWS_REGION
+            - name: AWS_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configmap.name }}
+                  key: AWS_SERVICE_URL
+            - name: AWS_QUEUE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configmap.name }}
+                  key: AWS_QUEUE

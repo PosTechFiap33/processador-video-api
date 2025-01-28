@@ -10,6 +10,11 @@ namespace FiAPProcessaVideo.Api.Controllers;
 [Route("[controller]")]
 public class ProcessamentoVideoController : ControllerBase
 {
+    [HttpDelete]
+    public async Task<IActionResult> Teste(){
+        return Ok();
+    }
+
     [HttpPost]
     [RequestSizeLimit(900_000_000)] // Limite de 900 MB
     public async Task<IActionResult> ConverterVideo(ICollection<IFormFile> videoFile,

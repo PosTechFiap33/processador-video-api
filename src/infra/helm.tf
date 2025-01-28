@@ -1,8 +1,14 @@
+resource "helm_repository" "fluent_bit" {
+  name = "fluent"
+  url  = "https://fluent.github.io/helm-charts"
+}
+
 resource "helm_release" "processador_video" {
   name       = var.projectName
   namespace  = "default"
   chart      = "./processamentovideo-chart"
 
+  # Variáveis de configuração do processador de vídeo
   set {
     name  = "environment"
     value = "prod"
@@ -19,18 +25,8 @@ resource "helm_release" "processador_video" {
   }
 
   set {
-    name  = "serviceAccount.labRole"
+    name  = "serviceAccount.role"
     value = var.labRole
-  }
-
-  set {
-    name  = "serviceAccount.principalRole"
-    value = var.principalArn
-  }
-
-  set {
-    name  = "serviceAccount.roles"
-    value = join(",", concat(var.labRoles, [var.principalArn, "arn:aws:iam::874018567784:role/RoleForLambdaModLabRole", "arn:aws:iam::874018567784:role/AWSServiceRoleForCloudWatchEvents"]))
   }
 
   set {
@@ -54,24 +50,40 @@ resource "helm_release" "processador_video" {
     value = "true"
   }
 
+  # Configuração do Log Group no CloudWatch
   set {
     name  = "fluentbit.cloudWatch.logGroupName"
-    value = "processamento-video-api"  # Nome do Log Group do CloudWatch
+    value = "processamento-video-api"  # Nome do Log Group no CloudWatch
   }
 
+  # Região do CloudWatch
   set {
     name  = "fluentbit.cloudWatch.region"
     value = var.region  # Região AWS
   }
 
+  # Prefixo para os logs no CloudWatch
   set {
     name  = "fluentbit.cloudWatch.logStreamPrefix"
     value = "eks-logs"  # Prefixo para os logs
   }
 
+  # Criação automática do grupo de logs, caso não exista
   set {
     name  = "fluentbit.cloudWatch.autoCreateGroup"
     value = "true"  # Se o grupo de logs será criado automaticamente
+  }
+
+  # Criação automática dos streams dentro do grupo de logs
+  set {
+    name  = "fluentbit.cloudWatch.autoCreateStream"
+    value = "true"  # Habilita a criação automática de streams se não existirem
+  }
+
+  # Configuração do tipo de coleta (exemplo de input, pode ser ajustado conforme necessidade)
+  set {
+    name  = "fluentbit.inputs"
+    value = "[INPUT]\n  Name tail\n  Path /var/log/containers/*.log\n  Parser docker\n  Tag kube.*\n  Refresh_Interval 5\n  Rotate_Wait 30s"
   }
 
   depends_on = [
