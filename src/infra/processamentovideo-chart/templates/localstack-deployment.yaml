@@ -1,3 +1,4 @@
+{{- if eq .Values.environment "local" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -32,3 +33,4 @@ spec:
                 hostPath:
                     path: /Users/flaviorobertoteixeira/Desktop/Desenvolvimento/PosTech/Hackaton/processador-video-api/src/infra/localstack-volume # Caminho no nó do Kubernetes
                     type: DirectoryOrCreate # Cria o diretório caso não exista
+{{- end }}

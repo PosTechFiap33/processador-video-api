@@ -15,6 +15,7 @@ crash.log
 .terraform/
 
 localstack-volume/
+docker-conf/
 
 # Override files
 override.tf

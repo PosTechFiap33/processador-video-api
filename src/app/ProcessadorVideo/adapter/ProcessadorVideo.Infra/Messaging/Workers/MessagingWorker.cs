@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -53,8 +54,15 @@ public abstract class MessagingWorker<T> : BackgroundService
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"queue: {_queueUrl} - Erro ao processar mensagens da fila. {ex.Message}");
-                _logger.LogError(ex, "Erro ao processar mensagens da fila.");
+                _logger.LogError(JsonSerializer.Serialize(new
+                {
+                    Message = $"Erro ao processar a mensagem da fila SQS",
+                    QueueUrl = _queueUrl,
+                    ExceptionMessage = ex.Message,
+                    ExceptionStackTrace = ex.StackTrace,
+                    Timestamp = DateTime.UtcNow
+                }));
+
             }
 
             await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);

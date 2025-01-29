@@ -1,16 +1,14 @@
 environment: local
 
 aws:
-  key: AwsIntegration
+  key: ""
   region: "us-east-1"
-  accesKey: ""
-  secretKey: ""
   serviceUrl: ""
   QueueUrl: ""
 
 deployment:
   name: api-deployment
-  image: kenobirt/processamento-video.api:dev
+  image: kenobirt/processamento-video.api:latest
   replicas: 1
 
 configmap:
@@ -28,6 +26,8 @@ service:
   http:
     targetPort: 80
     nodePort: 32000
-  https:
-    targetPort: 443
-    nodePort: 32001
+
+serviceAccount:
+  create: false
+  name: api-service-account
+  role: ""

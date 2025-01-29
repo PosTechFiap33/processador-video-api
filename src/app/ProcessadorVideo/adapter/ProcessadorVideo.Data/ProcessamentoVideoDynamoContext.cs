@@ -1,28 +1,18 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
-using Microsoft.Extensions.Options;
-using ProcessadorVideo.CrossCutting.Configurations;
-using ProcessadorVideo.CrossCutting.Factories;
 using ProcessadorVideo.Domain.Adapters.Repositories;
 
 namespace ProcessadorVideo.Data;
 
 public class ProcessamentoVideoDynamoContext : IUnitOfWork
 {
-    public AmazonDynamoDBClient Client { get; private set; }
+    public IAmazonDynamoDB Client { get; private set; }
     public readonly List<TransactWriteItem> WriteOperations;
 
-    public ProcessamentoVideoDynamoContext(IOptions<AWSConfiguration> configuration)
+    public ProcessamentoVideoDynamoContext(IAmazonDynamoDB client)
     {
-        var awsConfiguration = configuration.Value;
 
-        var config = new AmazonDynamoDBConfig
-        {
-            RegionEndpoint = Amazon.RegionEndpoint.GetBySystemName(awsConfiguration.Region),
-        };
-
-        Client = new AmazonDynamoDBClient(config.CreateCredentials(awsConfiguration), config);
-
+        Client = client;
         WriteOperations = new List<TransactWriteItem>();
     }
 
