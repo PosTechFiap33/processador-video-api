@@ -3,7 +3,7 @@ using ProcessadorVideo.Infra.Configurations;
 using ProcessadorVideo.Application.Configurations;
 using ProcessadorVideo.Data.Configurations;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using ProcessadorVideo.Identity.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +45,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddInfra(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddDataConfiguration(builder.Configuration);
+builder.Services.AddIdentity(builder.Configuration);
 
 builder.Services.AddHealthChecks()
                 .AddCheck("self", () => HealthCheckResult.Healthy());

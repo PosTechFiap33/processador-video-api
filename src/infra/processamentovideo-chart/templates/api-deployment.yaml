@@ -15,21 +15,9 @@ spec:
       {{- if .Values.serviceAccount.create }}
       serviceAccountName: {{ .Values.serviceAccount.name }}
       {{- end }}
-      volumes:
-        - name: aws-iam-token
-          projected:
-            sources:
-              - serviceAccountToken:
-                  audience: "sts.amazonaws.com"
-                  expirationSeconds: 86400
-                  path: token
       containers:
         - name: {{ .Values.deployment.name }}
           image: "{{ .Values.deployment.image }}"
-          volumeMounts:
-            - name: aws-iam-token
-              mountPath: /var/run/secrets/eks.amazonaws.com/serviceaccount
-              readOnly: true
           ports:
             - containerPort: 80
           livenessProbe:
@@ -55,7 +43,7 @@ spec:
             limits:
               cpu: "2048m"
               memory: "2048Mi"
-          env:
+          env:  
             - name: AWS_REGION
               valueFrom:
                 configMapKeyRef:
