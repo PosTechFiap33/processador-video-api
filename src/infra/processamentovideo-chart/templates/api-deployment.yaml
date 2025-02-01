@@ -13,7 +13,7 @@ spec:
         app: {{ .Values.deployment.name }}
     spec:
       {{- if .Values.serviceAccount.create }}
-      serviceAccountName: {{ .Values.serviceAccount.name }}
+      serviceAccountName: api-service-account
       {{- end }}
       containers:
         - name: {{ .Values.deployment.name }}
@@ -44,7 +44,7 @@ spec:
               cpu: "2048m"
               memory: "2048Mi"
           env:  
-            - name: DBConnection
+            - name: ConnectionString
               valueFrom:
                 configMapKeyRef:
                     name:  {{ .Values.configmap.name }}

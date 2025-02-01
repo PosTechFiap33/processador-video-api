@@ -7,6 +7,7 @@ using ProcessadorVideo.Identity.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,30 @@ builder.Services.AddSwaggerGen(options =>
         {
             Name = "Flávio Roberto Teixeira",
             Email = "flavio.r.teixeira@outlook.com",
+        }
+    });
+
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Entre com o seu Bearer token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        BearerFormat = "JWT",
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
         }
     });
 });
@@ -66,9 +91,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(key),
             ValidateIssuer = false, // Validação do emissor (Issuer)
-      //      ValidIssuer = "your-issuer",  // Substitua com o seu emissor
+                                    //      ValidIssuer = "your-issuer",  // Substitua com o seu emissor
             ValidateAudience = false, // Validação do público (Audience)
-         //   ValidAudience = "your-audience",  // Substitua com seu público
+                                      //   ValidAudience = "your-audience",  // Substitua com seu público
             ValidateLifetime = true,  // Verifica se o token expirou
             ClockSkew = TimeSpan.Zero // Remover o atraso da verificação de expiração
         };

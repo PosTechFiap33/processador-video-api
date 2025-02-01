@@ -32,7 +32,7 @@ resource "aws_db_instance" "controle_pedido_db" {
   password               = var.dbPassWord
   db_name                = var.dbName
   skip_final_snapshot    = true
-  publicly_accessible    = true  
+  publicly_accessible    = false  
 
   tags = {
     Name = "ControlePedidosDatabase"
