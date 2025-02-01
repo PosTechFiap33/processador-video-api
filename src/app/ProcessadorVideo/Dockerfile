@@ -3,6 +3,7 @@ FROM --platform=linux/amd64 mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 80
 ENV ASPNETCORE_URLS=http://0.0.0.0:80
+ENV ASPNETCORE_ENVIRONMENT=Production
 
 # Atualizar pacotes e instalar FFmpeg
 RUN apt-get update && \

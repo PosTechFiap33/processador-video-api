@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using ProcessadorVideo.CrossCutting.Extensions;
 using ProcessadorVideo.Domain.Adapters.Repositories;
@@ -16,14 +17,17 @@ public class AutenticarUseCase : IAutenticarUseCase
     private readonly ILogger<AutenticarUseCase> _logger;
     private readonly IUsuarioRepository _repository;
     private readonly ITokenService _tokenService;
+    private readonly IConfiguration _configuration;
 
     public AutenticarUseCase(IUsuarioRepository repository,
                              ILogger<AutenticarUseCase> logger,
-                             ITokenService tokenService)
+                             ITokenService tokenService,
+                             IConfiguration configuration)
     {
         _repository = repository;
         _logger = logger;
         _tokenService = tokenService;
+        _configuration = configuration;
     }
 
     public async Task<string> Executar(string nomeIdentificacao, string senha)
@@ -38,7 +42,7 @@ public class AutenticarUseCase : IAutenticarUseCase
         if (autenticacaoRealizada is false)
             ProcessarErro("Autenticacao inválida para o usuario {nomeIdentificacao}!");
 
-        return _tokenService.Gerar(usuario);
+        return _tokenService.Gerar(usuario, _configuration["SecretKey"]);
     }
 
     private void ProcessarErro(string log)

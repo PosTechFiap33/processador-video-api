@@ -1,7 +1,9 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
+using Amazon;
 using Amazon.SQS;
 using Amazon.SQS.Model;
+using Microsoft.Extensions.Configuration;
 using ProcessadorVideo.Domain.Adapters.MessageBus;
 using ProcessadorVideo.Domain.DomainObjects;
 
@@ -12,9 +14,20 @@ public class SqsMessageBus : IMessageBus
 {
     private readonly IAmazonSQS _client;
 
-    public SqsMessageBus(IAmazonSQS sqsClient)
+    public SqsMessageBus(IConfiguration configuration)
     {
-        _client = sqsClient;
+        var awsConfig = configuration.GetSection("AWS");
+
+        string serviceUrl = awsConfig["ServiceUrl"] ?? string.Empty;
+        string region = awsConfig["Region"] ?? "us-east-1";
+
+        var sqsConfigClient = new AmazonSQSConfig
+        {
+            RegionEndpoint = RegionEndpoint.GetBySystemName(region),
+            ServiceURL = serviceUrl
+        };
+
+        _client = new AmazonSQSClient(sqsConfigClient);
     }
 
     public async Task DeleteMessage(string topicOrQueue, string messageId)
@@ -47,13 +60,15 @@ public class SqsMessageBus : IMessageBus
         }
     }
 
-    public async Task<IEnumerable<MessageResult<T>>> ReceiveMessagesAsync<T>(string queueUrl, int maxMessages = 10, int waitTimeSeconds = 5, int visibilityTimeout = 20)
+    public async Task<IEnumerable<MessageResult<T>>> ReceiveMessagesAsync<T>(string queueName, int maxMessages = 10, int waitTimeSeconds = 5, int visibilityTimeout = 20)
     {
         try
         {
+            var queue = await GetQueueUrlAsync(queueName);
+
             var receiveMessageRequest = new ReceiveMessageRequest
             {
-                QueueUrl = queueUrl,
+                QueueUrl = queue,
                 MaxNumberOfMessages = maxMessages,
                 WaitTimeSeconds = waitTimeSeconds,
                 VisibilityTimeout = visibilityTimeout,
@@ -76,6 +91,26 @@ public class SqsMessageBus : IMessageBus
         catch (Exception ex)
         {
             throw new MessageBusException($"Erro ao receber a mensagem do SQS: {ex.Message}");
+        }
+    }
+
+    public async Task<string> GetQueueUrlAsync(string queueName)
+    {
+        try
+        {
+            var request = new GetQueueUrlRequest
+            {
+                QueueName = queueName
+            };
+
+            var response = await _client.GetQueueUrlAsync(request);
+
+            return response.QueueUrl;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao obter a URL da fila: {ex.Message}");
+            throw;
         }
     }
 }

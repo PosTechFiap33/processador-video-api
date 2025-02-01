@@ -7,16 +7,14 @@ namespace ProcessadorVideo.CrossCutting.Configurations;
 public class AWSConfiguration
 {
     public string Region { get; set; }
-    public string AwsQueueUrl { get; set; }
-    public string ConverterVideoParaImagemQueueUrl { get { return $"{AwsQueueUrl}/converter-video-para-imagem"; } }
-    public string ConversaoVideoParaImagemRealizadaQueueUrl { get { return $"{AwsQueueUrl}/conversao-video-para-imagem-realizada"; } }
-    public string ConversaoVideoParaImagemErroQueueUrl { get { return $"{AwsQueueUrl}/erro-conversao-video-para-imagem"; } }
+    public string ConverterVideoParaImagemQueueUrl { get { return "converter-video-para-imagem"; } }
+    public string ConversaoVideoParaImagemRealizadaQueueUrl { get { return "conversao-video-para-imagem-realizada"; } }
+    public string ConversaoVideoParaImagemErroQueueUrl { get { return "erro-conversao-video-para-imagem"; } }
 
 
     public AWSConfiguration()
     {
         Region = GetEnvironmentVariableOrDefault("AWS_REGION", Region);
-        AwsQueueUrl = GetEnvironmentVariableOrDefault("AWS_QUEUE", AwsQueueUrl);
     }
 
 

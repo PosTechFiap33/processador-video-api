@@ -17,7 +17,7 @@ public class AutenticacaoController : ControllerBase
         _logger = logger;
     }
 
-    [HttpPost("autenticar")]
+    [HttpPost]
     [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] AutenticacaoDTO autenticaao,
                                            [FromServices] IAutenticarUseCase useCase)
@@ -25,9 +25,10 @@ public class AutenticacaoController : ControllerBase
         try
         {
             var token = await useCase.Executar(autenticaao.Usuario, autenticaao.Senha);
-            return Ok(token);
+            return Ok(new { token });
         }
-        catch(AutenticacaoException ex){
+        catch (AutenticacaoException ex)
+        {
             return BadRequest(ex.Message);
         }
         catch (Exception ex)

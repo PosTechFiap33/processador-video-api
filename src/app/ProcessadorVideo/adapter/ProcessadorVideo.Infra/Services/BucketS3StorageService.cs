@@ -1,5 +1,7 @@
+using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
+using Microsoft.Extensions.Configuration;
 using ProcessadorVideo.Domain.Adapters.Services;
 
 namespace ProcessadorVideo.Infra.Services;
@@ -8,9 +10,20 @@ public class BucketS3StorageService : IFileStorageService
 {
     private readonly IAmazonS3 _client;
 
-    public BucketS3StorageService(IAmazonS3 client)
+    public BucketS3StorageService(IConfiguration configuration)
     {
-        _client = client;
+        var awsConfig = configuration.GetSection("AWS");
+
+        string serviceUrl = awsConfig["ServiceUrl"] ?? string.Empty;
+        string region = awsConfig["Region"] ?? "us-east-1";
+
+        var sqsConfigClient = new AmazonS3Config
+        {
+            RegionEndpoint = RegionEndpoint.GetBySystemName(region),
+            ServiceURL = serviceUrl
+        };
+
+        _client = new AmazonS3Client(sqsConfigClient);
     }
 
     public async Task<byte[]> Ler(string path, string fileName)

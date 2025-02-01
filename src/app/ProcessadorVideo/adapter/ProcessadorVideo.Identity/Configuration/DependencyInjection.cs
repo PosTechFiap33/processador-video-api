@@ -7,37 +7,42 @@ using ProcessadorVideo.Domain.Adapters.Services;
 using ProcessadorVideo.Identity.Repositories;
 using ProcessadorVideo.Identity.Services;
 
-namespace ProcessadorVideo.Identity.Configuration;
-
-public static class DependencyInjection
+namespace ProcessadorVideo.Identity.Configuration
 {
-    public static IServiceCollection AddIdentity(this IServiceCollection services, IConfiguration configuration){
-        services.AddScoped<IdentityContext>();
-        services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-        services.AddScoped<ITokenService, TokenService>();
-
-        var connectionEnv = "ConnectionString";
-        var connectionString = Environment.GetEnvironmentVariable(connectionEnv) ?? configuration[connectionEnv];
-        services.AddDbContext<IdentityContext>(options => options.UseNpgsql(connectionString));
-
-        services.ConfigureMigrationDatabase();
-
-        return services;
-    }
-
-    public static void ConfigureMigrationDatabase(this IServiceCollection services)
+    public static class DependencyInjection
     {
-        var serviceProvider = services.BuildServiceProvider();
+        public static IServiceCollection AddIdentity(this IServiceCollection services, IConfiguration configuration)
+        {
+            // Configuração do DbContext
+            services.AddScoped<IdentityContext>();
+            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<ITokenService, TokenService>();
 
-        try
-        {
-            var dbContext = serviceProvider.GetRequiredService<IdentityContext>();
-            dbContext.Database.Migrate();
+            var connectionEnv = "ConnectionString";
+            var connectionString = Environment.GetEnvironmentVariable(connectionEnv) ?? configuration[connectionEnv];
+
+            services.AddDbContext<IdentityContext>(options =>
+                options.UseNpgsql(connectionString));
+
+            services.ConfigureMigrationDatabase();
+
+            return services;
         }
-        catch (Exception ex)
+
+        private static void ConfigureMigrationDatabase(this IServiceCollection services)
         {
-            var logger = serviceProvider.GetRequiredService<ILogger<IdentityContext>>();
-            logger.LogError(ex, "Ocorreu um erro ao executar a migration do banco de dados!");
+            var serviceProvider = services.BuildServiceProvider();
+
+            try
+            {
+                var dbContext = serviceProvider.GetRequiredService<IdentityContext>();
+                dbContext.Database.Migrate(); // Aplica migrações automaticamente
+            }
+            catch (Exception ex)
+            {
+                var logger = serviceProvider.GetRequiredService<ILogger<IdentityContext>>();
+                logger.LogError(ex, "Ocorreu um erro ao executar a migration do banco de dados!");
+            }
         }
     }
 }

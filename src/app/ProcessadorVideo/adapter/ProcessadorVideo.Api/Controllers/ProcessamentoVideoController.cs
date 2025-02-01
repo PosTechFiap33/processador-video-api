@@ -8,16 +8,12 @@ using ProcessadorVideo.Domain.DomainObjects.Exceptions;
 namespace FiAPProcessaVideo.Api.Controllers;
 
 [ApiController]
+[Authorize(Roles = "administrador")]
 [Route("[controller]")]
 public class ProcessamentoVideoController : ControllerBase
 {
-    [HttpDelete]
-    public async Task<IActionResult> Teste(){
-        return Ok();
-    }
 
     [HttpPost]
-    [Authorize("todos")]
     [RequestSizeLimit(900_000_000)] // Limite de 900 MB
     public async Task<IActionResult> ConverterVideo(ICollection<IFormFile> videoFile,
                                                    [FromForm] Guid usuarioId,
@@ -39,7 +35,6 @@ public class ProcessamentoVideoController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize("todos")]
     public async Task<IActionResult> ListarProcessamentos([FromQuery] Guid usuarioId,
                                                           [FromServices] IListarProcessamentoUseCase useCase)
     {
@@ -59,7 +54,6 @@ public class ProcessamentoVideoController : ControllerBase
     }
 
     [HttpGet("{processamentoId}/download")]
-    [Authorize("todos")]
     public async Task<IActionResult> BaixarArquivo(Guid processamentoId,
                                                   [FromServices] IConsultarArquivoZipUseCase useCase)
     {
