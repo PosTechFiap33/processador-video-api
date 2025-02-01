@@ -49,13 +49,3 @@ spec:
                 configMapKeyRef:
                   name: {{ .Values.configmap.name }}
                   key: AWS_REGION
-            - name: AWS_SERVICE_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Values.configmap.name }}
-                  key: AWS_SERVICE_URL
-            - name: AWS_QUEUE
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Values.configmap.name }}
-                  key: AWS_QUEUE

@@ -3,8 +3,6 @@ environment: local
 aws:
   key: ""
   region: "us-east-1"
-  serviceUrl: ""
-  QueueUrl: ""
 
 deployment:
   name: api-deployment

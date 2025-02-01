@@ -16,11 +16,6 @@ resource "helm_release" "processador_video" {
   }
 
   set {
-    name  = "aws.QueueUrl"
-    value = "https://sqs.${var.region}.amazonaws.com/${data.aws_caller_identity.current.account_id}"
-  }
-
-  set {
     name  = "serviceAccount.role"
     value = var.labRole
   }
