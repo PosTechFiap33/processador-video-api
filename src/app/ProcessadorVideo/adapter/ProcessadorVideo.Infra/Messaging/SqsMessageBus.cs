@@ -18,14 +18,16 @@ public class SqsMessageBus : IMessageBus
     {
         var awsConfig = configuration.GetSection("AWS");
 
-        string serviceUrl = awsConfig["ServiceUrl"] ?? string.Empty;
+        string serviceUrl = awsConfig["ServiceUrl"];
         string region = awsConfig["Region"] ?? "us-east-1";
 
         var sqsConfigClient = new AmazonSQSConfig
         {
             RegionEndpoint = RegionEndpoint.GetBySystemName(region),
-            ServiceURL = serviceUrl
         };
+
+        if (!string.IsNullOrEmpty(serviceUrl))
+            sqsConfigClient.ServiceURL = serviceUrl;
 
         _client = new AmazonSQSClient(sqsConfigClient);
     }

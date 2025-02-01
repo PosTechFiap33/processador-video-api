@@ -32,7 +32,7 @@ resource "helm_release" "processador_video" {
 
   set {
     name  = "ConnectionString"
-    value = "Host=${aws_db_instance.controle_pedido_db.endpoint};Port=5432;Pooling=true;Database=${var.dbUsername};User Id=${var.dbUsername};Password=${var.dbPassWord};"  
+    value = "Host=${local.rds_host_without_port};Port=5432;Pooling=true;Database=${var.dbName};User Id=${var.dbUsername};Password=${var.dbPassWord};"  
   }
 
   # Configuração do Fluent Bit (CloudWatch)
