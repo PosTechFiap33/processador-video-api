@@ -11,6 +11,7 @@ public static class DependencyInjections
         services.AddScoped<IListarProcessamentoUseCase, ListarProcessamentoUseCase>();
         services.AddScoped<IConsultarArquivoZipUseCase, ConsultarArquivoZipUseCase>();
         services.AddScoped<IAutenticarUseCase, AutenticarUseCase>();
+        services.AddScoped<ICadastrarUsuarioUseCase, CadastrarUsuarioUseCase>();
 
         return services;
     }

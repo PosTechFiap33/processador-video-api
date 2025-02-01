@@ -23,6 +23,11 @@ public class UsuarioRepository : IUsuarioRepository
                              .FirstOrDefaultAsync();
     }
 
+    public void Criar(Usuario usuario)
+    {
+        _context.Usuario.Add(usuario);
+    }
+
     public void Dispose()
     {
         _context.Dispose();
