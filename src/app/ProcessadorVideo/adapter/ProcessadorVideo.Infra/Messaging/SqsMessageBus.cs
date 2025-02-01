@@ -111,7 +111,7 @@ public class SqsMessageBus : IMessageBus
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Erro ao obter a URL da fila: {ex.Message}");
+            Console.WriteLine($"Erro ao obter a URL da fila {queueName}: {ex.Message}");
             throw;
         }
     }
