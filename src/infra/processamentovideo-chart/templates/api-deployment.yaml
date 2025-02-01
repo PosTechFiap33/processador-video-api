@@ -44,6 +44,11 @@ spec:
               cpu: "2048m"
               memory: "2048Mi"
           env:  
+            - name: DBConnection
+              valueFrom:
+                configMapKeyRef:
+                    name:  {{ .Values.configmap.name }}
+                    key: ConnectionString 
             - name: AWS_REGION
               valueFrom:
                 configMapKeyRef:

@@ -4,5 +4,5 @@ metadata:
   name: {{.Values.configmap.name}}
 data:
   AWS_REGION: "{{ .Values.aws.region }}"
-
+  ConnectionString: "{{ .Values.ConnectionString }}"
 

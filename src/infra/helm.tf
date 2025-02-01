@@ -30,6 +30,11 @@ resource "helm_release" "processador_video" {
     value = "${timestamp()}"
   }
 
+  set {
+    name  = "ConnectionString"
+    value = "Host=${aws_db_instance.controle_pedido_db.endpoint};Port=5432;Pooling=true;Database=${var.dbUsername};User Id=${var.dbUsername};Password=${var.dbPassWord};"  
+  }
+
   # Configuração do Fluent Bit (CloudWatch)
   set {
     name  = "fluentbit.enabled"
@@ -86,6 +91,7 @@ EOF
   }
 
   depends_on = [
+    aws_db_instance.controle_pedido_db,
     aws_eks_node_group.eks-node,
     aws_eks_access_entry.eks-access-entry,
     aws_eks_access_policy_association.eks-access-policy,

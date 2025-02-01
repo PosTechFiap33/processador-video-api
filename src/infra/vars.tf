@@ -22,7 +22,7 @@ variable "nodeGroup" {
   default = "processador-videos-ng"
 }
 
-variable "instanceType" {
+variable "eksInstanceType" {
   default = "t3.medium"
 }
 
@@ -43,4 +43,24 @@ variable "DynamoTableName"{
 variable "BucketName"{
     description = "Nome do bucket s3"
     default = "postech33-processamento-videos"
+}
+
+variable "rdsInstanceType" {
+  default = "db.t3.micro"
+}
+
+variable "dbUsername" {
+  description = "Nome de usuário do banco de dados"
+  type        = string
+}
+
+variable "dbPassWord" {
+  description = "Senha do banco de dados"
+  type        = string
+  sensitive   = true
+}
+
+variable "dbName" {
+  description = "Nome do banco de dados"
+  type        = string
 }
