@@ -17,7 +17,7 @@ resource "helm_release" "processador_video" {
 
   set {
     name  = "serviceAccount.role"
-    value = var.principalArn
+    value = var.labRole
   }
 
   set {
