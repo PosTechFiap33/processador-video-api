@@ -4,5 +4,8 @@ metadata:
   name: {{.Values.configmap.name}}
 data:
   AWS_REGION: "{{ .Values.aws.region }}"
+  AWS_ACCESS_KEY: "{{.Values.aws.accessKey}}"
+  AWS_SECRET: "{{.Values.aws.secret}}"
+  AWS_TOKEN: "{{.Values.aws.token}}"
   ConnectionString: "{{ .Values.ConnectionString }}"
 

@@ -16,6 +16,21 @@ resource "helm_release" "processador_video" {
   }
 
   set {
+    name  = "aws.accessKey"
+    value = var.AWS_ACCESS_KEY_ID
+  }
+
+  set {
+    name  = "aws.secret"
+    value = var.AWS_SECRET_ACCESS_KEY
+  }
+
+  set {
+    name  = "aws.token"
+    value = var.AWS_SESSION_TOKEN
+  }
+
+  set {
     name  = "serviceAccount.role"
     value = var.labRole
   }

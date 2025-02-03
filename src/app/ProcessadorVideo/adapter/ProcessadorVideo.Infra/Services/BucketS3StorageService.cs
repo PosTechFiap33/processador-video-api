@@ -1,7 +1,10 @@
 using Amazon;
+using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using ProcessadorVideo.CrossCutting.Configurations;
 using ProcessadorVideo.Domain.Adapters.Services;
 
 namespace ProcessadorVideo.Infra.Services;
@@ -10,20 +13,21 @@ public class BucketS3StorageService : IFileStorageService
 {
     private readonly IAmazonS3 _client;
 
-    public BucketS3StorageService(IConfiguration configuration)
+    public BucketS3StorageService(IOptions<AWSConfiguration> configuration)
     {
-        var awsConfig = configuration.GetSection("AWS");
+        var awsConfig = configuration.Value;
 
-        string serviceUrl = awsConfig["ServiceUrl"] ?? string.Empty;
-        string region = awsConfig["Region"] ?? "us-east-1";
+        var credentials = new SessionAWSCredentials(awsConfig.AccesKey, awsConfig.Secret, awsConfig.Token);
 
         var sqsConfigClient = new AmazonS3Config
         {
-            RegionEndpoint = RegionEndpoint.GetBySystemName(region),
-            ServiceURL = serviceUrl
+            RegionEndpoint = RegionEndpoint.GetBySystemName(awsConfig.Region),
         };
 
-        _client = new AmazonS3Client(sqsConfigClient);
+        if (!string.IsNullOrEmpty(awsConfig.ServiceUrl))
+            sqsConfigClient.ServiceURL = awsConfig.ServiceUrl;
+
+        _client = new AmazonS3Client(credentials, sqsConfigClient);
     }
 
     public async Task<byte[]> Ler(string path, string fileName)

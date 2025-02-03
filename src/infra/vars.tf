@@ -2,6 +2,26 @@ variable "region" {
   default = "us-east-1"
 }
 
+variable "AWS_ACCESS_KEY_ID" {
+  description = "AWS Access Key ID"
+  type        = string
+  default = ""
+}
+
+variable "AWS_SECRET_ACCESS_KEY" {
+  description = "AWS Secret Access Key"
+  type        = string
+  sensitive   = true
+  default = ""
+}
+
+variable "AWS_SESSION_TOKEN" {
+  description = "AWS Session Token (if using temporary credentials)"
+  type        = string
+  sensitive   = true
+  default = ""
+}
+
 variable "projectName" {
   default = "processador-video-cluster"
 }

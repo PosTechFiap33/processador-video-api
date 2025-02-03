@@ -1,9 +1,11 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using Amazon;
+using Amazon.Runtime;
 using Amazon.SQS;
 using Amazon.SQS.Model;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using ProcessadorVideo.CrossCutting.Configurations;
 using ProcessadorVideo.Domain.Adapters.MessageBus;
 using ProcessadorVideo.Domain.DomainObjects;
 
@@ -14,22 +16,21 @@ public class SqsMessageBus : IMessageBus
 {
     private readonly IAmazonSQS _client;
 
-    public SqsMessageBus(IConfiguration configuration)
+    public SqsMessageBus(IOptions<AWSConfiguration> configuration)
     {
-        var awsConfig = configuration.GetSection("AWS");
+        var awsConfig = configuration.Value;
 
-        string serviceUrl = awsConfig["ServiceUrl"];
-        string region = awsConfig["Region"] ?? "us-east-1";
+        var credentials = new SessionAWSCredentials(awsConfig.AccesKey, awsConfig.Secret, awsConfig.Token);
 
         var sqsConfigClient = new AmazonSQSConfig
         {
-            RegionEndpoint = RegionEndpoint.GetBySystemName(region),
+            RegionEndpoint = RegionEndpoint.GetBySystemName(awsConfig.Region),
         };
 
-        if (!string.IsNullOrEmpty(serviceUrl))
-            sqsConfigClient.ServiceURL = serviceUrl;
+        if (!string.IsNullOrEmpty(awsConfig.ServiceUrl))
+            sqsConfigClient.ServiceURL = awsConfig.ServiceUrl;
 
-        _client = new AmazonSQSClient(sqsConfigClient);
+        _client = new AmazonSQSClient(credentials, sqsConfigClient);
     }
 
     public async Task DeleteMessage(string topicOrQueue, string messageId)

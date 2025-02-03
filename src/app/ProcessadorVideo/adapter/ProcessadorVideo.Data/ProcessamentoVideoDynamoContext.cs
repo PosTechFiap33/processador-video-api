@@ -1,7 +1,10 @@
 using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
+using Amazon.Runtime;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using ProcessadorVideo.CrossCutting.Configurations;
 using ProcessadorVideo.Domain.Adapters.Repositories;
 
 namespace ProcessadorVideo.Data;
@@ -11,20 +14,21 @@ public class ProcessamentoVideoDynamoContext : IUnitOfWork
     public IAmazonDynamoDB Client { get; private set; }
     public readonly List<TransactWriteItem> WriteOperations;
 
-    public ProcessamentoVideoDynamoContext(IConfiguration configuration)
+    public ProcessamentoVideoDynamoContext(IOptions<AWSConfiguration> configuration)
     {
-        var awsConfig = configuration.GetSection("AWS");
+        var awsConfig = configuration.Value;
 
-        string serviceUrl = awsConfig["ServiceUrl"] ?? string.Empty;
-        string region = awsConfig["Region"] ?? "us-east-1";
+        var credentials = new SessionAWSCredentials(awsConfig.AccesKey, awsConfig.Secret, awsConfig.Token);
 
         var sqsConfigClient = new AmazonDynamoDBConfig
         {
-            RegionEndpoint = RegionEndpoint.GetBySystemName(region),
-            ServiceURL = serviceUrl
+            RegionEndpoint = RegionEndpoint.GetBySystemName(awsConfig.Region)
         };
 
-        Client = new AmazonDynamoDBClient(sqsConfigClient);
+        if(!string.IsNullOrEmpty(awsConfig.ServiceUrl))
+            sqsConfigClient.ServiceURL = awsConfig.ServiceUrl;
+
+        Client = new AmazonDynamoDBClient(credentials, sqsConfigClient);
 
         WriteOperations = new List<TransactWriteItem>();
     }
