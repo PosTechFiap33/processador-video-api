@@ -19,12 +19,10 @@ public class AWSConfiguration
     public AWSConfiguration()
     {
         Region = GetEnvironmentVariableOrDefault("AWS_REGION", Region);
-        Region = GetEnvironmentVariableOrDefault("AWS_ACCESS_KEY", AccesKey);
-        Region = GetEnvironmentVariableOrDefault("AWS_SECRET", Secret);
-        Region = GetEnvironmentVariableOrDefault("AWS_TOKEN", Token);
-        Region = GetEnvironmentVariableOrDefault("AWS_SERVICE_URL", ServiceUrl);
-
-
+        AccesKey = GetEnvironmentVariableOrDefault("AWS_ACCESS_KEY", AccesKey);
+        Secret = GetEnvironmentVariableOrDefault("AWS_SECRET", Secret);
+        Token = GetEnvironmentVariableOrDefault("AWS_TOKEN", Token);
+        ServiceUrl = GetEnvironmentVariableOrDefault("AWS_SERVICE_URL", ServiceUrl);
     }
 
 

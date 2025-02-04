@@ -2,12 +2,15 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using Amazon;
 using Amazon.Runtime;
+using Amazon.Runtime.Internal.Util;
 using Amazon.SQS;
 using Amazon.SQS.Model;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ProcessadorVideo.CrossCutting.Configurations;
 using ProcessadorVideo.Domain.Adapters.MessageBus;
 using ProcessadorVideo.Domain.DomainObjects;
+using ProcessadorVideo.Domain.DomainObjects.Exceptions;
 
 namespace ProcessadorVideo.Infra.Messaging;
 
@@ -15,22 +18,34 @@ namespace ProcessadorVideo.Infra.Messaging;
 public class SqsMessageBus : IMessageBus
 {
     private readonly IAmazonSQS _client;
+    private readonly ILogger<SqsMessageBus> _logger;
 
-    public SqsMessageBus(IOptions<AWSConfiguration> configuration)
+    public SqsMessageBus(IOptions<AWSConfiguration> configuration,
+                         ILogger<SqsMessageBus> logger)
     {
-        var awsConfig = configuration.Value;
-
-        var credentials = new SessionAWSCredentials(awsConfig.AccesKey, awsConfig.Secret, awsConfig.Token);
-
-        var sqsConfigClient = new AmazonSQSConfig
+        try
         {
-            RegionEndpoint = RegionEndpoint.GetBySystemName(awsConfig.Region),
-        };
+            _logger = logger;
 
-        if (!string.IsNullOrEmpty(awsConfig.ServiceUrl))
-            sqsConfigClient.ServiceURL = awsConfig.ServiceUrl;
+            var awsConfig = configuration.Value;
 
-        _client = new AmazonSQSClient(credentials, sqsConfigClient);
+            var credentials = new SessionAWSCredentials(awsConfig.AccesKey, awsConfig.Secret, awsConfig.Token);
+
+            var sqsConfigClient = new AmazonSQSConfig
+            {
+                RegionEndpoint = RegionEndpoint.GetBySystemName(awsConfig.Region),
+            };
+
+            if (!string.IsNullOrEmpty(awsConfig.ServiceUrl))
+                sqsConfigClient.ServiceURL = awsConfig.ServiceUrl;
+
+            _client = new AmazonSQSClient(credentials, sqsConfigClient);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Ocorreu um erro ao criar as credencias da aws: {ex.Message}");
+            throw new IntegrationException("Ocorreu um erro ao comunicar com o provedor de cloud!");
+        }
     }
 
     public async Task DeleteMessage(string topicOrQueue, string messageId)

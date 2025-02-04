@@ -1,11 +1,13 @@
 using Amazon;
 using Amazon.Runtime;
+using Amazon.Runtime.Internal.Util;
 using Amazon.S3;
 using Amazon.S3.Model;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ProcessadorVideo.CrossCutting.Configurations;
 using ProcessadorVideo.Domain.Adapters.Services;
+using ProcessadorVideo.Domain.DomainObjects.Exceptions;
 
 namespace ProcessadorVideo.Infra.Services;
 
@@ -13,21 +15,30 @@ public class BucketS3StorageService : IFileStorageService
 {
     private readonly IAmazonS3 _client;
 
-    public BucketS3StorageService(IOptions<AWSConfiguration> configuration)
+    public BucketS3StorageService(IOptions<AWSConfiguration> configuration,
+                                  ILogger<BucketS3StorageService> logger)
     {
-        var awsConfig = configuration.Value;
-
-        var credentials = new SessionAWSCredentials(awsConfig.AccesKey, awsConfig.Secret, awsConfig.Token);
-
-        var sqsConfigClient = new AmazonS3Config
+        try
         {
-            RegionEndpoint = RegionEndpoint.GetBySystemName(awsConfig.Region),
-        };
+            var awsConfig = configuration.Value;
 
-        if (!string.IsNullOrEmpty(awsConfig.ServiceUrl))
-            sqsConfigClient.ServiceURL = awsConfig.ServiceUrl;
+            var credentials = new SessionAWSCredentials(awsConfig.AccesKey, awsConfig.Secret, awsConfig.Token);
 
-        _client = new AmazonS3Client(credentials, sqsConfigClient);
+            var sqsConfigClient = new AmazonS3Config
+            {
+                RegionEndpoint = RegionEndpoint.GetBySystemName(awsConfig.Region),
+            };
+
+            if (!string.IsNullOrEmpty(awsConfig.ServiceUrl))
+                sqsConfigClient.ServiceURL = awsConfig.ServiceUrl;
+
+            _client = new AmazonS3Client(credentials, sqsConfigClient);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, $"Ocorreu um erro ao criar as credencias da aws: {ex.Message}");
+            throw new IntegrationException("Ocorreu um erro ao comunicar com o provedor de cloud!");
+        }
     }
 
     public async Task<byte[]> Ler(string path, string fileName)

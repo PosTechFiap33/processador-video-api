@@ -54,11 +54,6 @@ spec:
                 configMapKeyRef:
                   name: {{ .Values.configmap.name }}
                   key: AWS_REGION
-            - name: AWS_REGION
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Values.configmap.name }}
-                  key: AWS_REGION
             - name: AWS_ACCESS_KEY
               valueFrom:
                 configMapKeyRef:
