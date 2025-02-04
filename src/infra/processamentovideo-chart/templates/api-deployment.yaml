@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Values.deployment.name }}
+  annotations:
+    updatedAt: "{{ now | date '2025-01-02T15:04:05Z' }}"  # Formato de data e hora para o Deployment
 spec:
   replicas: {{ .Values.deployment.replicas }}
   selector:
@@ -11,6 +13,8 @@ spec:
     metadata:
       labels:
         app: {{ .Values.deployment.name }}
+      annotations:
+        updatedAt: "{{ now | date '2025-01-02T15:04:05Z' }}"  # Formato de data e hora para o Pod
     spec:
       {{- if .Values.serviceAccount.create }}
       serviceAccountName: api-service-account
