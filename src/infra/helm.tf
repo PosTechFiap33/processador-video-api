@@ -37,7 +37,7 @@ resource "helm_release" "processador_video" {
 
   set {
     name  = "serviceAccount.create"
-    value = true
+    value = false
   }
 
   set {
