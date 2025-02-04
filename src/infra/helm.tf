@@ -1,10 +1,14 @@
 resource "helm_release" "processador_video" {
   name       = var.projectName
   namespace  = "default"
-  chart      = "./processamentovideo-chart"  # Mantém o caminho para o chart local, se necessário
+  chart      = "./processamentovideo-chart" 
   repository = "https://fluent.github.io/helm-charts"  # Repositório do Fluent Bit
 
-  # Variáveis de configuração do processador de vídeo
+  set {
+    name  = "deployment.replicas"
+    value = 1
+  }
+
   set {
     name  = "environment"
     value = "prod"
@@ -106,10 +110,14 @@ EOF
   }
 
   depends_on = [
+    aws_s3_bucket.bucket,
+    aws_sqs_queue.converter_video_imagem_realizada,
+    aws_sqs_queue.erro_converter_video_imagem,
+    aws_sqs_queue.converter_video_imagem,
+    aws_dynamodb_table.processamento_video_table,
     aws_db_instance.controle_pedido_db,
     aws_eks_node_group.eks-node,
     aws_eks_access_entry.eks-access-entry,
     aws_eks_access_policy_association.eks-access-policy,
-    aws_eks_cluster.eks-cluster
-  ]
+    aws_eks_cluster.eks-cluster  ]
 }
