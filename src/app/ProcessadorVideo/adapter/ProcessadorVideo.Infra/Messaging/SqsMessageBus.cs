@@ -2,7 +2,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using Amazon;
 using Amazon.Runtime;
-using Amazon.Runtime.Internal.Util;
 using Amazon.SQS;
 using Amazon.SQS.Model;
 using Microsoft.Extensions.Logging;
@@ -60,10 +59,12 @@ public class SqsMessageBus : IMessageBus
         }
     }
 
-    public async Task PublishAsync<T>(T message, string queueUrl)
+    public async Task PublishAsync<T>(T message, string queueName)
     {
         try
         {
+            var queueUrl = await GetQueueUrlAsync(queueName);
+
             var sendMessageRequest = new SendMessageRequest
             {
                 QueueUrl = queueUrl,

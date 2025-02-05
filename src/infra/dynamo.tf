@@ -2,7 +2,7 @@ resource "aws_dynamodb_table" "processamento_video_table" {
   name           = var.DynamoTableName  # Nome da tabela
   billing_mode   = "PROVISIONED"           # Pode ser "PROVISIONED" ou "PAY_PER_REQUEST"
   hash_key       = "Id"                    # Chave primária
-  range_key      = "usuarioId"               # Chave de ordenação (opcional)
+  range_key      = "UsuarioId"               # Chave de ordenação (opcional)
   read_capacity  = 5                       # Capacidade de leitura provisionada
   write_capacity = 5                       # Capacidade de gravação provisionada
 
@@ -13,14 +13,14 @@ resource "aws_dynamodb_table" "processamento_video_table" {
   }
 
   attribute {
-    name = "usuarioId"
+    name = "UsuarioId"
     type = "S"  # Tipo de dado para o índice
   }
 
   # Índice Secundário Global (GSI) baseado no atributo usuarioId
   global_secondary_index {
     name            = "UsuarioId"            # Nome do índice secundário global
-    hash_key        = "usuarioId"            # Chave hash do índice
+    hash_key        = "UsuarioId"            # Chave hash do índice
     projection_type = "ALL"                  # Todos os atributos da tabela serão projetados para o índice
     read_capacity   = 5                       # Capacidade de leitura provisionada para o índice
     write_capacity  = 5                       # Capacidade de gravação provisionada para o índice
