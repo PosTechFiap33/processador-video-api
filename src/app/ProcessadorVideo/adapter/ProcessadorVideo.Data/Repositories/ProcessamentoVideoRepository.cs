@@ -44,17 +44,8 @@ public class ProcessamentoVideoRepository : IProcessamentoVideoRepository
         catch (Exception ex)
         {
             _logger.LogError(ex, $"Ocorreu um erro ao cadastrar o item no dynamo: {ex.Message}");
-            throw new IntegrationException("Ocorreu um erro, favor tente novamente!");
+            throw new IntegrationException($"Ocorreu um erro ao cadastrar o item no dynamo: {ex.Message}");
         }
-
-        // _context.WriteOperations.Add(new TransactWriteItem
-        // {
-        //     Put = new Put
-        //     {
-        //         TableName = TABLE_NAME,
-        //         Item = mapeamentos
-        //     }
-        // });
     }
 
     public async Task Atualizar(ProcessamentoVideo processamento)
@@ -93,17 +84,6 @@ public class ProcessamentoVideoRepository : IProcessamentoVideoRepository
                 }
             }
         };
-            // var updateItem = new TransactWriteItem
-            // {
-            //     Update = new Update
-            //     {
-            //         TableName = TABLE_NAME,
-            //         Key = key,
-            //         UpdateExpression = updateExpression.ToString(),
-            //         ExpressionAttributeNames = mapAttributesNames,
-            //         ExpressionAttributeValues = mapExpressionAttributesValues
-            //     }
-            // };
 
             var updateRequest = new UpdateItemRequest
             {
@@ -120,9 +100,8 @@ public class ProcessamentoVideoRepository : IProcessamentoVideoRepository
         catch (Exception ex)
         {
             _logger.LogError(ex, $"Ocorreu um erro ao atualizar o item no dynamo: {ex.Message}");
-            throw new IntegrationException("Ocorreu um erro, favor tente novamente!");
+            throw new IntegrationException($"Ocorreu um erro ao atualizar o item no dynamo: {ex.Message}");
         }
-        // _context.WriteOperations.Add(updateItem);
     }
 
     public async Task<ProcessamentoVideo?> Consultar(Guid id)
