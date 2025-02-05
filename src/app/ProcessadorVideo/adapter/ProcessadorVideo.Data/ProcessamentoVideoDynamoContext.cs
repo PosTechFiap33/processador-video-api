@@ -5,21 +5,23 @@ using Amazon.Runtime;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ProcessadorVideo.CrossCutting.Configurations;
-using ProcessadorVideo.Domain.Adapters.Repositories;
 using ProcessadorVideo.Domain.DomainObjects.Exceptions;
 
 namespace ProcessadorVideo.Data;
 
-public class ProcessamentoVideoDynamoContext : IUnitOfWork
+public class ProcessamentoVideoDynamoContext 
 {
     public IAmazonDynamoDB Client { get; private set; }
-    public readonly List<TransactWriteItem> WriteOperations;
+    // public readonly List<TransactWriteItem> WriteOperations;
+    private readonly ILogger<ProcessamentoVideoDynamoContext> _logger;
 
     public ProcessamentoVideoDynamoContext(IOptions<AWSConfiguration> configuration,
                                            ILogger<ProcessamentoVideoDynamoContext> logger)
     {
         try
         {
+            _logger = logger;
+
             var awsConfig = configuration.Value;
 
             var credentials = new SessionAWSCredentials(awsConfig.AccesKey, awsConfig.Secret, awsConfig.Token);
@@ -34,37 +36,37 @@ public class ProcessamentoVideoDynamoContext : IUnitOfWork
 
             Client = new AmazonDynamoDBClient(credentials, sqsConfigClient);
 
-            WriteOperations = new List<TransactWriteItem>();
+            // WriteOperations = new List<TransactWriteItem>();
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, $"Ocorreu um erro ao criar as credencias da aws: {ex.Message}");
+            _logger.LogError(ex, $"Ocorreu um erro ao criar as credencias da aws: {ex.Message}");
             throw new IntegrationException("Ocorreu um erro ao comunicar com o provedor de cloud!");
         }
     }
 
-    public async Task Commit()
-    {
-        try
-        {
-            if (!WriteOperations.Any())
-                return;
+    // public async Task Commit()
+    // {
+    //     try
+    //     {
+    //         if (!WriteOperations.Any())
+    //             return;
 
-            var transactRequest = new TransactWriteItemsRequest
-            {
-                TransactItems = WriteOperations
-            };
+    //         var transactRequest = new TransactWriteItemsRequest
+    //         {
+    //             TransactItems = WriteOperations
+    //         };
 
-            await Client.TransactWriteItemsAsync(transactRequest);
+    //         await Client.TransactWriteItemsAsync(transactRequest);
 
-            WriteOperations.Clear();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Erro ao realizar commit: {ex.Message}");
-            throw;
-        }
-    }
+    //         WriteOperations.Clear();
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         _logger.LogError(ex, $"Erro ao realizar commit: {ex.Message}");
+    //         throw new IntegrationException("Ocorreu um erro interno, por favor tente novamente!");
+    //     }
+    // }
 
     public List<AttributeValue> MapToList<T>(IList<T> list, Func<T, AttributeValue> GetAttribute)
     {
@@ -74,8 +76,8 @@ public class ProcessamentoVideoDynamoContext : IUnitOfWork
         return new List<AttributeValue>();
     }
 
-    public void Dispose()
-    {
-        WriteOperations.Clear();
-    }
+    // public void Dispose()
+    // {
+    //     WriteOperations.Clear();
+    // }
 }

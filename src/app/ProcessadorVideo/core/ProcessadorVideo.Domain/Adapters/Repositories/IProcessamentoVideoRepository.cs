@@ -2,10 +2,10 @@ using ProcessadorVideo.Domain.Entities;
 
 namespace ProcessadorVideo.Domain.Adapters.Repositories;
 
-public interface IProcessamentoVideoRepository : IRepository<ProcessamentoVideo>
+public interface IProcessamentoVideoRepository 
 {
-    void Criar(ProcessamentoVideo processamentoVideo);
-    void Atualizar(ProcessamentoVideo processamento);
+    Task Criar(ProcessamentoVideo processamentoVideo);
+    Task Atualizar(ProcessamentoVideo processamento);
     Task<ProcessamentoVideo?> Consultar(Guid id);
     Task<IEnumerable<ProcessamentoVideo>> ListarPorUsuario(Guid usuarioId);
 }
