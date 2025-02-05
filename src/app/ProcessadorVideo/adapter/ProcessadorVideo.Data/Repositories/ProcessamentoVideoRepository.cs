@@ -53,9 +53,10 @@ public class ProcessamentoVideoRepository : IProcessamentoVideoRepository
         try
         {
             var key = new Dictionary<string, AttributeValue>
-        {
-            { nameof(processamento.Id), new AttributeValue { S = processamento.Id.ToString() } }
-        };
+            {
+                { nameof(processamento.Id), new AttributeValue { S = processamento.Id.ToString() } },
+                { nameof(processamento.UsuarioId), new AttributeValue { S = processamento.UsuarioId.ToString() } } 
+            };
 
             var updateExpression = new StringBuilder("SET ");
             updateExpression.Append("#status = :status, ");
@@ -64,12 +65,12 @@ public class ProcessamentoVideoRepository : IProcessamentoVideoRepository
             updateExpression.Append("#arquivoDownload = :arquivoDownload");
 
             var mapAttributesNames = new Dictionary<string, string>
-        {
-            { "#status", "Status" },
-            { "#data", "Data" },
-            { "#mensagens", "Mensagens" },
-            { "#arquivoDownload", "ArquivoDownload" }
-        };
+            {
+                { "#status", "Status" },
+                { "#data", "Data" },
+                { "#mensagens", "Mensagens" },
+                { "#arquivoDownload", "ArquivoDownload" }
+            };
 
             var mapExpressionAttributesValues = new Dictionary<string, AttributeValue>
         {

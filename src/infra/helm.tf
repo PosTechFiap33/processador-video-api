@@ -2,7 +2,8 @@ resource "helm_release" "processador_video" {
   name       = var.projectName
   namespace  = "default"
   chart      = "./processamentovideo-chart" 
-  repository = "https://fluent.github.io/helm-charts"  # Repositório do Fluent Bit
+  repository = "https://fluent.github.io/helm-charts"
+  timeout    = 600
 
   set {
     name  = "deployment.replicas"
