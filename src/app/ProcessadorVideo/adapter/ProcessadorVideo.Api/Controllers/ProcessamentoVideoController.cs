@@ -12,6 +12,12 @@ namespace FiAPProcessaVideo.Api.Controllers;
 [Route("[controller]")]
 public class ProcessamentoVideoController : ControllerBase
 {
+    private readonly ILogger<ProcessamentoVideoController> _logger;
+
+    public ProcessamentoVideoController(ILogger<ProcessamentoVideoController> logger)
+    {
+        _logger = logger;
+    }
 
     [HttpPost]
     [RequestSizeLimit(900_000_000)] // Limite de 900 MB
@@ -30,6 +36,7 @@ public class ProcessamentoVideoController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, $"Ocorreu um erro ao processar o video: {ex.Message}");
             return StatusCode(500, $"An error occurred: {ex.Message}");
         }
     }
