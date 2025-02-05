@@ -47,11 +47,12 @@ public class SqsMessageBus : IMessageBus
         }
     }
 
-    public async Task DeleteMessage(string topicOrQueue, string messageId)
+    public async Task DeleteMessage(string queueName, string messageId)
     {
         try
         {
-            await _client.DeleteMessageAsync(topicOrQueue, messageId);
+            var queueUrl = await GetQueueUrlAsync(queueName);
+            await _client.DeleteMessageAsync(queueUrl, messageId);
         }
         catch (Exception ex)
         {
