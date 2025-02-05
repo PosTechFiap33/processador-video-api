@@ -2,7 +2,7 @@ resource "aws_dynamodb_table" "processamento_video_table" {
   name           = var.DynamoTableName  # Nome da tabela
   billing_mode   = "PROVISIONED"           # Pode ser "PROVISIONED" ou "PAY_PER_REQUEST"
   hash_key       = "Id"                    # Chave primária
-  range_key      = "UsuarioId"               # Chave de ordenação (opcional)
+  range_key      = "UsuarioId"             # Chave de ordenação (opcional)
   read_capacity  = 5                       # Capacidade de leitura provisionada
   write_capacity = 5                       # Capacidade de gravação provisionada
 

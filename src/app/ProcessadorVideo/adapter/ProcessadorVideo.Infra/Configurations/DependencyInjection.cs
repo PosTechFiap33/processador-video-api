@@ -18,14 +18,15 @@ public static class DependencyInjection
         services.AddDefaultAWSOptions(configuration.GetAWSOptions());
         // services.AddAWSService<IAmazonSQS>();
         // services.AddAWSService<IAmazonS3>();
-        
+
         services.AddScoped<IMessageBus, SqsMessageBus>();
 
         services.AddScoped<IVideoService, VideoService>();
         services.AddScoped<IFileStorageService, BucketS3StorageService>();
 
         services.AddHostedService<ProcessarVideoMessagingWorker>();
-        services.AddHostedService<ProcessamentoVideoRealizadoMessagingWorker>();        
+        services.AddHostedService<ProcessamentoVideoRealizadoMessagingWorker>();
+        services.AddHostedService<ProcessamentoVideoErrorMessagingWorker>();
 
         return services;
     }
