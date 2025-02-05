@@ -29,10 +29,26 @@ awslocal dynamodb create-table \
     --table-name ProcessamentoVideos \
     --attribute-definitions \
         AttributeName=Id,AttributeType=S \
+        AttributeName=UsuarioId,AttributeType=S \
     --key-schema \
         AttributeName=Id,KeyType=HASH \
+        AttributeName=UsuarioId,KeyType=RANGE \
     --provisioned-throughput \
-        ReadCapacityUnits=5,WriteCapacityUnits=5
+        ReadCapacityUnits=5,WriteCapacityUnits=5 \
+    --global-secondary-indexes \
+        '[{
+            "IndexName": "UsuarioId",
+            "KeySchema": [
+                {"AttributeName": "UsuarioId", "KeyType": "HASH"}
+            ],
+            "Projection": {
+                "ProjectionType": "ALL"
+            },
+            "ProvisionedThroughput": {
+                "ReadCapacityUnits": 5,
+                "WriteCapacityUnits": 5
+            }
+        }]'
 
 awslocal dynamodb scan --table-name ProcessamentoVideos
 
@@ -48,7 +64,23 @@ awslocal dynamodb create-table \
     --table-name ProcessamentoVideos \
     --attribute-definitions \
         AttributeName=Id,AttributeType=S \
+        AttributeName=UsuarioId,AttributeType=S \
     --key-schema \
         AttributeName=Id,KeyType=HASH \
+        AttributeName=UsuarioId,KeyType=RANGE \
     --provisioned-throughput \
-        ReadCapacityUnits=5,WriteCapacityUnits=5
+        ReadCapacityUnits=5,WriteCapacityUnits=5 \
+    --global-secondary-indexes \
+        '[{
+            "IndexName": "UsuarioId",
+            "KeySchema": [
+                {"AttributeName": "UsuarioId", "KeyType": "HASH"}
+            ],
+            "Projection": {
+                "ProjectionType": "ALL"
+            },
+            "ProvisionedThroughput": {
+                "ReadCapacityUnits": 5,
+                "WriteCapacityUnits": 5
+            }
+        }]'
