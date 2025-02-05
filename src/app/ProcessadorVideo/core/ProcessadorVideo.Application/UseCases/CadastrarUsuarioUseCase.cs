@@ -8,7 +8,7 @@ namespace ProcessadorVideo.Application.UseCases;
 
 public interface ICadastrarUsuarioUseCase
 {
-    Task Executar(UsuarioDTO usuario);
+    Task<Usuario> Executar(UsuarioDTO usuario);
 }
 
 public class CadastrarUsuarioUseCase : ICadastrarUsuarioUseCase
@@ -20,21 +20,23 @@ public class CadastrarUsuarioUseCase : ICadastrarUsuarioUseCase
         _repository = repository;
     }
 
-    public async Task Executar(UsuarioDTO dadosUsuario)
+    public async Task<Usuario> Executar(UsuarioDTO dadosUsuario)
     {
 
-       var usuarioCadastrado = await _repository.Consultar(dadosUsuario.Usuario);
+        var usuarioCadastrado = await _repository.Consultar(dadosUsuario.Usuario);
 
-       if(usuarioCadastrado is not null)
+        if (usuarioCadastrado is not null)
             throw new DomainException("Ja existe um usuario com esse nome cadastrado!");
 
-        var usuario = new Usuario(dadosUsuario.Usuario, 
+        var usuario = new Usuario(dadosUsuario.Usuario,
                                   dadosUsuario.Senha.ToMD5(),
                                   dadosUsuario.Email,
                                   dadosUsuario.Perfil);
 
-      _repository.Criar(usuario);
+        _repository.Criar(usuario);
 
-       await _repository.UnitOfWork.Commit();
+        await _repository.UnitOfWork.Commit();
+
+        return usuario;
     }
 }

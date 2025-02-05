@@ -25,8 +25,11 @@ public class UsuarioController : ControllerBase
     {
         try
         {
-            await useCase.Executar(usuario);
-            return StatusCode((int)HttpStatusCode.Created, "Usuario cadastrado!");
+            var usuarioCadastrado = await useCase.Executar(usuario);
+            return StatusCode((int)HttpStatusCode.Created, new { 
+                usuarioCadastrado.Id, 
+                usuarioCadastrado.NomeIdentificacao 
+            });
         }
         catch (DomainException ex)
         {
