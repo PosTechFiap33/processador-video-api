@@ -19,8 +19,6 @@ public static class DependencyInjection
         services.AddAWSService<IAmazonSQS>();
         services.AddAWSService<IAmazonS3>();
         
-        services.Configure<AWSConfiguration>(configuration.GetSection("AWS"));
-
         services.AddScoped<IMessageBus, SqsMessageBus>();
 
         services.AddScoped<IVideoService, VideoService>();

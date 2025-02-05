@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using ProcessadorVideo.CrossCutting.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,9 +71,10 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.Configure<AWSConfiguration>(builder.Configuration.GetSection("AWS"));
+builder.Services.AddDataConfiguration(builder.Configuration);
 builder.Services.AddInfra(builder.Configuration);
 builder.Services.AddApplication();
-builder.Services.AddDataConfiguration(builder.Configuration);
 builder.Services.AddIdentity(builder.Configuration);
 
 builder.Services.AddHealthChecks()

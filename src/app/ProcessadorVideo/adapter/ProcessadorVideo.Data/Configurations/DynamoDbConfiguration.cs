@@ -14,7 +14,6 @@ public static class DynamoDbConfiguration
     public static IServiceCollection AddDataConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDefaultAWSOptions(configuration.GetAWSOptions());
-        services.Configure<AWSConfiguration>(configuration.GetSection("AWS"));
         services.AddAWSService<IAmazonDynamoDB>();
 
         services.AddScoped<ProcessamentoVideoDynamoContext>();
