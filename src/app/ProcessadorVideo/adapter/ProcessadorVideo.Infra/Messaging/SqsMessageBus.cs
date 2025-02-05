@@ -9,7 +9,6 @@ using Microsoft.Extensions.Options;
 using ProcessadorVideo.CrossCutting.Configurations;
 using ProcessadorVideo.Domain.Adapters.MessageBus;
 using ProcessadorVideo.Domain.DomainObjects;
-using ProcessadorVideo.Domain.DomainObjects.Exceptions;
 
 namespace ProcessadorVideo.Infra.Messaging;
 
@@ -28,22 +27,26 @@ public class SqsMessageBus : IMessageBus
 
             var awsConfig = configuration.Value;
 
-            var credentials = new SessionAWSCredentials(awsConfig.AccesKey, awsConfig.Secret, awsConfig.Token);
-
             var sqsConfigClient = new AmazonSQSConfig
             {
                 RegionEndpoint = RegionEndpoint.GetBySystemName(awsConfig.Region),
             };
 
-            if (!string.IsNullOrEmpty(awsConfig.ServiceUrl))
+            if (string.IsNullOrEmpty(awsConfig.ServiceUrl))
+            {
+                var credentials = new SessionAWSCredentials(awsConfig.AccesKey, awsConfig.Secret, awsConfig.Token);
+                _client = new AmazonSQSClient(credentials, sqsConfigClient);
+            }
+            else
+            {
                 sqsConfigClient.ServiceURL = awsConfig.ServiceUrl;
-
-            _client = new AmazonSQSClient(credentials, sqsConfigClient);
+                _client = new AmazonSQSClient(sqsConfigClient);
+            }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, $"Ocorreu um erro ao criar as credencias da aws: {ex.Message}");
-            throw new IntegrationException("Ocorreu um erro ao comunicar com o provedor de cloud!");
+            throw new MessageBusException("Ocorreu um erro ao autenticar com o provedor de cloud!");
         }
     }
 
@@ -56,6 +59,7 @@ public class SqsMessageBus : IMessageBus
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, $"Ocorreu um erro remover a mensagem da fila: {ex.Message}");
             throw new MessageBusException($"Erro ao deletar a mensagem do SQS: {ex.Message}");
         }
     }
@@ -76,6 +80,7 @@ public class SqsMessageBus : IMessageBus
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, $"Ocorreu um erro publicar a mensagem na fila: {ex.Message}");
             throw new MessageBusException($"Erro ao publicar a mensagem do SQS: {ex.Message}");
         }
     }
@@ -110,6 +115,7 @@ public class SqsMessageBus : IMessageBus
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, $"Ocorreu um erro receber a mensagem na fila: {ex.Message}");
             throw new MessageBusException($"Erro ao receber a mensagem do SQS: {ex.Message}");
         }
     }
@@ -129,8 +135,8 @@ public class SqsMessageBus : IMessageBus
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Erro ao obter a URL da fila {queueName}: {ex.Message}");
-            throw;
+            _logger.LogError(ex, $"Ocorreu um erro ao recuperar a url da fila: {ex.Message}");
+            throw new MessageBusException($"Erro ao recuperar nome da fila SQS: {ex.Message}");
         }
     }
 }

@@ -80,46 +80,43 @@ builder.Services.AddIdentity(builder.Configuration);
 builder.Services.AddHealthChecks()
                 .AddCheck("self", () => HealthCheckResult.Healthy());
 
+builder.Services
+       .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+       .AddJwtBearer(options =>
+       {
+           var key = Encoding.UTF8.GetBytes(builder.Configuration["SecretKey"]);
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        var key = Encoding.UTF8.GetBytes(builder.Configuration["SecretKey"]);
+           options.RequireHttpsMetadata = false;  // Para desenvolvimento, desabilitar HTTPS
+           options.SaveToken = true;  // Salvar o token no contexto da requisição
+           options.TokenValidationParameters = new TokenValidationParameters
+           {
+               ValidateIssuerSigningKey = true,
+               IssuerSigningKey = new SymmetricSecurityKey(key),
+               ValidateIssuer = false, // Validação do emissor (Issuer)
+               ValidateAudience = false, // Validação do público (Audience)
+               ValidateLifetime = true,  // Verifica se o token expirou
+               ClockSkew = TimeSpan.Zero // Remover o atraso da verificação de expiração
+           };
 
-        options.RequireHttpsMetadata = false;  // Para desenvolvimento, desabilitar HTTPS
-        options.SaveToken = true;  // Salvar o token no contexto da requisição
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(key),
-            ValidateIssuer = false, // Validação do emissor (Issuer)
-                                    //      ValidIssuer = "your-issuer",  // Substitua com o seu emissor
-            ValidateAudience = false, // Validação do público (Audience)
-                                      //   ValidAudience = "your-audience",  // Substitua com seu público
-            ValidateLifetime = true,  // Verifica se o token expirou
-            ClockSkew = TimeSpan.Zero // Remover o atraso da verificação de expiração
-        };
-
-        // Habilitar log detalhado para depuração
-        options.Events = new JwtBearerEvents
-        {
-            OnAuthenticationFailed = context =>
-            {
-                Console.WriteLine($"Authentication failed: {context.Exception.Message}");
-                return Task.CompletedTask;
-            },
-            OnTokenValidated = context =>
-            {
-                Console.WriteLine("Token validated successfully.");
-                return Task.CompletedTask;
-            }
-        };
-    });
+           // Habilitar log detalhado para depuração
+           options.Events = new JwtBearerEvents
+           {
+               OnAuthenticationFailed = context =>
+               {
+                   Console.WriteLine($"Authentication failed: {context.Exception.Message}");
+                   return Task.CompletedTask;
+               },
+               OnTokenValidated = context =>
+               {
+                   Console.WriteLine("Token validated successfully.");
+                   return Task.CompletedTask;
+               }
+           };
+       });
 
 builder.Services.AddAuthorizationCore(options =>
 {
-    options.AddPolicy("administrador", policy =>
-        policy.RequireRole("administrador"));
+    options.AddPolicy("administrador", policy => policy.RequireRole("administrador"));
 });
 
 var app = builder.Build();

@@ -7,14 +7,13 @@ using ProcessadorVideo.Domain.Adapters.Repositories;
 using ProcessadorVideo.Domain.Adapters.Services;
 using ProcessadorVideo.Domain.Entities;
 using Microsoft.Extensions.Options;
-using Amazon.Runtime.Internal.Util;
 using Microsoft.Extensions.Logging;
 
 namespace ProcessadorVideo.Application.UseCases;
 
 public interface IConverterVideoParaImagemUseCase
 {
-    Task Executar(ICollection<IFormFile> videos, Guid usuarioId);
+    Task<ProcessamentoVideo> Executar(ICollection<IFormFile> videos, Guid usuarioId);
 }
 
 public class ConverterVideoParaImagemUseCase : IConverterVideoParaImagemUseCase
@@ -38,7 +37,7 @@ public class ConverterVideoParaImagemUseCase : IConverterVideoParaImagemUseCase
         _logger = logger;
     }
 
-    public async Task Executar(ICollection<IFormFile> videos, Guid usuarioId)
+    public async Task<ProcessamentoVideo> Executar(ICollection<IFormFile> videos, Guid usuarioId)
     {
         var processamento = new ProcessamentoVideo(usuarioId);
         var converterVideoMessage = new ProcessarVideoMessage(processamento.Id);
@@ -64,6 +63,8 @@ public class ConverterVideoParaImagemUseCase : IConverterVideoParaImagemUseCase
             await _repository.Criar(processamento);
 
             await _messageBus.PublishAsync(converterVideoMessage, _awsConfiguration.ConverterVideoParaImagemQueueUrl);
+
+            return processamento;
         }
         catch (Exception ex)
         {

@@ -9,10 +9,9 @@ using ProcessadorVideo.Domain.DomainObjects.Exceptions;
 
 namespace ProcessadorVideo.Data;
 
-public class ProcessamentoVideoDynamoContext 
+public class ProcessamentoVideoDynamoContext
 {
     public IAmazonDynamoDB Client { get; private set; }
-    // public readonly List<TransactWriteItem> WriteOperations;
     private readonly ILogger<ProcessamentoVideoDynamoContext> _logger;
 
     public ProcessamentoVideoDynamoContext(IOptions<AWSConfiguration> configuration,
@@ -24,19 +23,20 @@ public class ProcessamentoVideoDynamoContext
 
             var awsConfig = configuration.Value;
 
-            var credentials = new SessionAWSCredentials(awsConfig.AccesKey, awsConfig.Secret, awsConfig.Token);
-
             var sqsConfigClient = new AmazonDynamoDBConfig
             {
                 RegionEndpoint = RegionEndpoint.GetBySystemName(awsConfig.Region)
             };
 
-            if (!string.IsNullOrEmpty(awsConfig.ServiceUrl))
+            if (string.IsNullOrEmpty(awsConfig.ServiceUrl)){
+                var credentials = new SessionAWSCredentials(awsConfig.AccesKey, awsConfig.Secret, awsConfig.Token);
+                Client = new AmazonDynamoDBClient(credentials, sqsConfigClient);
+            }
+            else
+            {
                 sqsConfigClient.ServiceURL = awsConfig.ServiceUrl;
-
-            Client = new AmazonDynamoDBClient(credentials, sqsConfigClient);
-
-            // WriteOperations = new List<TransactWriteItem>();
+                Client = new AmazonDynamoDBClient(sqsConfigClient);
+            }
         }
         catch (Exception ex)
         {
@@ -45,29 +45,6 @@ public class ProcessamentoVideoDynamoContext
         }
     }
 
-    // public async Task Commit()
-    // {
-    //     try
-    //     {
-    //         if (!WriteOperations.Any())
-    //             return;
-
-    //         var transactRequest = new TransactWriteItemsRequest
-    //         {
-    //             TransactItems = WriteOperations
-    //         };
-
-    //         await Client.TransactWriteItemsAsync(transactRequest);
-
-    //         WriteOperations.Clear();
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         _logger.LogError(ex, $"Erro ao realizar commit: {ex.Message}");
-    //         throw new IntegrationException("Ocorreu um erro interno, por favor tente novamente!");
-    //     }
-    // }
-
     public List<AttributeValue> MapToList<T>(IList<T> list, Func<T, AttributeValue> GetAttribute)
     {
         if (list != null && list.Any())
@@ -75,9 +52,4 @@ public class ProcessamentoVideoDynamoContext
 
         return new List<AttributeValue>();
     }
-
-    // public void Dispose()
-    // {
-    //     WriteOperations.Clear();
-    // }
 }

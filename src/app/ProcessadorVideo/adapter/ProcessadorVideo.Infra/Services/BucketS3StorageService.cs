@@ -1,6 +1,5 @@
 using Amazon;
 using Amazon.Runtime;
-using Amazon.Runtime.Internal.Util;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.Extensions.Logging;
@@ -14,25 +13,36 @@ namespace ProcessadorVideo.Infra.Services;
 public class BucketS3StorageService : IFileStorageService
 {
     private readonly IAmazonS3 _client;
+    private readonly ILogger<BucketS3StorageService> _logger;
 
     public BucketS3StorageService(IOptions<AWSConfiguration> configuration,
                                   ILogger<BucketS3StorageService> logger)
     {
         try
         {
+            _logger = logger;
+
             var awsConfig = configuration.Value;
 
-            var credentials = new SessionAWSCredentials(awsConfig.AccesKey, awsConfig.Secret, awsConfig.Token);
+            var sqsConfigClient = new AmazonS3Config();
 
-            var sqsConfigClient = new AmazonS3Config
+            if (string.IsNullOrEmpty(awsConfig.ServiceUrl))
             {
-                RegionEndpoint = RegionEndpoint.GetBySystemName(awsConfig.Region),
-            };
-
-            if (!string.IsNullOrEmpty(awsConfig.ServiceUrl))
-                sqsConfigClient.ServiceURL = awsConfig.ServiceUrl;
-
-            _client = new AmazonS3Client(credentials, sqsConfigClient);
+                var credentials = new SessionAWSCredentials(awsConfig.AccesKey, awsConfig.Secret, awsConfig.Token);
+                _client = new AmazonS3Client(credentials, new AmazonS3Config
+                {
+                    RegionEndpoint = RegionEndpoint.GetBySystemName(awsConfig.Region)
+                });
+            }
+            else
+            {
+                _client = new AmazonS3Client(
+                    new AmazonS3Config
+                    {
+                        ServiceURL = awsConfig.ServiceUrl,
+                        ForcePathStyle = true
+                    });
+            }
         }
         catch (Exception ex)
         {
@@ -65,8 +75,8 @@ public class BucketS3StorageService : IFileStorageService
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Erro ao ler o arquivo: {ex.Message}");
-            throw;
+            _logger.LogError(ex, $"Ocorreu um erro ao ler o arquivo do bucket s3: {ex.Message}");
+            throw new IntegrationException("Ocorreu um erro interno, favor tente novamente!");
         }
     }
 
@@ -84,36 +94,38 @@ public class BucketS3StorageService : IFileStorageService
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Erro ao ler o arquivo: {ex.Message}");
-            throw;
+            _logger.LogError(ex, $"Ocorreu um erro ao remover o arquivo do bucket s3: {ex.Message}");
+            throw new IntegrationException("Ocorreu um erro interno, favor tente novamente!");
         }
     }
 
     public async Task Salvar(string path, string fileName, byte[] fileBytes, string contentType)
     {
-        var stream = new MemoryStream(fileBytes);
-
         try
         {
-            var request = new PutObjectRequest
+            using (var stream = new MemoryStream(fileBytes))
             {
-                BucketName = path,
-                Key = fileName,
-                InputStream = stream,
-                ContentType = contentType,
-                TagSet = new List<Tag> {
+                var request = new PutObjectRequest
+                {
+                    BucketName = path,
+                    Key = fileName,
+                    InputStream = stream,
+                    ContentType = contentType,
+                    TagSet = new List<Tag> {
                     new Tag {
                         Key = "ExpirationDate",
                         Value = DateTime.UtcNow.AddDays(3).ToString("yyyy-MM-ddTHH:mm:ssZ")
                     }
                 }
-            };
+                };
 
-            await _client.PutObjectAsync(request);
+                await _client.PutObjectAsync(request);
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Erro ao enviar arquivo: {ex.Message}");
+            _logger.LogError(ex, $"Ocorreu um erro ao salvar o arquivo no bucket s3: {ex.Message}");
+            throw new IntegrationException("Ocorreu um erro interno, favor tente novamente!");
         }
     }
 }

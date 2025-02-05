@@ -16,8 +16,8 @@ public static class DependencyInjection
     public static IServiceCollection AddInfra(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDefaultAWSOptions(configuration.GetAWSOptions());
-        services.AddAWSService<IAmazonSQS>();
-        services.AddAWSService<IAmazonS3>();
+        // services.AddAWSService<IAmazonSQS>();
+        // services.AddAWSService<IAmazonS3>();
         
         services.AddScoped<IMessageBus, SqsMessageBus>();
 

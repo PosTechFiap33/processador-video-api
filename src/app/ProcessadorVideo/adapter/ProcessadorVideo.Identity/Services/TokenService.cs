@@ -27,11 +27,10 @@ public class TokenService : ITokenService
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new List<Claim>
-        {
-            new Claim("nomeIdentificacao", usuario.NomeIdentificacao),
-            new Claim("perfil", ((int)usuario.Perfil).ToString()),
-            new Claim(ClaimTypes.Role, usuario.Perfil.ToString().ToLower())
-        }),
+            {
+                new Claim("Id", usuario.Id.ToString()),
+                new Claim(ClaimTypes.Role, usuario.Perfil.ToString().ToLower())
+            }),
             Expires = DateTime.UtcNow.AddMinutes(int.Parse(tokenConfig["Minutes"])),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
