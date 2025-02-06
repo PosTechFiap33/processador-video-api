@@ -10,7 +10,6 @@ spec:
   template:
     metadata:
       annotations:
-        releaseTime: {{ dateInZone "2006-01-02 15:04:05Z" (now) "UTC"| quote }}
       labels:
         app: {{ .Values.identityDeployment.name }}
     spec:
