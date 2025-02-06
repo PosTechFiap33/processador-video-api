@@ -27,20 +27,20 @@ public class SqsMessageBus : IMessageBus
 
             var awsConfig = configuration.Value;
 
-            var sqsConfigClient = new AmazonSQSConfig
-            {
-                RegionEndpoint = RegionEndpoint.GetBySystemName(awsConfig.Region),
-            };
-
             if (string.IsNullOrEmpty(awsConfig.ServiceUrl))
             {
                 var credentials = new SessionAWSCredentials(awsConfig.AccesKey, awsConfig.Secret, awsConfig.Token);
-                _client = new AmazonSQSClient(credentials, sqsConfigClient);
+                _client = new AmazonSQSClient(credentials, new AmazonSQSConfig
+                {
+                    RegionEndpoint = RegionEndpoint.GetBySystemName(awsConfig.Region)
+                });
             }
             else
             {
-                sqsConfigClient.ServiceURL = awsConfig.ServiceUrl;
-                _client = new AmazonSQSClient(sqsConfigClient);
+                _client = new AmazonSQSClient(new AmazonSQSConfig
+                {
+                    ServiceURL = awsConfig.ServiceUrl,
+                });
             }
         }
         catch (Exception ex)

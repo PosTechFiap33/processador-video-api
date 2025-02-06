@@ -19,12 +19,12 @@ public class AutenticacaoController : ControllerBase
 
     [HttpPost]
     [AllowAnonymous]
-    public async Task<IActionResult> Login([FromBody] AutenticacaoDTO autenticaao,
+    public async Task<IActionResult> Login([FromBody] AutenticacaoDTO autenticacao,
                                            [FromServices] IAutenticarUseCase useCase)
     {
         try
         {
-            var token = await useCase.Executar(autenticaao.Usuario, autenticaao.Senha);
+            var token = await useCase.Executar(autenticacao.Usuario, autenticacao.Senha);
             return Ok(new { token });
         }
         catch (AutenticacaoException ex)
