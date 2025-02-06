@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../build/ProcessamentoVideo.Identity.Api.props" />
+</Project>

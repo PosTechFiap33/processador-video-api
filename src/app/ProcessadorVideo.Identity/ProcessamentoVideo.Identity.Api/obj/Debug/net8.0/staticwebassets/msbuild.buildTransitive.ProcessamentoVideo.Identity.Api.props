@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../buildMultiTargeting/ProcessamentoVideo.Identity.Api.props" />
+</Project>
