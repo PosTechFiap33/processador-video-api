@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.Values.serviceIdentity.name}}
+spec:
+  selector:
+    app: {{.Values.identityDeployment.name}}  # Seleciona os pods que correspondem a essa label
+  ports:
+    - name: http            # Nome da porta para referência interna (HTTP)
+      protocol: TCP
+      port: {{.Values.serviceIdentity.http.targetPort}}              # Porta externa do serviço Kubernetes
+      targetPort: {{.Values.serviceIdentity.http.targetPort}}        # Porta no pod onde a sua aplicação está escutando
+      {{- if eq .Values.environment "local" }}
+      nodePort: {{ .Values.serviceIdentity.http.nodePort }}
+      {{- end }}     
+  type: {{ if eq .Values.environment "local" }} NodePort {{ else }} LoadBalancer {{ end }}

@@ -8,4 +8,4 @@ data:
   AWS_SECRET: "{{.Values.aws.secret}}"
   AWS_TOKEN: "{{.Values.aws.token}}"
   ConnectionString: "{{ .Values.ConnectionString }}"
-
+  SecretKey: "{{.Values.SecretKey}}"

@@ -2,6 +2,11 @@ variable "region" {
   default = "us-east-1"
 }
 
+variable "SecretKey" {
+  description = "Chave de criptografia do token"
+  type        = string
+}
+
 variable "AWS_ACCESS_KEY_ID" {
   description = "AWS Access Key ID"
   type        = string

@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.apiDeployment.name }}
+  name: {{ .Values.identityDeployment.name }}
 spec:
-  replicas: {{ .Values.apiDeployment.replicas }}
+  replicas: {{ .Values.identityDeployment.replicas }}
   selector:
     matchLabels:
-      app: {{ .Values.apiDeployment.name }}
+      app: {{ .Values.identityDeployment.name }}
   template:
     metadata:
       annotations:
         releaseTime: {{ dateInZone "2006-01-02 15:04:05Z" (now) "UTC"| quote }}
       labels:
-        app: {{ .Values.apiDeployment.name }}
+        app: {{ .Values.identityDeployment.name }}
     spec:
       {{- if .Values.serviceAccount.create }}
       serviceAccountName: api-service-account
       {{- end }}
       containers:
-        - name: {{ .Values.apiDeployment.name }}
-          image: "{{ .Values.apiDeployment.image }}"
+        - name: {{ .Values.identityDeployment.name }}
+          image: "{{ .Values.identityDeployment.image }}"
           ports:
             - containerPort: 80
           livenessProbe:
@@ -50,27 +50,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                     name:  {{ .Values.configmap.name }}
-                    key: ConnectionString 
-            - name: AWS_REGION
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Values.configmap.name }}
-                  key: AWS_REGION
-            - name: AWS_ACCESS_KEY
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Values.configmap.name }}
-                  key: AWS_ACCESS_KEY
-            - name: AWS_SECRET
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Values.configmap.name }}
-                  key: AWS_SECRET
-            - name: AWS_TOKEN
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Values.configmap.name }}
-                  key: AWS_TOKEN
+                    key: ConnectionString
             - name: SecretKey
               valueFrom:
                 configMapKeyRef:

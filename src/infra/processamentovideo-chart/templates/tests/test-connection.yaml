@@ -11,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "processamentovideo-chart.fullname" . }}:{{ .Values.service.http.targetPort }}']
+      args: ['{{ include "processamentovideo-chart.fullname" . }}:{{ .Values.serviceApi.http.targetPort }}']
   restartPolicy: Never
