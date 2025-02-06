@@ -1,12 +1,10 @@
 environment: local
 
+ConnectionString: "Host=127.0.0.1;Port=5432;Pooling=true;Database=ProcessamentoImagemIdentity;User Id=postgres;"
+
 aws:
   key: AwsIntegration
   region: "us-east-1"
-  accesKey: "test"
-  secretKey: "test"
-  serviceUrl: "http://localstack:4566"
-  QueueUrl: "http://localstack.default.svc.cluster.local:4566/000000000000"
 
 deployment:
   name: api-deployment
@@ -26,8 +24,8 @@ hpa:
 service:
   name: api-svc
   http:
-    targetPort: 8080
+    targetPort: 80
     nodePort: 32000
-  https:
-    targetPort: 443
-    nodePort: 32001
+
+serviceAccount:
+  create: false

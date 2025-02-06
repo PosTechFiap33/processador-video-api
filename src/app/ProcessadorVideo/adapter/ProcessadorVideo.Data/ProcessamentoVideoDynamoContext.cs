@@ -1,51 +1,47 @@
+using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
+using Amazon.Runtime;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ProcessadorVideo.CrossCutting.Configurations;
-using ProcessadorVideo.CrossCutting.Factories;
-using ProcessadorVideo.Domain.Adapters.Repositories;
+using ProcessadorVideo.Domain.DomainObjects.Exceptions;
 
 namespace ProcessadorVideo.Data;
 
-public class ProcessamentoVideoDynamoContext : IUnitOfWork
+public class ProcessamentoVideoDynamoContext
 {
-    public AmazonDynamoDBClient Client { get; private set; }
-    public readonly List<TransactWriteItem> WriteOperations;
+    public IAmazonDynamoDB Client { get; private set; }
+    private readonly ILogger<ProcessamentoVideoDynamoContext> _logger;
 
-    public ProcessamentoVideoDynamoContext(IOptions<AWSConfiguration> configuration)
-    {
-        var awsConfiguration = configuration.Value;
-
-        var config = new AmazonDynamoDBConfig
-        {
-            RegionEndpoint = Amazon.RegionEndpoint.GetBySystemName(awsConfiguration.Region),
-        };
-
-        Client = new AmazonDynamoDBClient(config.CreateCredentials(awsConfiguration), config);
-
-        WriteOperations = new List<TransactWriteItem>();
-    }
-
-    public async Task Commit()
+    public ProcessamentoVideoDynamoContext(IOptions<AWSConfiguration> configuration,
+                                           ILogger<ProcessamentoVideoDynamoContext> logger)
     {
         try
         {
-            if (!WriteOperations.Any())
-                return;
+            _logger = logger;
 
-            var transactRequest = new TransactWriteItemsRequest
+            var awsConfig = configuration.Value;
+
+            var sqsConfigClient = new AmazonDynamoDBConfig
             {
-                TransactItems = WriteOperations
+                RegionEndpoint = RegionEndpoint.GetBySystemName(awsConfig.Region)
             };
 
-            await Client.TransactWriteItemsAsync(transactRequest);
-
-            WriteOperations.Clear();
+            if (string.IsNullOrEmpty(awsConfig.ServiceUrl)){
+                var credentials = new SessionAWSCredentials(awsConfig.AccesKey, awsConfig.Secret, awsConfig.Token);
+                Client = new AmazonDynamoDBClient(credentials, sqsConfigClient);
+            }
+            else
+            {
+                sqsConfigClient.ServiceURL = awsConfig.ServiceUrl;
+                Client = new AmazonDynamoDBClient(sqsConfigClient);
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Erro ao realizar commit: {ex.Message}");
-            throw;
+            _logger.LogError(ex, $"Ocorreu um erro ao criar as credencias da aws: {ex.Message}");
+            throw new IntegrationException("Ocorreu um erro ao comunicar com o provedor de cloud!");
         }
     }
 
@@ -55,10 +51,5 @@ public class ProcessamentoVideoDynamoContext : IUnitOfWork
             return list.Select(GetAttribute).ToList();
 
         return new List<AttributeValue>();
-    }
-
-    public void Dispose()
-    {
-        WriteOperations.Clear();
     }
 }

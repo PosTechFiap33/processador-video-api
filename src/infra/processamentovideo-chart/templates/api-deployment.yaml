@@ -1,4 +1,3 @@
-# templates/deployment1.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -10,70 +9,65 @@ spec:
       app: {{ .Values.deployment.name }}
   template:
     metadata:
+      annotations:
+        releaseTime: {{ dateInZone "2006-01-02 15:04:05Z" (now) "UTC"| quote }}
       labels:
         app: {{ .Values.deployment.name }}
     spec:
+      {{- if .Values.serviceAccount.create }}
+      serviceAccountName: api-service-account
+      {{- end }}
       containers:
-      - name: {{ .Values.deployment.name }}
-        image: "{{ .Values.deployment.image }}"
-        ports:
-          - containerPort: 8080   # Porta HTTP dentro do contêiner
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 30  
-          periodSeconds: 10        
-          timeoutSeconds: 5        
-          failureThreshold: 2     
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 10  
-          periodSeconds: 10        # Verifica a cada 10 segundos
-          timeoutSeconds: 5        # Tempo limite de 5 segundos para a resposta
-          failureThreshold: 2      # Número de falhas consecutivas para considerar o container como não pronto
-        resources:
-          requests:
-            cpu: "512m"
-            memory: "512Mi"
-          limits:
-            cpu: "2048m"
-            memory: "2048Mi"
-        env:  
-          - name: AWS_REGION
-            valueFrom:
-              configMapKeyRef:
-                name: {{ .Values.configmap.name }}
-                key: AWS_REGION
-          
-          - name: AWS_REGION
-            valueFrom:
-              configMapKeyRef:
-                name: {{ .Values.configmap.name }}
-                key: AWS_REGION
-
-          - name: AWS_SERVICE_URL
-            valueFrom:
-              configMapKeyRef:
-                name: {{ .Values.configmap.name }}
-                key: AWS_SERVICE_URL
-
-          - name: AWS_QUEUE
-            valueFrom:
-              configMapKeyRef:
-                name: {{ .Values.configmap.name }}
-                key: AWS_QUEUE
-
-          - name: AWS_SECRET_KEY
-            valueFrom:
-              configMapKeyRef:
-                name: {{.Values.configmap.name}} 
-                key: AWS_SECRET_KEY
-
-          - name: AWS_ACCESS_KEY
-            valueFrom:
-              configMapKeyRef:
-                name: {{.Values.configmap.name}} 
-                key: AWS_ACCESS_KEY
+        - name: {{ .Values.deployment.name }}
+          image: "{{ .Values.deployment.image }}"
+          ports:
+            - containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 30  
+            periodSeconds: 10        
+            timeoutSeconds: 5        
+            failureThreshold: 2     
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 10  
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 2
+          resources:
+            requests:
+              cpu: "512m"
+              memory: "512Mi"
+            limits:
+              cpu: "2048m"
+              memory: "2048Mi"
+          env:  
+            - name: ConnectionString
+              valueFrom:
+                configMapKeyRef:
+                    name:  {{ .Values.configmap.name }}
+                    key: ConnectionString 
+            - name: AWS_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configmap.name }}
+                  key: AWS_REGION
+            - name: AWS_ACCESS_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configmap.name }}
+                  key: AWS_ACCESS_KEY
+            - name: AWS_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configmap.name }}
+                  key: AWS_SECRET
+            - name: AWS_TOKEN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configmap.name }}
+                  key: AWS_TOKEN

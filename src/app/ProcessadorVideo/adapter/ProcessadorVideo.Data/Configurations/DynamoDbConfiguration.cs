@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Amazon.DynamoDBv2;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProcessadorVideo.CrossCutting.Configurations;
@@ -12,7 +13,9 @@ public static class DynamoDbConfiguration
 {
     public static IServiceCollection AddDataConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<AWSConfiguration>(configuration.GetSection("AWS"));
+        services.AddDefaultAWSOptions(configuration.GetAWSOptions());
+        services.AddAWSService<IAmazonDynamoDB>();
+
         services.AddScoped<ProcessamentoVideoDynamoContext>();
         services.AddTransient<IProcessamentoVideoRepository, ProcessamentoVideoRepository>();
         return services;

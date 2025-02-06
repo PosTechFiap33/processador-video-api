@@ -11,3 +11,8 @@ resource "aws_eks_cluster" "eks-cluster" {
     authentication_mode = var.accessConfig
   }
 }
+
+resource "aws_eks_addon" "aws-observability" {
+  addon_name   = "amazon-cloudwatch-observability"
+  cluster_name =  data.aws_eks_cluster.eks_cluster.name
+}

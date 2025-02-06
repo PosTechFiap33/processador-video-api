@@ -74,6 +74,11 @@ O fluxo de trabalho está definido em `.github/workflows`. Ele realiza as seguin
 6. **Faça o merge na branch `main`**:
    - Realize o merge para que a pipe inicie o deploy do helm no EKS.
 
+
+## Migrations Identity
+
+dotnet ef migrations add {MigrationName} --project adapter/ProcessadorVideo.Identity -s adapter/ProcessadorVideo.Api -c IdentityContext --verbose
+
 ## Contribuições
 
 Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou pull requests.

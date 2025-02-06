@@ -7,12 +7,13 @@ using ProcessadorVideo.Domain.Adapters.Repositories;
 using ProcessadorVideo.Domain.Adapters.Services;
 using ProcessadorVideo.Domain.Entities;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 
 namespace ProcessadorVideo.Application.UseCases;
 
 public interface IConverterVideoParaImagemUseCase
 {
-    Task Executar(ICollection<IFormFile> videos, Guid usuarioId);
+    Task<ProcessamentoVideo> Executar(ICollection<IFormFile> videos, Guid usuarioId);
 }
 
 public class ConverterVideoParaImagemUseCase : IConverterVideoParaImagemUseCase
@@ -21,19 +22,22 @@ public class ConverterVideoParaImagemUseCase : IConverterVideoParaImagemUseCase
     private readonly IFileStorageService _fileStorageService;
     private readonly IProcessamentoVideoRepository _repository;
     private readonly AWSConfiguration _awsConfiguration;
+    private readonly ILogger<ConverterVideoParaImagemUseCase> _logger;
 
     public ConverterVideoParaImagemUseCase(IMessageBus messageBus,
                                            IFileStorageService fileStorageService,
                                            IProcessamentoVideoRepository repository,
-                                           IOptions<AWSConfiguration> configuration)
+                                           IOptions<AWSConfiguration> configuration,
+                                           ILogger<ConverterVideoParaImagemUseCase> logger)
     {
         _messageBus = messageBus;
         _fileStorageService = fileStorageService;
         _repository = repository;
         _awsConfiguration = configuration.Value;
+        _logger = logger;
     }
 
-    public async Task Executar(ICollection<IFormFile> videos, Guid usuarioId)
+    public async Task<ProcessamentoVideo> Executar(ICollection<IFormFile> videos, Guid usuarioId)
     {
         var processamento = new ProcessamentoVideo(usuarioId);
         var converterVideoMessage = new ProcessarVideoMessage(processamento.Id);
@@ -56,15 +60,15 @@ public class ConverterVideoParaImagemUseCase : IConverterVideoParaImagemUseCase
                        });
 
             //TODO: pensar em como deixar atomico
-            _repository.Criar(processamento);
-
-            await _repository.UnitOfWork.Commit();
+            await _repository.Criar(processamento);
 
             await _messageBus.PublishAsync(converterVideoMessage, _awsConfiguration.ConverterVideoParaImagemQueueUrl);
+
+            return processamento;
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
+            _logger.LogError(ex, $"Ocorreu ao executar o caso de uso: {ex.Message}");
             throw;
         }
         finally

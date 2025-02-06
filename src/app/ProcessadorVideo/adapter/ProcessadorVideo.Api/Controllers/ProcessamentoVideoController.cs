@@ -1,4 +1,6 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProcessadorVideo.Application.DTOs;
 using ProcessadorVideo.Application.UseCases;
@@ -7,13 +9,20 @@ using ProcessadorVideo.Domain.DomainObjects.Exceptions;
 namespace FiAPProcessaVideo.Api.Controllers;
 
 [ApiController]
+[Authorize(Roles = "administrador")]
 [Route("[controller]")]
 public class ProcessamentoVideoController : ControllerBase
 {
+    private readonly ILogger<ProcessamentoVideoController> _logger;
+
+    public ProcessamentoVideoController(ILogger<ProcessamentoVideoController> logger)
+    {
+        _logger = logger;
+    }
+
     [HttpPost]
     [RequestSizeLimit(900_000_000)] // Limite de 900 MB
     public async Task<IActionResult> ConverterVideo(ICollection<IFormFile> videoFile,
-                                                   [FromForm] Guid usuarioId,
                                                    [FromServices] IConverterVideoParaImagemUseCase useCase)
     {
         try
@@ -21,24 +30,25 @@ public class ProcessamentoVideoController : ControllerBase
             if (videoFile == null || !videoFile.Any())
                 return BadRequest("A valid video file is required.");
 
-            await useCase.Executar(videoFile, usuarioId);
+            var usuarioId = RecuperarIdUsuario();
 
-            return StatusCode((int)HttpStatusCode.Created, "Processamento iniciado!");
+            var processamento = await useCase.Executar(videoFile, usuarioId);
+
+            return StatusCode((int)HttpStatusCode.Created, processamento.Id);
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, $"Ocorreu um erro ao processar o video: {ex.Message}");
             return StatusCode(500, $"An error occurred: {ex.Message}");
         }
     }
 
     [HttpGet]
-    public async Task<IActionResult> ListarProcessamentos([FromQuery] Guid usuarioId,
-                                                          [FromServices] IListarProcessamentoUseCase useCase)
+    public async Task<IActionResult> ListarProcessamentos([FromServices] IListarProcessamentoUseCase useCase)
     {
         try
         {
-            if (Guid.Empty == usuarioId)
-                return BadRequest("Id do usuário não foi informado!");
+            var usuarioId = RecuperarIdUsuario();
 
             var listaProcessamento = await useCase.Executar(usuarioId);
 
@@ -63,10 +73,12 @@ public class ProcessamentoVideoController : ControllerBase
 
             return File(arquivo.Conteudo, "application/zip", arquivo.Nome);
         }
-        catch(ProcessamentoNaoEncontradoException ex){
+        catch (ProcessamentoNaoEncontradoException ex)
+        {
             return NotFound(ex.Message);
         }
-        catch(ArquivoNaoEncontradoException ex){
+        catch (ArquivoNaoEncontradoException ex)
+        {
             return NoContent();
         }
         catch (Exception ex)
@@ -75,4 +87,13 @@ public class ProcessamentoVideoController : ControllerBase
         }
     }
 
+    private Guid RecuperarIdUsuario()
+    {
+        var authorizationHeader = Request.Headers["Authorization"].FirstOrDefault();
+        var token = authorizationHeader.Substring("Bearer ".Length).Trim();
+        var handler = new JwtSecurityTokenHandler();
+        var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+        var usuarioIdClaim = jsonToken.Claims.FirstOrDefault(c => c.Type == "Id");
+        return Guid.Parse(usuarioIdClaim.Value);
+    }
 }

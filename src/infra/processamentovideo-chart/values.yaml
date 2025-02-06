@@ -1,16 +1,17 @@
 environment: local
 
+ConnectionString: "Host=127.0.0.1;Port=5432;Pooling=true;Database=ProcessamentoImagemIdentity;User Id=postgres;"
+
 aws:
-  key: AwsIntegration
+  key: ""
   region: "us-east-1"
-  accesKey: ""
-  secretKey: ""
-  serviceUrl: ""
-  QueueUrl: ""
+  accessKey: ""
+  secret: ""
+  token: ""
 
 deployment:
   name: api-deployment
-  image: kenobirt/processamento-video.api:dev
+  image: kenobirt/processamento-video.api:latest
   replicas: 1
 
 configmap:
@@ -28,6 +29,6 @@ service:
   http:
     targetPort: 80
     nodePort: 32000
-  https:
-    targetPort: 443
-    nodePort: 32001
+
+serviceAccount:
+  create: false

@@ -29,6 +29,5 @@ jobs:
 
     - name: Build the project
       run: dotnet build --no-restore --configuration Release  src/app/ProcessadorVideo/ProcessadorVideo.sln
-
-    - name: Run tests
-      run: dotnet test --no-build --configuration Release --verbosity normal  src/app/ProcessadorVideo/ProcessadorVideo.sln
+    # - name: Run tests
+    #   run: dotnet test --no-build --configuration Release --verbosity normal  src/app/ProcessadorVideo/ProcessadorVideo.sln

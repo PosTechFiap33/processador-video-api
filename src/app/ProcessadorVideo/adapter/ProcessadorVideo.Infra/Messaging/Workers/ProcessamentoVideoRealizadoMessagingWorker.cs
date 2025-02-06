@@ -33,9 +33,7 @@ public class ProcessamentoVideoRealizadoMessagingWorker : MessagingWorker<Proces
 
             processamento.Finalizar(message.Zip);
 
-            repository.Atualizar(processamento);
-
-            await repository.UnitOfWork.Commit();
+            await repository.Atualizar(processamento);
         }
         catch (Exception ex)
         {

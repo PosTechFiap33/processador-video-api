@@ -1,7 +1,9 @@
 using System.Text;
 using Amazon.DynamoDBv2.Model;
+using Microsoft.Extensions.Logging;
 using ProcessadorVideo.Domain.Adapters.MessageBus.Messages;
 using ProcessadorVideo.Domain.Adapters.Repositories;
+using ProcessadorVideo.Domain.DomainObjects.Exceptions;
 using ProcessadorVideo.Domain.Entities;
 
 namespace ProcessadorVideo.Data.Repositories;
@@ -10,16 +12,20 @@ public class ProcessamentoVideoRepository : IProcessamentoVideoRepository
 {
     private const string TABLE_NAME = "ProcessamentoVideos";
     private readonly ProcessamentoVideoDynamoContext _context;
-    public IUnitOfWork UnitOfWork => _context;
+    private readonly ILogger<ProcessamentoVideoRepository> _logger;
 
-    public ProcessamentoVideoRepository(ProcessamentoVideoDynamoContext context)
+    public ProcessamentoVideoRepository(ProcessamentoVideoDynamoContext context,
+                                        ILogger<ProcessamentoVideoRepository> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
-    public void Criar(ProcessamentoVideo processamentoVideo)
+    public async Task Criar(ProcessamentoVideo processamentoVideo)
     {
-        var mapeamentos = new Dictionary<string, AttributeValue>{
+        try
+        {
+            var mapeamentos = new Dictionary<string, AttributeValue>{
             { nameof(processamentoVideo.Id), new AttributeValue {  S = processamentoVideo.Id.ToString() }},
             { nameof(processamentoVideo.UsuarioId), new AttributeValue {  S = processamentoVideo.UsuarioId.ToString() }},
             { nameof(processamentoVideo.Status), new AttributeValue {  N = ((int)processamentoVideo.Status).ToString() }},
@@ -33,39 +39,40 @@ public class ProcessamentoVideoRepository : IProcessamentoVideoRepository
             }},
         };
 
-        _context.WriteOperations.Add(new TransactWriteItem
+            await _context.Client.PutItemAsync(TABLE_NAME, mapeamentos);
+        }
+        catch (Exception ex)
         {
-            Put = new Put
-            {
-                TableName = TABLE_NAME,
-                Item = mapeamentos
-            }
-        });
+            _logger.LogError(ex, $"Ocorreu um erro ao cadastrar o item no dynamo: {ex.Message}");
+            throw new IntegrationException($"Ocorreu um erro ao cadastrar o item no dynamo: {ex.Message}");
+        }
     }
 
-    public void Atualizar(ProcessamentoVideo processamento)
+    public async Task Atualizar(ProcessamentoVideo processamento)
     {
-        var key = new Dictionary<string, AttributeValue>
+        try
         {
-            { nameof(processamento.Id), new AttributeValue { S = processamento.Id.ToString() } }
-        };
+            var key = new Dictionary<string, AttributeValue>
+            {
+                { nameof(processamento.Id), new AttributeValue { S = processamento.Id.ToString() } },
+                { nameof(processamento.UsuarioId), new AttributeValue { S = processamento.UsuarioId.ToString() } } 
+            };
 
-        var updateExpression = new StringBuilder("SET ");
-        updateExpression.Append("#status = :status, ");
-        updateExpression.Append("#data = :data, ");
-        updateExpression.Append("#mensagens = :mensagens, ");
-        updateExpression.Append("#arquivoDownload = :arquivoDownload");
+            var updateExpression = new StringBuilder("SET ");
+            updateExpression.Append("#status = :status, ");
+            updateExpression.Append("#data = :data, ");
+            updateExpression.Append("#mensagens = :mensagens, ");
+            updateExpression.Append("#arquivoDownload = :arquivoDownload");
 
-        var mapAttributesNames = new Dictionary<string, string>
-        {
-            { "#status", "Status" },
-            { "#data", "Data" },
-            { "#mensagens", "Mensagens" },
-            { "#arquivoDownload", "ArquivoDownload" }
-        };
+            var mapAttributesNames = new Dictionary<string, string>
+            {
+                { "#status", "Status" },
+                { "#data", "Data" },
+                { "#mensagens", "Mensagens" },
+                { "#arquivoDownload", "ArquivoDownload" }
+            };
 
-
-        var mapExpressionAttributesValues = new Dictionary<string, AttributeValue>
+            var mapExpressionAttributesValues = new Dictionary<string, AttributeValue>
         {
             { ":status", new AttributeValue { N = ((int)processamento.Status).ToString() } },
             { ":data", new AttributeValue { S = processamento.Data.ToString() } },
@@ -79,19 +86,23 @@ public class ProcessamentoVideoRepository : IProcessamentoVideoRepository
             }
         };
 
-        var updateItem = new TransactWriteItem
-        {
-            Update = new Update
+            var updateRequest = new UpdateItemRequest
             {
                 TableName = TABLE_NAME,
                 Key = key,
                 UpdateExpression = updateExpression.ToString(),
                 ExpressionAttributeNames = mapAttributesNames,
                 ExpressionAttributeValues = mapExpressionAttributesValues
-            }
-        };
+            };
 
-        _context.WriteOperations.Add(updateItem);
+            await _context.Client.UpdateItemAsync(updateRequest);
+
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Ocorreu um erro ao atualizar o item no dynamo: {ex.Message}");
+            throw new IntegrationException($"Ocorreu um erro ao atualizar o item no dynamo: {ex.Message}");
+        }
     }
 
     public async Task<ProcessamentoVideo?> Consultar(Guid id)
@@ -140,7 +151,7 @@ public class ProcessamentoVideoRepository : IProcessamentoVideoRepository
         var mensagens = attributes[nameof(ProcessamentoVideo.Mensagens)].L;
 
         var arquivoAttributes = attributes[nameof(ProcessamentoVideo.ArquivoDownload)].M;
-     
+
         var arquivo = new Arquivo
         {
             Nome = arquivoAttributes[nameof(Arquivo.Nome)].S,
@@ -157,8 +168,8 @@ public class ProcessamentoVideoRepository : IProcessamentoVideoRepository
         );
     }
 
-    public void Dispose()
-    {
-        _context.Dispose();
-    }
+    // public void Dispose()
+    // {
+    //     _context.Dispose();
+    // }
 }
