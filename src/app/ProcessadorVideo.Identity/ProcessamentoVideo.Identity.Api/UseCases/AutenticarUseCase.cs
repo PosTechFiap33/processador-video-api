@@ -30,6 +30,12 @@ public class AutenticarUseCase : IAutenticarUseCase
 
     public async Task<string> Executar(string nomeIdentificacao, string senha)
     {
+        if (string.IsNullOrEmpty(nomeIdentificacao))
+            ProcessarErro("Nome de identificação não informado!");
+
+        if (string.IsNullOrEmpty(senha))
+            ProcessarErro("Senha não informada!");
+
         var usuario = await _repository.Consultar(nomeIdentificacao);
 
         if (usuario is null)

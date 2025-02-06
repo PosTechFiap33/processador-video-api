@@ -23,19 +23,19 @@ public class ProcessamentoVideoDynamoContext
 
             var awsConfig = configuration.Value;
 
-            var sqsConfigClient = new AmazonDynamoDBConfig
-            {
-                RegionEndpoint = RegionEndpoint.GetBySystemName(awsConfig.Region)
-            };
-
             if (string.IsNullOrEmpty(awsConfig.ServiceUrl)){
                 var credentials = new SessionAWSCredentials(awsConfig.AccesKey, awsConfig.Secret, awsConfig.Token);
-                Client = new AmazonDynamoDBClient(credentials, sqsConfigClient);
+                Client = new AmazonDynamoDBClient(credentials, new AmazonDynamoDBConfig
+                {
+                    RegionEndpoint = RegionEndpoint.GetBySystemName(awsConfig.Region)
+                });
             }
             else
             {
-                sqsConfigClient.ServiceURL = awsConfig.ServiceUrl;
-                Client = new AmazonDynamoDBClient(sqsConfigClient);
+                Client = new AmazonDynamoDBClient(new AmazonDynamoDBConfig
+                {
+                    ServiceURL = awsConfig.ServiceUrl
+                });
             }
         }
         catch (Exception ex)

@@ -26,6 +26,11 @@ resource "helm_release" "processador_video" {
   }
 
   set {
+    name  = "aws.serviceUrl"
+    value = ""
+  }
+
+  set {
     name  = "aws.accessKey"
     value = var.AWS_ACCESS_KEY_ID
   }
