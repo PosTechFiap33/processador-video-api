@@ -27,6 +27,7 @@ public class TokenService : ITokenService
         try
         {
             var tokenConfig = _configuration.GetSection("Token");
+            var ttl = tokenConfig["Minutes"] ?? "3";
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(secret);
@@ -38,7 +39,7 @@ public class TokenService : ITokenService
                 new Claim("Id", usuario.Id.ToString()),
                 new Claim(ClaimTypes.Role, usuario.Perfil.ToString().ToLower())
             }),
-                Expires = DateTime.UtcNow.AddMinutes(int.Parse(tokenConfig["Minutes"])),
+                Expires = DateTime.UtcNow.AddMinutes(int.Parse(ttl)),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 

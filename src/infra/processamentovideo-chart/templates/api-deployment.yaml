@@ -10,7 +10,6 @@ spec:
   template:
     metadata:
       annotations:
-    releaseTime: {{ .Values.apiDeployment.releaseTime | quote }}
       labels:
         app: {{ .Values.apiDeployment.name }}
     spec:

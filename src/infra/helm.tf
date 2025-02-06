@@ -4,17 +4,13 @@ resource "helm_release" "processador_video" {
   chart      = "./processamentovideo-chart" 
   repository = "https://fluent.github.io/helm-charts"
   timeout    = 600
+  version    = "1.0.0" 
 
   set {
     name  = "deployment.replicas"
     value = 1
   }
-
-  set {
-    name  = "apiDeployment.releaseTime"
-    value = local.release_time
-  }
-
+  
   set {
     name  = "environment"
     value = "prod"
