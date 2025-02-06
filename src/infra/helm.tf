@@ -11,6 +11,11 @@ resource "helm_release" "processador_video" {
   }
 
   set {
+    name  = "apiDeployment.releaseTime"
+    value = local.release_time
+  }
+
+  set {
     name  = "environment"
     value = "prod"
   }
