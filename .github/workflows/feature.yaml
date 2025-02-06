@@ -20,7 +20,7 @@ jobs:
         ref: ${{ github.ref }} # Checkout para a branch atual
 
     - name: Set up .NET
-      uses: actions/setup-dotnet@v2
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x' # Use a versão mais recente do .NET 7.0 disponível
 
@@ -43,7 +43,7 @@ jobs:
         ref: ${{ github.ref }} # Checkout para a branch atual
 
     - name: Set up .NET
-      uses: actions/setup-dotnet@v2
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x' # Use a versão mais recente do .NET 7.0 disponível
 
