@@ -40,7 +40,8 @@ public class AutenticarUseCase : IAutenticarUseCase
         if (autenticacaoRealizada is false)
             ProcessarErro("Autenticacao inválida para o usuario {nomeIdentificacao}!");
 
-        return _tokenService.Gerar(usuario, _configuration["SecretKey"]);
+        var secretKey = Environment.GetEnvironmentVariable("SecretKey") ?? _configuration["SecretKey"];
+        return _tokenService.Gerar(usuario, secretKey);
     }
 
     private void ProcessarErro(string log)

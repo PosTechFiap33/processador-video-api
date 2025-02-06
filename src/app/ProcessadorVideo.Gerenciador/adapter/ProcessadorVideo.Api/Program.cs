@@ -82,7 +82,7 @@ builder.Services
        .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
        .AddJwtBearer(options =>
        {
-           var key = Encoding.UTF8.GetBytes(builder.Configuration["SecretKey"]);
+           var key = Environment.GetEnvironmentVariable("SecretKey") ?? _configuration["SecretKey"];
 
            options.RequireHttpsMetadata = false;  // Para desenvolvimento, desabilitar HTTPS
            options.SaveToken = true;  // Salvar o token no contexto da requisição

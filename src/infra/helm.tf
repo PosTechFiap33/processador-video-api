@@ -16,6 +16,11 @@ resource "helm_release" "processador_video" {
   }
 
   set {
+    name  = "SecretKey"
+    value = var.SecretKey
+  }
+
+  set {
     name  = "aws.region"
     value = var.region
   }

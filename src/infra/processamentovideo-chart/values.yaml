@@ -1,6 +1,7 @@
 environment: local
 
-ConnectionString: "Host=127.0.0.1;Port=5432;Pooling=true;Database=ProcessamentoImagemIdentity;User Id=postgres;"
+ConnectionString: "Host=postgres;Port=5432;Pooling=true;Database=ProcessamentoImagemIdentity;User Id=postgres;Password=local123;"
+SecretKey: ""
 
 aws:
   key: ""
@@ -9,9 +10,14 @@ aws:
   secret: ""
   token: ""
 
-deployment:
+apiDeployment:
   name: api-deployment
-  image: kenobirt/processamento-video.api:latest
+  image: kenobirt/processamento-video.gerenciador.api:latest
+  replicas: 1
+
+identityDeployment:
+  name: identity-deployment
+  image: kenobirt/processamento-video.identity.api:latest
   replicas: 1
 
 configmap:
@@ -24,11 +30,17 @@ hpa:
   cpuAverageUtilization: 50
   memoryAverageUtilization: 50
 
-service:
+serviceApi:
   name: api-svc
   http:
     targetPort: 80
     nodePort: 32000
+
+serviceIdentity:
+  name: identity-svc
+  http:
+    targetPort: 80
+    nodePort: 32001
 
 serviceAccount:
   create: false

@@ -1,0 +1,43 @@
+{{- if eq .Values.environment "local" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: postgres
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: postgres
+    template:
+        metadata:
+            labels:
+                app: postgres
+        spec:
+            containers:
+              - name: postgres
+                image: postgres:latest
+                env:
+                  - name: POSTGRES_DB
+                    value: "ProcessamentoImagemIdentity"
+                  - name: POSTGRES_USER
+                    value: "postgres"
+                  - name: POSTGRES_PASSWORD
+                    value: "local123"
+                ports:
+                  - containerPort: 5432
+                resources:
+                    requests:
+                        memory: "1Gi"
+                        cpu: "500m"
+                    limits:
+                        memory: "2Gi"
+                        cpu: "1"
+                volumeMounts:
+                  - name: postgres-data
+                    mountPath: /var/lib/postgresql/data
+            volumes:
+              - name: postgres-data
+                hostPath:
+                    path: /Users/flaviorobertoteixeira/Desktop/Desenvolvimento/PosTech/Hackaton/processador-video-api/src/infra/postgres-volume
+                    type: DirectoryOrCreate
+{{- end }}

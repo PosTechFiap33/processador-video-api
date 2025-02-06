@@ -54,9 +54,9 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Create the name of the service account to use
 */}}
 {{- define "processamentovideo-chart.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "processamentovideo-chart.fullname" .) .Values.serviceAccount.name }}
+{{- if .Values.serviceApi.create }}
+{{- default (include "processamentovideo-chart.fullname" .) .Values.serviceApi.name }}
 {{- else }}
-{{- default "default" .Values.serviceAccount.name }}
+{{- default "default" .Values.serviceApi.name }}
 {{- end }}
 {{- end }}

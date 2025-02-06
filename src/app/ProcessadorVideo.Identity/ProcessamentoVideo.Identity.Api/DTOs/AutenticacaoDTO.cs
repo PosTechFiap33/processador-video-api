@@ -1,5 +1,3 @@
-using System;
-
 namespace ProcessadorVideo.Identity.Api.DTOs;
 
 public class AutenticacaoDTO
