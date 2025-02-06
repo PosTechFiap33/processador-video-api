@@ -12,15 +12,15 @@ RUN apt-get update && \
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY . .
-RUN dotnet restore "ProcessadorVideo.Identity.Api/ProcessadorVideo.Identity.Api.csproj"
+RUN dotnet restore "ProcessamentoVideo.Identity.Api/ProcessamentoVideo.Identity.Api.csproj"
 COPY . .
-WORKDIR "/src/ProcessadorVideo.Identity.Api"
-RUN dotnet build "ProcessadorVideo.Identity.Api.csproj" -c Release -o /app/build
+WORKDIR "/src/ProcessamentoVideo.Identity.Api"
+RUN dotnet build "ProcessamentoVideo.Identity.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "ProcessadorVideo.Identity.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "ProcessamentoVideo.Identity.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "ProcessadorVideo.Identity.Api.dll"]
+ENTRYPOINT ["dotnet", "ProcessamentoVideo.Identity.Api.dll"]
