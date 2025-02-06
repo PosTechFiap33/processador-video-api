@@ -407,3 +407,7 @@ ASALocalRun/
 
 # Local History for Visual Studio
 .localhistory/
+
+ProcessamentoVideo.Identity.Api/bin
+
+ProcessamentoVideo.Identity.Api/obj

@@ -12,9 +12,9 @@ RUN apt-get update && \
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY . .
-RUN dotnet restore "ProcessamentoVideo.Identity.Api/ProcessamentoVideo.Identity.Api.csproj"
+RUN dotnet restore "ProcessadorVideo.Identity/ProcessamentoVideo.Identity.Api/ProcessamentoVideo.Identity.Api.csproj"
 COPY . .
-WORKDIR "/src/ProcessamentoVideo.Identity.Api"
+WORKDIR "/src/ProcessadorVideo.Identity/ProcessamentoVideo.Identity.Api"
 RUN dotnet build "ProcessamentoVideo.Identity.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish

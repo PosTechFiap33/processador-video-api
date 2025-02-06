@@ -12,6 +12,7 @@
     <Folder Include="Exceptions/" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="../../ProcessadorVideo.Gerenciador/core/ProcessadorVideo.Domain/ProcessadorVideo.Domain.csproj" />
     <ProjectReference Include="../ProcessadorVideo.Identity.Data/ProcessadorVideo.Identity.Data.csproj" />
   </ItemGroup>
 </Project>
