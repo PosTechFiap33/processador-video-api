@@ -1,31 +1,53 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProcessadorVideo.Identity", "ProcessadorVideo.Identity", "{FC62F3FB-61EC-40E8-8B94-D2E5EEF8B9B3}"
+	ProjectSection(SolutionItems) = preProject
+		ProcessadorVideo.Identity\Dockerfile = ProcessadorVideo.Identity\Dockerfile
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessamentoVideo.Identity.Api", "ProcessadorVideo.Identity\ProcessamentoVideo.Identity.Api\ProcessamentoVideo.Identity.Api.csproj", "{A5749F8E-4C5E-4475-A446-A9A67112BCFA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProcessadorVideo.Gerenciador", "ProcessadorVideo.Gerenciador", "{11FF22C8-C495-4F5F-9386-6181CDD72FD2}"
+	ProjectSection(SolutionItems) = preProject
+		ProcessadorVideo.Gerenciador\Dockerfile = ProcessadorVideo.Gerenciador\Dockerfile
+	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "adapter", "adapter", "{C8B96F68-B4A8-46CD-AB8B-F9081744CD72}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Adapters", "Adapters", "{C8B96F68-B4A8-46CD-AB8B-F9081744CD72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessadorVideo.Api", "ProcessadorVideo.Gerenciador\adapter\ProcessadorVideo.Api\ProcessadorVideo.Api.csproj", "{67793135-06F8-4885-AB8A-B8EF61ACF730}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessadorVideo.Gerenciador.Api", "ProcessadorVideo.Gerenciador\adapter\ProcessadorVideo.Api\ProcessadorVideo.Gerenciador.Api.csproj", "{67793135-06F8-4885-AB8A-B8EF61ACF730}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProcessadorVideo.Conversor", "ProcessadorVideo.Conversor", "{6B34E1A6-01D3-4822-9ACA-B645AED17043}"
+	ProjectSection(SolutionItems) = preProject
+		ProcessadorVideo.Conversor\Dockerfile = ProcessadorVideo.Conversor\Dockerfile
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessadorVideo.Conversor.Worker", "ProcessadorVideo.Conversor\ProcessadorVideo.Conversor.Worker\ProcessadorVideo.Conversor.Worker.csproj", "{DFF9D04F-765C-4971-975F-58A1B6A7C528}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProcessadorVide.SharedKernel", "ProcessadorVide.SharedKernel", "{78964B78-6F16-4557-A5E0-CBB12F84D7AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessadorVideo.Domain", "ProcessadorVide.SharedKernel\ProcessadorVideo.Domain\ProcessadorVideo.Domain.csproj", "{3E7303C5-8073-44C0-9C46-CCE17C4ACC94}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessadorVideo.Infra", "ProcessadorVide.SharedKernel\ProcessadorVideo.Infra\ProcessadorVideo.Infra.csproj", "{137FACA7-9947-4F21-8F29-8E3C1D361AA4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessadorVideo.Gerenciador.Data", "ProcessadorVideo.Gerenciador\adapter\ProcessadorVideo.Data\ProcessadorVideo.Gerenciador.Data.csproj", "{4388E155-A137-4C07-8514-CB511F5365A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessadorVideo.Gerenciador.Application", "ProcessadorVideo.Gerenciador\core\ProcessadorVideo.Application\ProcessadorVideo.Gerenciador.Application.csproj", "{ADF1EE4E-63A0-45CE-9FF1-77AA3E3BAD23}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Adapters", "Adapters", "{C3C059EF-D59F-12E9-B832-840F9B2F47D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessadorVideo.Identity.Data", "ProcessadorVideo.Identity\ProcessadorVideo.Identity.Data\ProcessadorVideo.Identity.Data.csproj", "{F22FB206-528E-48C9-B4A3-3C458C184F24}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessadorVideo.CrossCutting", "ProcessadorVide.SharedKernel\ProcessadorVideo.CrossCutting\ProcessadorVideo.CrossCutting.csproj", "{3426F463-37E7-4D02-A8E7-B42D92E6095C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7CF0154D-E0A9-4C66-A6EC-6D3B60E94EBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7CF0154D-E0A9-4C66-A6EC-6D3B60E94EBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7CF0154D-E0A9-4C66-A6EC-6D3B60E94EBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7CF0154D-E0A9-4C66-A6EC-6D3B60E94EBA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A5749F8E-4C5E-4475-A446-A9A67112BCFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A5749F8E-4C5E-4475-A446-A9A67112BCFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5749F8E-4C5E-4475-A446-A9A67112BCFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -34,10 +56,49 @@ Global
 		{67793135-06F8-4885-AB8A-B8EF61ACF730}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67793135-06F8-4885-AB8A-B8EF61ACF730}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67793135-06F8-4885-AB8A-B8EF61ACF730}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFF9D04F-765C-4971-975F-58A1B6A7C528}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFF9D04F-765C-4971-975F-58A1B6A7C528}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFF9D04F-765C-4971-975F-58A1B6A7C528}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFF9D04F-765C-4971-975F-58A1B6A7C528}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E7303C5-8073-44C0-9C46-CCE17C4ACC94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E7303C5-8073-44C0-9C46-CCE17C4ACC94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E7303C5-8073-44C0-9C46-CCE17C4ACC94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E7303C5-8073-44C0-9C46-CCE17C4ACC94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{137FACA7-9947-4F21-8F29-8E3C1D361AA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{137FACA7-9947-4F21-8F29-8E3C1D361AA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{137FACA7-9947-4F21-8F29-8E3C1D361AA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{137FACA7-9947-4F21-8F29-8E3C1D361AA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4388E155-A137-4C07-8514-CB511F5365A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4388E155-A137-4C07-8514-CB511F5365A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4388E155-A137-4C07-8514-CB511F5365A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4388E155-A137-4C07-8514-CB511F5365A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADF1EE4E-63A0-45CE-9FF1-77AA3E3BAD23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADF1EE4E-63A0-45CE-9FF1-77AA3E3BAD23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADF1EE4E-63A0-45CE-9FF1-77AA3E3BAD23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADF1EE4E-63A0-45CE-9FF1-77AA3E3BAD23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F22FB206-528E-48C9-B4A3-3C458C184F24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F22FB206-528E-48C9-B4A3-3C458C184F24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F22FB206-528E-48C9-B4A3-3C458C184F24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F22FB206-528E-48C9-B4A3-3C458C184F24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3426F463-37E7-4D02-A8E7-B42D92E6095C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3426F463-37E7-4D02-A8E7-B42D92E6095C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3426F463-37E7-4D02-A8E7-B42D92E6095C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3426F463-37E7-4D02-A8E7-B42D92E6095C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{A5749F8E-4C5E-4475-A446-A9A67112BCFA} = {FC62F3FB-61EC-40E8-8B94-D2E5EEF8B9B3}
+		{A5749F8E-4C5E-4475-A446-A9A67112BCFA} = {C3C059EF-D59F-12E9-B832-840F9B2F47D1}
 		{C8B96F68-B4A8-46CD-AB8B-F9081744CD72} = {11FF22C8-C495-4F5F-9386-6181CDD72FD2}
 		{67793135-06F8-4885-AB8A-B8EF61ACF730} = {C8B96F68-B4A8-46CD-AB8B-F9081744CD72}
+		{DFF9D04F-765C-4971-975F-58A1B6A7C528} = {6B34E1A6-01D3-4822-9ACA-B645AED17043}
+		{3E7303C5-8073-44C0-9C46-CCE17C4ACC94} = {78964B78-6F16-4557-A5E0-CBB12F84D7AA}
+		{137FACA7-9947-4F21-8F29-8E3C1D361AA4} = {78964B78-6F16-4557-A5E0-CBB12F84D7AA}
+		{4388E155-A137-4C07-8514-CB511F5365A7} = {C8B96F68-B4A8-46CD-AB8B-F9081744CD72}
+		{ADF1EE4E-63A0-45CE-9FF1-77AA3E3BAD23} = {11FF22C8-C495-4F5F-9386-6181CDD72FD2}
+		{C3C059EF-D59F-12E9-B832-840F9B2F47D1} = {FC62F3FB-61EC-40E8-8B94-D2E5EEF8B9B3}
+		{F22FB206-528E-48C9-B4A3-3C458C184F24} = {FC62F3FB-61EC-40E8-8B94-D2E5EEF8B9B3}
+		{3426F463-37E7-4D02-A8E7-B42D92E6095C} = {78964B78-6F16-4557-A5E0-CBB12F84D7AA}
 	EndGlobalSection
 EndGlobal

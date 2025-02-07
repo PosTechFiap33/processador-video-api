@@ -10,12 +10,9 @@ env:
   CLUSTER_NAME: "processador-video-cluster"
 
 jobs:
-
-  publish-image-gerenciador:
+  build-solution:
     runs-on: ubuntu-latest
-
     steps:
-
     - name: Check out the repository
       uses: actions/checkout@v2
       with:
@@ -27,14 +24,18 @@ jobs:
         dotnet-version: '8.0.x'
 
     - name: Install dependencies
-      run: dotnet restore  src/app/ProcessadorVideo.Gerenciador/ProcessadorVideo.Gerenciador.sln
+      run: dotnet restore  src/app/ProcessadorVideo.sln
 
     - name: Build the project
-      run: dotnet build --no-restore --configuration Release  src/app/ProcessadorVideo.Gerenciador/ProcessadorVideo.Gerenciador.sln
+      run: dotnet build --no-restore --configuration Release  src/app/ProcessadorVideo.sln
 
     - name: Run tests
-      run: dotnet test --no-build --configuration Release --verbosity normal  src/app/ProcessadorVideo.Gerenciador/ProcessadorVideo.Gerenciador.sln
+      run: dotnet test --no-build --configuration Release --verbosity normal  src/app/ProcessadorVideo.sln
 
+  publish-image-gerenciador:
+    needs: build-solution
+    runs-on: ubuntu-latest
+    steps:
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
       with:
@@ -42,36 +43,16 @@ jobs:
         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
     - name: Build Docker image
-      run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/processamento-video.gerenciador.api:latest .
-      working-directory: src/app/ProcessadorVideo.Gerenciador # Path to your Dockerfile
+      run: docker build -f ProcessadorVideo.Gerenciador/Dockerfile -t ${{ secrets.DOCKER_HUB_USERNAME }}/processamento-video.gerenciador.api:latest .
+      working-directory: src/app # Path to your Dockerfile
 
     - name: Push Docker image to Docker Hub
       run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/processamento-video.gerenciador.api:latest
 
   publish-image-identity:
+    needs: build-solution
     runs-on: ubuntu-latest
-
     steps:
-
-    - name: Check out the repository
-      uses: actions/checkout@v2
-      with:
-        ref: ${{ github.ref }} # Checkout para a branch atual
-
-    - name: Set up .NET
-      uses: actions/setup-dotnet@v2
-      with:
-        dotnet-version: '8.0.x'
-
-    - name: Install dependencies
-      run: dotnet restore  src/app/ProcessadorVideo.Identity/ProcessadorVideo.Identity.sln
-
-    - name: Build the project
-      run: dotnet build --no-restore --configuration Release  src/app/ProcessadorVideo.Identity/ProcessadorVideo.Identity.sln
-
-    - name: Run tests
-      run: dotnet test --no-build --configuration Release --verbosity normal  src/app/ProcessadorVideo.Identity/ProcessadorVideo.Identity.sln
-
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
       with:

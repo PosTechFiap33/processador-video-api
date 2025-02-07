@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ProcessadorVideo.CrossCutting.Configurations;
+using ProcessadorVideo.Gerenciador.Api.Consumers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -74,6 +75,10 @@ builder.Services.Configure<AWSConfiguration>(builder.Configuration.GetSection("A
 builder.Services.AddDataConfiguration(builder.Configuration);
 builder.Services.AddInfra(builder.Configuration);
 builder.Services.AddApplication();
+
+builder.Services.AddHostedService<ProcessamentoVideoRealizadoConsumer>();
+builder.Services.AddHostedService<ProcessamentoVideoErroConsumer>();
+
 
 builder.Services.AddHealthChecks()
                 .AddCheck("self", () => HealthCheckResult.Healthy());

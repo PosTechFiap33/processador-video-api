@@ -21,6 +21,7 @@
 
     <ItemGroup>
         <ProjectReference Include="../../core/ProcessadorVideo.Domain/ProcessadorVideo.Domain.csproj" />
+        <ProjectReference Include="../../ProcessadorVide.SharedKernel/ProcessadorVideo.Domain/ProcessadorVideo.Domain.csproj" />
         <ProjectReference Include="../../ProcessadorVideo.Gerenciador/core/ProcessadorVideo.Domain/ProcessadorVideo.Domain.csproj" />
     </ItemGroup>
 

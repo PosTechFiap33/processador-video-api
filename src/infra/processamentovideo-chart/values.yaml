@@ -1,7 +1,7 @@
 environment: local
 
 ConnectionString: "Host=postgres;Port=5432;Pooling=true;Database=ProcessamentoImagemIdentity;User Id=postgres;Password=local123;"
-SecretKey: ""
+SecretKey: "chave_token_secreta_muito_segura_de_128_bits!"
 
 aws:
   key: ""
