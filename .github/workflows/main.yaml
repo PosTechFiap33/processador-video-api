@@ -46,5 +46,6 @@ jobs:
 
     - name: Terraform Apply
       id: apply
-      run: terraform apply -input=false -auto-approve
+      if: success() # Adiciona a condição para rodar o apply somente se o plan for bem-sucedido
+      run: terraform apply -input=false -auto-approve tfplan
       working-directory: ./src/infra
