@@ -48,7 +48,7 @@ variable "nodeGroup" {
 }
 
 variable "eksInstanceType" {
-  default = "t3.medium"
+  default = "t3.xlarge"
 }
 
 variable "policyArn" {
