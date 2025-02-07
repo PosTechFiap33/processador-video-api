@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.conversorDeployment.name }}
+spec:
+  replicas: {{ .Values.conversorDeployment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.conversorDeployment.name }}
+  template:
+    metadata:
+      annotations:
+      labels:
+        app: {{ .Values.conversorDeployment.name }}
+    spec:
+      {{- if .Values.serviceAccount.create }}
+      serviceAccountName: api-service-account
+      {{- end }}
+      containers:
+        - name: {{ .Values.conversorDeployment.name }}
+          image: "{{ .Values.conversorDeployment.image }}"
+          ports:
+            - containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 30  
+            periodSeconds: 10        
+            timeoutSeconds: 5        
+            failureThreshold: 2     
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 10  
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 2
+          resources:
+            requests:
+              cpu: "512m"
+              memory: "512Mi"
+            limits:
+              cpu: "2048m"
+              memory: "2048Mi"
+          env:  
+            - name: ConnectionString
+              valueFrom:
+                configMapKeyRef:
+                    name:  {{ .Values.configmap.name }}
+                    key: ConnectionString 
+            - name: AWS_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configmap.name }}
+                  key: AWS_REGION
+            - name: AWS_ACCESS_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configmap.name }}
+                  key: AWS_ACCESS_KEY
+            - name: AWS_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configmap.name }}
+                  key: AWS_SECRET
+            - name: AWS_TOKEN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configmap.name }}
+                  key: AWS_TOKEN
+            - name: SecretKey
+              valueFrom:
+                configMapKeyRef:
+                    name: {{ .Values.configmap.name }}
+                    key: SecretKey

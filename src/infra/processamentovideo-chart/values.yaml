@@ -14,18 +14,29 @@ apiDeployment:
   name: api-deployment
   image: kenobirt/processamento-video.gerenciador.api:latest
   replicas: 1
-  releaseTime: ""
 
 identityDeployment:
   name: identity-deployment
   image: kenobirt/processamento-video.identity.api:latest
   replicas: 1
 
+conversorDeployment:
+  name: conversor-deployment
+  image: kenobirt/processamento-video.conversor.worker:latest
+  replicas: 1
+
 configmap:
   name: api-configmap
 
-hpa:
+apiHpa:
   name: api-hpa
+  minReplicas: 1
+  maxReplicas: 5
+  cpuAverageUtilization: 50
+  memoryAverageUtilization: 50
+
+identityHpa:
+  name: identity-hpa
   minReplicas: 1
   maxReplicas: 5
   cpuAverageUtilization: 50
