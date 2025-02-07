@@ -1,0 +1,498 @@
+{
+	"info": {
+		"_postman_id": "31589ebf-bcd0-4494-a95c-f1dd470167f4",
+		"name": "Processamento video",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3291654"
+	},
+	"item": [
+		{
+			"name": "AWS",
+			"item": [
+				{
+					"name": "[AWS] Dowload",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{urlAws}}/ProcessamentoVideo/{{processamentoId}}/download",
+							"host": [
+								"{{urlAws}}"
+							],
+							"path": [
+								"ProcessamentoVideo",
+								"{{processamentoId}}",
+								"download"
+							],
+							"query": [
+								{
+									"key": "usuarioId",
+									"value": "{{$guid}}",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[AWS] Verificar status",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{urlAws}}/ProcessamentoVideo",
+							"host": [
+								"{{urlAws}}"
+							],
+							"path": [
+								"ProcessamentoVideo"
+							],
+							"query": [
+								{
+									"key": "usuarioId",
+									"value": "{{usuarioId}}",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[AWS] Processar",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();",
+									"pm.collectionVariables.set(\"processamentoId\", responseJson);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "videoFile",
+									"type": "file",
+									"src": "/Users/flaviorobertoteixeira/Downloads/FIAP_DOTNET_NET1_23/FIAPProcessaVideo/Marvel_DOTNET_CSHARP.mp4"
+								},
+								{
+									"key": "usuarioId",
+									"value": "{{usuarioId}}",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "videoFile",
+									"type": "file",
+									"src": "/Users/flaviorobertoteixeira/Downloads/FIAP_DOTNET_NET1_23/FIAPProcessaVideo/teste.mp4"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{urlAws}}/ProcessamentoVideo",
+							"host": [
+								"{{urlAws}}"
+							],
+							"path": [
+								"ProcessamentoVideo"
+							],
+							"query": [
+								{
+									"key": "usuarioId",
+									"value": "{{$guid}}",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[AWS] Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();",
+									"pm.collectionVariables.set(\"jwt_token\", responseJson.token);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"usuario\": \"teste2\",\n  \"senha\": \"teste\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{identityUrlAws}}/Autenticacao",
+							"host": [
+								"{{identityUrlAws}}"
+							],
+							"path": [
+								"Autenticacao"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[AWS] Usuario",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"usuario\": \"teste2\",\n  \"senha\": \"teste\",\n  \"email\": \"string\",\n  \"perfil\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{identityUrlAws}}/Usuario",
+							"host": [
+								"{{identityUrlAws}}"
+							],
+							"path": [
+								"Usuario"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Local",
+			"item": [
+				{
+					"name": "Verificar status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{localUrl}}/ProcessamentoVideo",
+							"host": [
+								"{{localUrl}}"
+							],
+							"path": [
+								"ProcessamentoVideo"
+							],
+							"query": [
+								{
+									"key": "usuarioId",
+									"value": "{{$guid}}",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Dowload",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{localUrl}}/ProcessamentoVideo/{{processamentoId}}/download",
+							"host": [
+								"{{localUrl}}"
+							],
+							"path": [
+								"ProcessamentoVideo",
+								"{{processamentoId}}",
+								"download"
+							],
+							"query": [
+								{
+									"key": "usuarioId",
+									"value": "{{$guid}}",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();",
+									"pm.collectionVariables.set(\"jwt_token\", responseJson.token);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"usuario\": \"teste2\",\n  \"senha\": \"teste\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{identityUrl}}/Autenticacao",
+							"host": [
+								"{{identityUrl}}"
+							],
+							"path": [
+								"Autenticacao"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Processar",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();",
+									"pm.collectionVariables.set(\"processamentoId\", responseJson);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "videoFile",
+									"type": "file",
+									"src": "/Users/flaviorobertoteixeira/Downloads/FIAP_DOTNET_NET1_23/FIAPProcessaVideo/Marvel_DOTNET_CSHARP copy.mp4"
+								},
+								{
+									"key": "usuarioId",
+									"value": "{{$guid}}",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{localUrl}}/ProcessamentoVideo",
+							"host": [
+								"{{localUrl}}"
+							],
+							"path": [
+								"ProcessamentoVideo"
+							],
+							"query": [
+								{
+									"key": "usuarioId",
+									"value": "{{$guid}}",
+									"disabled": true
+								},
+								{
+									"key": "videoFile",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Usuario",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"usuario\": \"teste2\",\n  \"senha\": \"teste\",\n  \"email\": \"string\",\n  \"perfil\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{identityUrl}}/Usuario",
+							"host": [
+								"{{identityUrl}}"
+							],
+							"path": [
+								"Usuario"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "jwt_token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21lSWRlbnRpZmljYWNhbyI6InRlc3RlIiwicGVyZmlsIjoiMSIsInJvbGUiOiJhZG1pbmlzdHJhZG9yIiwibmJmIjoxNzM4MzY1MzQ2LCJleHAiOjE3Mzg0NTE3NDYsImlhdCI6MTczODM2NTM0Nn0.z4U8PC_Y_NIeQyRghdPNFSZs77pqpW8rSGYoq16rmVQ",
+			"type": "string"
+		},
+		{
+			"key": "urlAws",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "usuarioId",
+			"value": "8259934e-2860-4a1f-b94c-801a2183695d",
+			"type": "default"
+		},
+		{
+			"key": "localUrl",
+			"value": "http://localhost:5115",
+			"type": "default"
+		},
+		{
+			"key": "processamentoId",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "urlIdentityLocal",
+			"value": "http://localhost:5170",
+			"type": "default"
+		},
+		{
+			"key": "identityUrlAws",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
