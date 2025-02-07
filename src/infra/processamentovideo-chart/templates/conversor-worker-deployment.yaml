@@ -18,25 +18,7 @@ spec:
       {{- end }}
       containers:
         - name: {{ .Values.conversorDeployment.name }}
-          image: "{{ .Values.conversorDeployment.image }}"
-          ports:
-            - containerPort: 80
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 80
-            initialDelaySeconds: 30  
-            periodSeconds: 10        
-            timeoutSeconds: 5        
-            failureThreshold: 2     
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 80
-            initialDelaySeconds: 10  
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 2
+          image: "{{ .Values.conversorDeployment.image }}"   
           resources:
             requests:
               cpu: "512m"
