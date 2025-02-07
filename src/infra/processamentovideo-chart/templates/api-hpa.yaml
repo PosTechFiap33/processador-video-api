@@ -1,24 +1,24 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{.Values.hpa.name}}
+  name: {{.Values.apiHpa.name}}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
     name: {{.Values.apiDeployment.name}}
-  minReplicas: {{.Values.hpa.minReplicas}}  # Número mínimo de réplicas
-  maxReplicas: {{.Values.hpa.maxReplicas}}  # Número máximo de réplicas
+  minReplicas: {{.Values.apiHpa.minReplicas}}  # Número mínimo de réplicas
+  maxReplicas: {{.Values.apiHpa.maxReplicas}}  # Número máximo de réplicas
   metrics:
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: {{.Values.hpa.cpuAverageUtilization}}
+          averageUtilization: {{.Values.apiHpa.cpuAverageUtilization}}
     - type: Resource
       resource:
         name: memory
         target:
           type: Utilization
-          averageUtilization: {{.Values.hpa.memoryAverageUtilization}}
+          averageUtilization: {{.Values.apiHpa.memoryAverageUtilization}}

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.11" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.11" />
+        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="8.0.12" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="../../../ProcessadorVide.SharedKernel/ProcessadorVideo.Infra/ProcessadorVideo.Infra.csproj" />
+        <ProjectReference Include="../../core/ProcessadorVideo.Application/ProcessadorVideo.Gerenciador.Application.csproj" />
+        <ProjectReference Include="../ProcessadorVideo.Data/ProcessadorVideo.Gerenciador.Data.csproj" />
+    </ItemGroup>
+
+</Project>

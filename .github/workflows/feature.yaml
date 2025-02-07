@@ -9,8 +9,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  build-gerenciador:
-
+  build-solution:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,35 +21,13 @@ jobs:
     - name: Set up .NET
       uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: '8.0.x' # Use a versão mais recente do .NET 7.0 disponível
+        dotnet-version: '8.0.x'
 
     - name: Install dependencies
-      run: dotnet restore src/app/ProcessadorVideo.Gerenciador/ProcessadorVideo.Gerenciador.sln
+      run: dotnet restore  src/app/ProcessadorVideo.sln
 
     - name: Build the project
-      run: dotnet build --no-restore --configuration Release  src/app/ProcessadorVideo.Gerenciador/ProcessadorVideo.Gerenciador.sln
-    # - name: Run tests
-    #   run: dotnet test --no-build --configuration Release --verbosity normal  src/app/ProcessadorVideo/ProcessadorVideo.sln
+      run: dotnet build --no-restore --configuration Release  src/app/ProcessadorVideo.sln
 
-  build-identity:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Check out the repository
-      uses: actions/checkout@v2
-      with:
-        ref: ${{ github.ref }} # Checkout para a branch atual
-
-    - name: Set up .NET
-      uses: actions/setup-dotnet@v2
-      with:
-        dotnet-version: '8.0.x' # Use a versão mais recente do .NET 7.0 disponível
-
-    - name: Install dependencies
-      run: dotnet restore src/app/ProcessadorVideo.Identity/ProcessadorVideo.Identity.sln
-
-    - name: Build the project
-      run: dotnet build --no-restore --configuration Release src/app/ProcessadorVideo.Identity/ProcessadorVideo.Identity.sln
-    # - name: Run tests
-    #   run: dotnet test --no-build --configuration Release --verbosity normal  src/app/ProcessadorVideo/ProcessadorVideo.sln
+    - name: Run tests
+      run: dotnet test --no-build --configuration Release --verbosity normal  src/app/ProcessadorVideo.sln
