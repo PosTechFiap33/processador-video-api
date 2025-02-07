@@ -42,6 +42,13 @@ identityHpa:
   cpuAverageUtilization: 50
   memoryAverageUtilization: 50
 
+conversorHpa:
+  name: conversor-worker-hpa
+  minReplicas: 1
+  maxReplicas: 5
+  cpuAverageUtilization: 50
+  memoryAverageUtilization: 50
+
 serviceApi:
   name: api-svc
   http:

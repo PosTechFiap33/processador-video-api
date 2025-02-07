@@ -2,57 +2,64 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using ProcessadorVideo.Identity.Api.UseCases;
 using ProcessadorVideo.Identity.Configuration;
 
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-
-// Add services to the container.
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IAutenticarUseCase, AutenticarUseCase>();
-builder.Services.AddScoped<ICadastrarUsuarioUseCase, CadastrarUsuarioUseCase>();
-builder.Services.AddData(builder.Configuration);
-
-
-builder.Services.AddCors(options =>
+public class Program
 {
-    options.AddPolicy("AllowAll", policy =>
+    public static void Main(string[] args)
     {
-        policy.AllowAnyOrigin() // Permite qualquer origem (domínio)
-              .AllowAnyMethod() // Permite qualquer método HTTP (GET, POST, etc.)
-              .AllowAnyHeader(); // Permite qualquer cabeçalho
-    });
-});
+        var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddHealthChecks()
-                .AddCheck("self", () => HealthCheckResult.Healthy());
-                
-var app = builder.Build();
+        builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
 
-// Configura o pipeline de requisição HTTP
-app.UseSwagger();
-app.UseSwaggerUI(options =>
-{
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Minha API v1");
-    options.RoutePrefix = "swagger"; // Swagger será acessível em /swagger
-});
+        // Add services to the container.
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+        builder.Services.AddScoped<IAutenticarUseCase, AutenticarUseCase>();
+        builder.Services.AddScoped<ICadastrarUsuarioUseCase, CadastrarUsuarioUseCase>();
+        builder.Services.AddData(builder.Configuration);
 
-app.UseHttpsRedirection();
 
-app.UseStaticFiles(); // Adiciona suporte para arquivos estáticos
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", policy =>
+            {
+                policy.AllowAnyOrigin() // Permite qualquer origem (domínio)
+                      .AllowAnyMethod() // Permite qualquer método HTTP (GET, POST, etc.)
+                      .AllowAnyHeader(); // Permite qualquer cabeçalho
+            });
+        });
 
-// Ativa o CORS
-app.UseCors("AllowAll"); // Aplica a política de CORS
+        builder.Services.AddHealthChecks()
+                        .AddCheck("self", () => HealthCheckResult.Healthy());
 
-app.UseRouting();
+        var app = builder.Build();
 
-app.UseAuthentication();
+        // Configura o pipeline de requisição HTTP
+        app.UseSwagger();
+        app.UseSwaggerUI(options =>
+        {
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "Minha API v1");
+            options.RoutePrefix = "swagger"; // Swagger será acessível em /swagger
+        });
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-    endpoints.MapHealthChecks("/health");
-});
+        app.UseHttpsRedirection();
 
-app.Run();
+        app.UseStaticFiles(); // Adiciona suporte para arquivos estáticos
+
+        // Ativa o CORS
+        app.UseCors("AllowAll"); // Aplica a política de CORS
+
+        app.UseRouting();
+
+        app.UseAuthentication();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+            endpoints.MapHealthChecks("/health");
+        });
+
+        app.Run();
+
+    }
+}

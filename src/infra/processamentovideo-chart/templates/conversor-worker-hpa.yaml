@@ -1,0 +1,24 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{.Values.conversorHpa.name}}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{.Values.conversorDeployment.name}}
+  minReplicas: {{.Values.conversorHpa.minReplicas}}  # Número mínimo de réplicas
+  maxReplicas: {{.Values.conversorHpa.maxReplicas}}  # Número máximo de réplicas
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{.Values.conversorHpa.cpuAverageUtilization}}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{.Values.conversorHpa.memoryAverageUtilization}}

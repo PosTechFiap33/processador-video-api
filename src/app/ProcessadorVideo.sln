@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
@@ -42,6 +42,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessadorVideo.Identity.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessadorVideo.CrossCutting", "ProcessadorVide.SharedKernel\ProcessadorVideo.CrossCutting\ProcessadorVideo.CrossCutting.csproj", "{3426F463-37E7-4D02-A8E7-B42D92E6095C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{EB7C6A2C-1564-2930-50FC-11C131909CDE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessadorVideo.Identity.Tests", "ProcessadorVideo.Identity\ProcessadorVideo.Identity.Tests\ProcessadorVideo.Identity.Tests.csproj", "{7FA4E961-986A-42D5-A950-0B3E4EE0A90C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,6 +88,10 @@ Global
 		{3426F463-37E7-4D02-A8E7-B42D92E6095C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3426F463-37E7-4D02-A8E7-B42D92E6095C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3426F463-37E7-4D02-A8E7-B42D92E6095C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FA4E961-986A-42D5-A950-0B3E4EE0A90C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FA4E961-986A-42D5-A950-0B3E4EE0A90C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FA4E961-986A-42D5-A950-0B3E4EE0A90C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FA4E961-986A-42D5-A950-0B3E4EE0A90C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -100,5 +108,7 @@ Global
 		{C3C059EF-D59F-12E9-B832-840F9B2F47D1} = {FC62F3FB-61EC-40E8-8B94-D2E5EEF8B9B3}
 		{F22FB206-528E-48C9-B4A3-3C458C184F24} = {FC62F3FB-61EC-40E8-8B94-D2E5EEF8B9B3}
 		{3426F463-37E7-4D02-A8E7-B42D92E6095C} = {78964B78-6F16-4557-A5E0-CBB12F84D7AA}
+		{EB7C6A2C-1564-2930-50FC-11C131909CDE} = {FC62F3FB-61EC-40E8-8B94-D2E5EEF8B9B3}
+		{7FA4E961-986A-42D5-A950-0B3E4EE0A90C} = {EB7C6A2C-1564-2930-50FC-11C131909CDE}
 	EndGlobalSection
 EndGlobal
