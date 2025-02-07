@@ -21,8 +21,10 @@ namespace ProcessadorVideo.Identity.Configuration
             var connectionEnv = "ConnectionString";
             var connectionString = Environment.GetEnvironmentVariable(connectionEnv) ?? configuration[connectionEnv];
 
-            services.AddDbContext<IdentityContext>(options =>
-                options.UseNpgsql(connectionString));
+            //TODO avalidar melhor depois pra resolver na fixture de teste
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != "Testing")
+                services.AddDbContext<IdentityContext>(options =>
+                    options.UseNpgsql(connectionString));
 
             services.ConfigureMigrationDatabase();
 

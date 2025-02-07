@@ -20,15 +20,16 @@ public class UsuarioController : ControllerBase
 
     [HttpPost]
     [AllowAnonymous]
-    public async Task<IActionResult> Login([FromBody] UsuarioDTO usuario,
-                                           [FromServices] ICadastrarUsuarioUseCase useCase)
+    public async Task<IActionResult> Cadastrar([FromBody] UsuarioDTO usuario,
+                                               [FromServices] ICadastrarUsuarioUseCase useCase)
     {
         try
         {
             var usuarioCadastrado = await useCase.Executar(usuario);
-            return StatusCode((int)HttpStatusCode.Created, new { 
-                usuarioCadastrado.Id, 
-                usuarioCadastrado.NomeIdentificacao 
+            return StatusCode((int)HttpStatusCode.Created, new
+            {
+                usuarioCadastrado.Id,
+                usuarioCadastrado.NomeIdentificacao
             });
         }
         catch (DomainException ex)

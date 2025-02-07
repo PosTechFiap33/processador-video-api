@@ -1,0 +1,41 @@
+localstack_data
+postgres-volume
+/.vs
+TestResults
+
+# Terraform files
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+
+# Crash log files
+crash.log
+
+# Local .terraform directories
+.terraform/
+
+localstack-volume/
+docker-conf/
+
+# Override files
+override.tf
+override.tf.json
+
+# Environment files
+terraform.tfvars
+terraform.tfvars.json
+
+# IDE files
+*.idea/
+*.vscode/
+*.DS_Store
+
+# Terraform plan files
+*.tfplan
+src/app/ProcessadorVide.SharedKernel/ProcessadorVideo.CrossCutting/obj/
+src/app/ProcessadorVide.SharedKernel/ProcessadorVideo.CrossCutting/obj/Debug/net8.0/ProcessadorVideo.CrossCutting.AssemblyInfoInputs.cache
+src/app/ProcessadorVide.SharedKernel/ProcessadorVideo.Domain/obj/
+src/app/ProcessadorVide.SharedKernel/ProcessadorVideo.Domain/obj/Debug/net8.0/ProcessadorVideo.Domain.AssemblyInfoInputs.cache
+src/app/ProcessadorVide.SharedKernel/ProcessadorVideo.Infra/obj/
+src/app/ProcessadorVide.SharedKernel/ProcessadorVideo.Infra/obj/Debug/net8.0/ProcessadorVideo.Infra.AssemblyInfoInputs.cache
