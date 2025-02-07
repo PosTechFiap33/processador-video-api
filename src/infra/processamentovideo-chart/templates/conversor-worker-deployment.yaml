@@ -45,11 +45,6 @@ spec:
               cpu: "2048m"
               memory: "2048Mi"
           env:  
-            - name: ConnectionString
-              valueFrom:
-                configMapKeyRef:
-                    name:  {{ .Values.configmap.name }}
-                    key: ConnectionString 
             - name: AWS_REGION
               valueFrom:
                 configMapKeyRef:
@@ -70,8 +65,3 @@ spec:
                 configMapKeyRef:
                   name: {{ .Values.configmap.name }}
                   key: AWS_TOKEN
-            - name: SecretKey
-              valueFrom:
-                configMapKeyRef:
-                    name: {{ .Values.configmap.name }}
-                    key: SecretKey

@@ -12,9 +12,9 @@ RUN apt-get update && \
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY . .
-RUN dotnet restore "adapter/ProcessadorVideo.Api/ProcessadorVideo.Gerenciador.Api.csproj"
+RUN dotnet restore "ProcessadorVideo.Gerenciador/adapter/ProcessadorVideo.Api/ProcessadorVideo.Gerenciador.Api.csproj"
 COPY . .
-WORKDIR "/src/adapter/ProcessadorVideo.Api"
+WORKDIR "/src/ProcessadorVideo.Gerenciador/adapter/ProcessadorVideo.Api"
 RUN dotnet build "ProcessadorVideo.Gerenciador.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
