@@ -51,7 +51,7 @@ public class UsuarioStepDefinitions : IClassFixture<IntegrationTestFixture>
         _usuario.Email = email;
     }
 
-    [Given(@"a senha ""(.*)""")]
+    [Given(@"que eu informe a senha  ""(.*)""")]
     public void Givenasenha(string senha)
     {
         _usuario.Senha = senha;
@@ -94,6 +94,13 @@ public class UsuarioStepDefinitions : IClassFixture<IntegrationTestFixture>
         var dados = await _response.Content.ReadAsStringAsync();
         var response = JsonSerializer.Deserialize<TokenModel>(dados);
         response?.Token.Should().NotBeNullOrEmpty();
+    }
+
+    [Then(@"devera ser retornado a mensagem de erro ""(.*)""")]
+    public async Task Givendeveraserretornadoamensagemdeerro(string mensagemErro)
+    {
+        var dados = await _response.Content.ReadAsStringAsync();
+        dados.Should().Be(mensagemErro);
     }
 
 }
