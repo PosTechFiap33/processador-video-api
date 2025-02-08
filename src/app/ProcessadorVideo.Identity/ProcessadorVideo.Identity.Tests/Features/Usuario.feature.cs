@@ -105,7 +105,7 @@ namespace ProcessadorVideo.Identity.Tests.Features
     testRunner.And("o email \"teste@teste.com\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 6
-    testRunner.And("a senha \"hellothere\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+    testRunner.And("que eu informe a senha  \"hellothere\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 7
     testRunner.When("for feita a requisição para a rota de cadastro", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
@@ -120,14 +120,14 @@ namespace ProcessadorVideo.Identity.Tests.Features
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Autenticar o usuario cadastrado com sucesso")]
+        [Xunit.SkippableFactAttribute(DisplayName="Cadastrar um usuario já existente")]
         [Xunit.TraitAttribute("FeatureTitle", "Usuario")]
-        [Xunit.TraitAttribute("Description", "Autenticar o usuario cadastrado com sucesso")]
-        public void AutenticarOUsuarioCadastradoComSucesso()
+        [Xunit.TraitAttribute("Description", "Cadastrar um usuario já existente")]
+        public void CadastrarUmUsuarioJaExistente()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Autenticar o usuario cadastrado com sucesso", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Cadastrar um usuario já existente", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 11
   this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -142,16 +142,200 @@ namespace ProcessadorVideo.Identity.Tests.Features
     testRunner.Given("que eu informe o nome de identificacao \"vader\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 13
-    testRunner.And("a senha \"darkside\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+    testRunner.And("o email \"existente@teste.com\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 14
-    testRunner.When("for realizada uma autenticacao com o usuario e senha informados", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+    testRunner.And("que eu informe a senha  \"jaexiste\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 15
-    testRunner.Then("devera ser retornado o status 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.When("for feita a requisição para a rota de cadastro", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 16
+    testRunner.Then("devera ser retornado o status 400", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 17
+    testRunner.And("devera ser retornado a mensagem de erro \"Ja existe um usuario com esse nome cadas" +
+                        "trado!\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Autenticar o usuario cadastrado com sucesso")]
+        [Xunit.TraitAttribute("FeatureTitle", "Usuario")]
+        [Xunit.TraitAttribute("Description", "Autenticar o usuario cadastrado com sucesso")]
+        public void AutenticarOUsuarioCadastradoComSucesso()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Autenticar o usuario cadastrado com sucesso", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 19
+  this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 20
+    testRunner.Given("que eu informe o nome de identificacao \"vader\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 21
+    testRunner.And("que eu informe a senha  \"darkside\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 22
+    testRunner.When("for realizada uma autenticacao com o usuario e senha informados", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 23
+    testRunner.Then("devera ser retornado o status 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 24
     testRunner.And("devera ser retornado o token", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Autenticar o usuario sem informar o nome de identificacao")]
+        [Xunit.TraitAttribute("FeatureTitle", "Usuario")]
+        [Xunit.TraitAttribute("Description", "Autenticar o usuario sem informar o nome de identificacao")]
+        public void AutenticarOUsuarioSemInformarONomeDeIdentificacao()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Autenticar o usuario sem informar o nome de identificacao", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 26
+  this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 27
+    testRunner.Given("que eu informe a senha  \"darkside\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 28
+    testRunner.When("for realizada uma autenticacao com o usuario e senha informados", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 29
+    testRunner.Then("devera ser retornado o status 400", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 30
+    testRunner.And("devera ser retornado a mensagem de erro \"Nome de identificação não informado!\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Autenticar o usuario sem informar a senha")]
+        [Xunit.TraitAttribute("FeatureTitle", "Usuario")]
+        [Xunit.TraitAttribute("Description", "Autenticar o usuario sem informar a senha")]
+        public void AutenticarOUsuarioSemInformarASenha()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Autenticar o usuario sem informar a senha", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 32
+  this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 33
+    testRunner.Given("que eu informe o nome de identificacao \"vader\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 34
+    testRunner.When("for realizada uma autenticacao com o usuario e senha informados", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 35
+    testRunner.Then("devera ser retornado o status 400", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 36
+    testRunner.And("devera ser retornado a mensagem de erro \"Senha não informada!\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Autenticar um usuario inexistente")]
+        [Xunit.TraitAttribute("FeatureTitle", "Usuario")]
+        [Xunit.TraitAttribute("Description", "Autenticar um usuario inexistente")]
+        public void AutenticarUmUsuarioInexistente()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Autenticar um usuario inexistente", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 38
+  this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 39
+    testRunner.Given("que eu informe o nome de identificacao \"yoda\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 40
+    testRunner.And("que eu informe a senha  \"master\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 41
+    testRunner.When("for realizada uma autenticacao com o usuario e senha informados", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 42
+    testRunner.Then("devera ser retornado o status 400", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 43
+    testRunner.And("devera ser retornado a mensagem de erro \"usuario yoda não encontrado!\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Autenticar o usuario com senha incorreta")]
+        [Xunit.TraitAttribute("FeatureTitle", "Usuario")]
+        [Xunit.TraitAttribute("Description", "Autenticar o usuario com senha incorreta")]
+        public void AutenticarOUsuarioComSenhaIncorreta()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Autenticar o usuario com senha incorreta", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 45
+  this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 46
+    testRunner.Given("que eu informe o nome de identificacao \"vader\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 47
+    testRunner.And("que eu informe a senha  \"lightside\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 48
+    testRunner.When("for realizada uma autenticacao com o usuario e senha informados", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 49
+    testRunner.Then("devera ser retornado o status 400", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 50
+    testRunner.And("devera ser retornado a mensagem de erro \"Autenticacao inválida para o usuario vad" +
+                        "er!\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();

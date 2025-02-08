@@ -44,7 +44,7 @@ public class AutenticarUseCase : IAutenticarUseCase
         var autenticacaoRealizada = usuario.Autenticar(senha.ToMD5());
 
         if (autenticacaoRealizada is false)
-            ProcessarErro("Autenticacao inválida para o usuario {nomeIdentificacao}!");
+            ProcessarErro($"Autenticacao inválida para o usuario {nomeIdentificacao}!");
 
         var secretKey = Environment.GetEnvironmentVariable("SecretKey") ?? _configuration["SecretKey"];
         return _tokenService.Gerar(usuario, secretKey);
@@ -53,6 +53,6 @@ public class AutenticarUseCase : IAutenticarUseCase
     private void ProcessarErro(string log)
     {
         _logger.LogWarning(log);
-        throw new AutenticacaoException("Ocorreu um erro ao realizar a autenticação, verifique o usuário e senha informados!");
+        throw new AutenticacaoException(log);
     }
 }
