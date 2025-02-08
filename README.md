@@ -23,7 +23,7 @@ Este repositório contém as atividades (Hackaton) da Pós Graduação em Arquit
 ## Documentação
 
 - [Domain Event Storming](https://www.figma.com/board/fHGDc1i4RxCmrrsPomCD4E/Domain-Event-Storming-Tech-Challenge?node-id=0%3A1&t=TI5wBxdhle65UPSn-1): Este link direciona para o Domain Event Storming, fornecendo uma visão geral visual do projeto.
-- [Demonstração da Arquitetura (em vídeo)](https://www.youtube.com/watch?v=6ygqioJ6_Rs&ab_channel=Kenobirt)
+- [Demonstração da Arquitetura (em vídeo)](https://www.youtube.com/watch?v=Jf91z9W3RAg)
 - Collection: A collection do postman está localizada na pasta docs/collection
 
 ## Desenho de Arquitetura
