@@ -80,14 +80,14 @@ namespace ProcessadorVideo.Gerenciador.Tests.Features
             this.TestTearDown();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Listar processamento por usuario com sucesso")]
+        [Xunit.SkippableFactAttribute(DisplayName="Cadastrar processamento sem informar o arquivo de video")]
         [Xunit.TraitAttribute("FeatureTitle", "Processamento")]
-        [Xunit.TraitAttribute("Description", "Listar processamento por usuario com sucesso")]
-        public void ListarProcessamentoPorUsuarioComSucesso()
+        [Xunit.TraitAttribute("Description", "Cadastrar processamento sem informar o arquivo de video")]
+        public void CadastrarProcessamentoSemInformarOArquivoDeVideo()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Listar processamento por usuario com sucesso", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Cadastrar processamento sem informar o arquivo de video", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 3
   this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -99,15 +99,84 @@ namespace ProcessadorVideo.Gerenciador.Tests.Features
             {
                 this.ScenarioStart();
 #line 4
-    testRunner.Given("que tenha processsamentos cadastrados", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+    testRunner.Given("que eu nao informe um arquivo de video valido", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 5
-    testRunner.When("for feita a requisição para a rota listagem de processamento", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+    testRunner.When("for feita a requisição para a rota de cadastro de processamento", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 6
-    testRunner.Then("devera ser retornado o status 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("devera ser retornado o status 400", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 7
+    testRunner.And("devera ser exibida uma mensagem de erro \"Informe um video para ser processado.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Cadastrar processamento com sucesso")]
+        [Xunit.TraitAttribute("FeatureTitle", "Processamento")]
+        [Xunit.TraitAttribute("Description", "Cadastrar processamento com sucesso")]
+        public void CadastrarProcessamentoComSucesso()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Cadastrar processamento com sucesso", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 9
+  this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 10
+    testRunner.Given("que eu informe um arquivo de video valido", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 11
+    testRunner.When("for feita a requisição para a rota de cadastro de processamento", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 12
+    testRunner.Then("devera ser retornado o status 201", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 13
+    testRunner.And("devera ser retornado o id do processamento", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Listar processamento por usuario com sucesso")]
+        [Xunit.TraitAttribute("FeatureTitle", "Processamento")]
+        [Xunit.TraitAttribute("Description", "Listar processamento por usuario com sucesso")]
+        public void ListarProcessamentoPorUsuarioComSucesso()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Listar processamento por usuario com sucesso", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 15
+  this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 16
+    testRunner.Given("que tenha processsamentos cadastrados com id \"93277f0f-087b-4aaa-b7bf-e649c50676b" +
+                        "7\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 17
+    testRunner.When("for feita a requisição para a rota listagem de processamento", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 18
+    testRunner.Then("devera ser retornado o status 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 19
     testRunner.And("devera ser retornado a lista de processamentos", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
@@ -122,7 +191,7 @@ namespace ProcessadorVideo.Gerenciador.Tests.Features
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Realizar o download do arquivo zip do processamento com sucesso", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 9
+#line 21
   this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -132,17 +201,123 @@ namespace ProcessadorVideo.Gerenciador.Tests.Features
             else
             {
                 this.ScenarioStart();
-#line 10
+#line 22
     testRunner.Given("que tenha processsamentos concluidos cadastrados", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 11
+#line 23
     testRunner.When("for feita a requisição para a rota download de processamento", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 12
+#line 24
     testRunner.Then("devera ser retornado o status 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 13
+#line 25
     testRunner.And("devera ser retornado o binario do arquivo zip", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Realizar o download do arquivo zip sem informar o id do processamento")]
+        [Xunit.TraitAttribute("FeatureTitle", "Processamento")]
+        [Xunit.TraitAttribute("Description", "Realizar o download do arquivo zip sem informar o id do processamento")]
+        public void RealizarODownloadDoArquivoZipSemInformarOIdDoProcessamento()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Realizar o download do arquivo zip sem informar o id do processamento", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 27
+  this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 28
+    testRunner.Given("que eu nao tenha processsamentos cadastrados", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 29
+    testRunner.When("for feita a requisição para a rota download de processamento", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 30
+    testRunner.Then("devera ser retornado o status 400", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 31
+    testRunner.And("devera ser exibida uma mensagem de erro \"Id do processamento não foi informado!\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Realizar o download do arquivo zip informando um id de processamento inexistente")]
+        [Xunit.TraitAttribute("FeatureTitle", "Processamento")]
+        [Xunit.TraitAttribute("Description", "Realizar o download do arquivo zip informando um id de processamento inexistente")]
+        public void RealizarODownloadDoArquivoZipInformandoUmIdDeProcessamentoInexistente()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Realizar o download do arquivo zip informando um id de processamento inexistente", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 33
+  this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 34
+    testRunner.Given("que eu informe um id de processamento inexistente \"93277e0f-087b-4aaa-b7bf-e649c5" +
+                        "0676b6\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 35
+    testRunner.When("for feita a requisição para a rota download de processamento", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 36
+    testRunner.Then("devera ser retornado o status 404", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 37
+    testRunner.And("devera ser exibida uma mensagem de erro \"Não foi encontrado um processamento com " +
+                        "id 93277e0f-087b-4aaa-b7bf-e649c50676b6\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Realizar o download do arquivo zip inexistente")]
+        [Xunit.TraitAttribute("FeatureTitle", "Processamento")]
+        [Xunit.TraitAttribute("Description", "Realizar o download do arquivo zip inexistente")]
+        public void RealizarODownloadDoArquivoZipInexistente()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Realizar o download do arquivo zip inexistente", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 39
+  this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 40
+    testRunner.Given("que tenha processsamentos cadastrados com id \"93277e0f-087b-4aaa-b7bf-e649c50676b" +
+                        "7\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 41
+    testRunner.When("for feita a requisição para a rota download de processamento", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 42
+    testRunner.Then("devera ser retornado o status 404", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 43
+    testRunner.And("devera ser exibida uma mensagem de erro \"Não foi encontrado um processamento com " +
+                        "id 93277e0f-087b-4aaa-b7bf-e649c50676b7\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();

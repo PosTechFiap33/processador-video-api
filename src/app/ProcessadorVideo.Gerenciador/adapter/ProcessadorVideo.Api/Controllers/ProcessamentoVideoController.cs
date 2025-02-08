@@ -28,7 +28,7 @@ public class ProcessamentoVideoController : ControllerBase
         try
         {
             if (videoFile == null || !videoFile.Any())
-                return BadRequest("A valid video file is required.");
+                return BadRequest("Informe um video para ser processado.");
 
             var usuarioId = RecuperarIdUsuario();
 
@@ -61,7 +61,7 @@ public class ProcessamentoVideoController : ControllerBase
     }
 
     [HttpGet("{processamentoId}/download")]
-    public async Task<IActionResult> BaixarArquivo(Guid processamentoId,
+    public async Task<IActionResult> BaixarArquivo(Guid? processamentoId,
                                                   [FromServices] IConsultarArquivoZipUseCase useCase)
     {
         try
@@ -69,7 +69,7 @@ public class ProcessamentoVideoController : ControllerBase
             if (Guid.Empty == processamentoId)
                 return BadRequest("Id do processamento não foi informado!");
 
-            ArquivoZipDTO arquivo = await useCase.Executar(processamentoId);
+            ArquivoZipDTO arquivo = await useCase.Executar(processamentoId.Value);
 
             return File(arquivo.Conteudo, "application/zip", arquivo.Nome);
         }

@@ -59,7 +59,6 @@ public class ConverterVideoParaImagemUseCase : IConverterVideoParaImagemUseCase
                            converterVideoMessage.AdicionarVideo(video.FileName, pathProcessamento);
                        });
 
-            //TODO: pensar em como deixar atomico
             await _repository.Criar(processamento);
 
             await _messageBus.PublishAsync(converterVideoMessage, _awsConfiguration.ConverterVideoParaImagemQueueUrl);

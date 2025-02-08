@@ -1,10 +1,10 @@
-using System;
 using System.Net;
 using System.Text.Json;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using ProcessadorVideo.Application.DTOs;
+using ProcessadorVideo.Domain.Adapters.MessageBus;
 using ProcessadorVideo.Domain.Adapters.MessageBus.Messages;
 using ProcessadorVideo.Domain.Adapters.Repositories;
 using ProcessadorVideo.Domain.Adapters.Services;
@@ -28,7 +28,8 @@ public class ProcessamentoStepDefinition : IClassFixture<IntegrationTestFixture>
     private HttpClient _client;
     private HttpResponseMessage _response;
     private readonly IntegrationTestFixture _fixture;
-    private readonly ProcessamentoVideo _processamentoMock;
+    private ProcessamentoVideo _processamentoMock;
+    private MultipartFormDataContent _file;
 
     public ProcessamentoStepDefinition(IntegrationTestFixture fixture)
     {
@@ -39,11 +40,37 @@ public class ProcessamentoStepDefinition : IClassFixture<IntegrationTestFixture>
                                    StatusProcessamento.Processado,
                                    DateTime.Now,
                                    new List<string> { "teste" });
+
+        _fixture.AdicionarDependencia(s =>
+        {
+            s.AddSingleton(s => new Mock<IProcessamentoVideoRepository>().Object);
+            s.AddSingleton(s => new Mock<IFileStorageService>().Object);
+            s.AddSingleton(s => new Mock<IMessageBus>().Object);
+        });
     }
 
-    [Given(@"que tenha processsamentos cadastrados")]
-    public void Givenquetenhaprocesssamentoscadastrados()
+    [Given(@"que eu informe um arquivo de video valido")]
+    public void Givenqueeuinformeumarquivodevideovalido()
     {
+        var bin = new FormFile(new MemoryStream([1, 2, 3]), 0, 3, "teste", "teste.mp4");
+      
+        _file = new MultipartFormDataContent
+        {
+            { new StreamContent(bin.OpenReadStream()), "videoFile", bin.FileName }
+        };
+    }
+
+    [Given(@"que eu nao informe um arquivo de video valido")]
+    public void Givenqueeunaoinformeumarquivodevideovalido()
+    {
+        _file = null;
+    }
+
+    [Given(@"que tenha processsamentos cadastrados com id ""(.*)""")]
+    public void Givenquetenhaprocesssamentoscadastradoscomid(string id)
+    {
+        _processamentoMock.Id = Guid.Parse(id);
+
         var processamentos = new List<ProcessamentoVideo> {
             _processamentoMock
         };
@@ -56,10 +83,7 @@ public class ProcessamentoStepDefinition : IClassFixture<IntegrationTestFixture>
         {
             s.AddSingleton(s => processamentoVideoRepositoryMock.Object);
         });
-
-        _client = _fixture.GerarHttpClient();
     }
-
 
     [Given(@"que tenha processsamentos concluidos cadastrados")]
     public void Givenquetenhaprocesssamentosconcluidoscadastrados()
@@ -78,13 +102,46 @@ public class ProcessamentoStepDefinition : IClassFixture<IntegrationTestFixture>
              s.AddSingleton(s => processamentoVideoRepositoryMock.Object);
              s.AddSingleton(s => fileStorageServiceMock.Object);
          });
-
-        _client = _fixture.GerarHttpClient();
     }
+
+    [Given(@"que eu nao tenha processsamentos cadastrados")]
+    public void Givenqueeunaotenhaprocesssamentoscadastrados()
+    {
+        _processamentoMock.Id = Guid.Empty;
+    }
+
+
+    [Given(@"que eu informe um id de processamento inexistente ""(.*)""")]
+    public void Givenqueeuinformeumiddeprocessamentoinexistente(string id)
+    {
+        _processamentoMock.Id = Guid.Parse(id);
+    }
+
+    [Given(@"que nao exista o arquivo zip do processamento")]
+    public void Givenquenaoexistaoarquivozipdoprocessamento()
+    {
+        _processamentoMock = new ProcessamentoVideo(_processamentoMock.UsuarioId);
+
+        var processamentoVideoRepositoryMock = new Mock<IProcessamentoVideoRepository>();
+        processamentoVideoRepositoryMock.Setup(x => x.Consultar(It.Is<Guid>(id => id == _processamentoMock.Id)))
+                                        .ReturnsAsync(_processamentoMock);
+
+        _fixture.AdicionarDependencia(s => s.AddSingleton(s => processamentoVideoRepositoryMock.Object));
+    }
+
+
+    [When(@"for feita a requisição para a rota de cadastro de processamento")]
+    public async Task Whenforfeitaarequisiçãoparaarotadecadastrodeprocessamento()
+    {
+        _client = _fixture.GerarHttpClient();
+        _response = await _client.PostAsync("ProcessamentoVideo", _file);
+    }
+
 
     [When(@"for feita a requisição para a rota listagem de processamento")]
     public async Task Whenforfeitaarequisiçãoparaarotalistagemdeprocessamento()
     {
+        _client = _fixture.GerarHttpClient();
         _response = await _client.GetAsync("ProcessamentoVideo");
     }
 
@@ -112,6 +169,7 @@ public class ProcessamentoStepDefinition : IClassFixture<IntegrationTestFixture>
     [When(@"for feita a requisição para a rota download de processamento")]
     public async Task Whenforfeitaarequisiçãoparaarotadownloaddeprocessamento()
     {
+        _client = _fixture.GerarHttpClient();
         _response = await _client.GetAsync($"ProcessamentoVideo/{_processamentoMock.Id}/download");
     }
 
@@ -121,6 +179,22 @@ public class ProcessamentoStepDefinition : IClassFixture<IntegrationTestFixture>
         _response.Content.Headers.ContentType.MediaType.Should().Be("application/zip");
         var dados = await _response.Content.ReadAsByteArrayAsync();
         dados.Should().NotBeNullOrEmpty();
+    }
+
+    [Then(@"devera ser exibida uma mensagem de erro ""(.*)""")]
+    public async Task Thendeveraserexibidaumamensagemdeerro(string mensagemErro)
+    {
+        var dados = await _response.Content.ReadAsStringAsync();
+        dados.Should().Be(mensagemErro);
+    }
+
+
+    [Then(@"devera ser retornado o id do processamento")]
+    public async Task Thendeveraserretornadooiddoprocessamento()
+    {
+        var dados = await _response.Content.ReadAsStringAsync();
+        var id = JsonSerializer.Deserialize<Guid>(dados);
+        id.Should().NotBe(Guid.Empty);
     }
 
 }
