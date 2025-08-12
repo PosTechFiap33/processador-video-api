@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Check out the repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v5
       with:
         ref: ${{ github.ref }} # Checkout para a branch atual
 
@@ -38,7 +38,7 @@ jobs:
 
     steps:
     - name: Check out the repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v5
       with:
         ref: ${{ github.ref }} # Checkout para a branch atual
 
@@ -61,7 +61,7 @@ jobs:
 
     steps:
     - name: Check out the repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v5
       with:
         ref: ${{ github.ref }} # Checkout para a branch atual
 
@@ -84,7 +84,7 @@ jobs:
 
     steps:
     - name: Check out the repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v5
       with:
         ref: ${{ github.ref }} # Checkout para a branch atual
 
